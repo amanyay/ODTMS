@@ -1,0 +1,158 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+import baseUrl from '@/src/api';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+export default function notification() {
+
+    const [approvedData, setApprovedData] = useState<any>([])
+    const [notFound, setNotFound] = useState('');
+    const [arrow , setArrow] = useState('')
+
+
+
+    async function getNotificationdata() {
+
+        const token = await AsyncStorage.getItem('token');
+        const request = await axios.post(`${baseUrl}/userNotification`, { token })
+
+        if (request.data.status === 'ok') {
+
+            setApprovedData(request.data.message)
+            setArrow(request.data.arrow)
+        }
+        else if (request.data.status === '404') {
+            setNotFound('Empty Notification');
+        }
+
+    }
+
+    useEffect(() => {
+        getNotificationdata()
+    }, [])
+
+
+
+
+
+
+    return (
+        <View style={styless.box}>
+            <ImageBackground
+                source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
+                style={{ flex: 1 }} >
+
+                <View style={styless.box1}>
+                    <Text style={styless.notification}>
+                        Notification
+                    </Text>
+                    <TouchableOpacity style={styless.box2BtnRefresh} onPress={getNotificationdata}>
+                        <Text style={styless.box2BtnText}><EvilIcons name="refresh" size={50} color="black" /></Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={{ height: 35 }}>
+                    <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue', fontWeight: 'bold' ,marginTop:"2%" }}>{notFound}</Text>
+                </View>
+
+                <FlatList
+                    data={approvedData}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styless.eachNotificationBox}>
+                            <Text style={{fontWeight:'bold', fontFamily:'fantasy'}}>   Date : {item.date}</Text>
+                            <Text style={styless.texts}>Dear, <Text style={styless.userName}>{item.rec_name}</Text> <Text>
+                                We are excited to inform you that a suitable organ match has been
+                                found for your request. It means the system found compatible organ for you
+                                with your blood type and organ.
+                            </Text></Text>
+                            <Text style={styless.texts1}>{item.rec_name} {arrow}  {item.don_name}  </Text>
+                            <Text style={styless.texts}>Please Call</Text>
+                            <TouchableOpacity style={styless.freeCallCenterBox}>
+                                <Text>900</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+
+                />
+
+
+
+            </ImageBackground>
+        </View>
+
+    )
+}
+
+const styless = StyleSheet.create({
+    box: {
+        flex: 1
+    },
+    box1: {
+        width: '100%',
+        paddingBottom: '1%',
+        marginTop: '10%',
+        // backgroundColor:'darkgray',
+        height: '10%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        borderBottomWidth: 1.2
+    },
+    notification: {
+        marginLeft: '32%',
+        fontSize: 22,
+        fontWeight: 'bold'
+    },
+    box2BtnText: {
+        // backgroundColor:'red',
+        textAlign: 'center',
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18
+    },
+    box2BtnRefresh: {
+        marginRight: '5%',
+        // backgroundColor: "rgba(42, 146, 201, 0.7)",
+        width: '8%',
+        marginLeft: '1%',
+        justifyContent: 'center',
+    },
+    eachNotificationBox: {
+        height: 275,
+        width: '95%',
+        backgroundColor: '#8f9396',
+        opacity: 0.6,
+        marginTop: '1%',
+        marginLeft: '2%',
+        borderRadius: 10,
+        overflow: 'hidden'
+    },
+    texts: {
+        fontSize: 16,
+        padding: 10
+    },
+    texts1:{
+        fontWeight:'bold',
+        fontSize: 16,
+        padding: 10,
+        color:'red'
+    },
+    userName: {
+        color: 'black',
+        fontWeight: '900'
+    },
+    freeCallCenterBox: {
+        backgroundColor: '#f7c600',
+        width: '35%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 3,
+        height: 40,
+        marginLeft: '4%'
+    }
+})
