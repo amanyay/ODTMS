@@ -63,13 +63,13 @@ export default function home() {
 
         // console.log(recAge)
 
-        if (userRole === 'recipents' || length.length < 1) {
+        if (userRole === 'recipents') {
 
             Alert.alert("You are recipents not allowed")
 
         }
         else {
-            if (userBloodType === null) {
+            if (userBloodType === null || length.length < 1) {
                 router.push('/homePageContents/donarForm')
             }
             else if (userBloodType !== null) {

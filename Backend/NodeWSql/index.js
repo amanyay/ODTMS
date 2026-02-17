@@ -12,7 +12,7 @@ const JWT_SECRET = "ajd82hAHSJH82hjsahj@#92hjsa8h2hjsa";
 app.use(bodyParser.json());
 
 app.listen(3000, () => {
-    console.log("sql database server running in port 3000");
+    console.log("server running in port 3000");
 })
 
 
@@ -21,15 +21,29 @@ app.post("/signUp", async (req, res) => {
 
     const { firstName, phoneNumber, email, password, selectedValue } = req.body;
     const connection = await createDBConnection();
-    const insertionQuery = `INSERT INTO users (first_name ,phone_number ,email , password , role) VALUES (?,?,?,?,?) `;
 
-    const result = await connection.query(insertionQuery, [firstName, phoneNumber, email, password, selectedValue]);
-    if (result[0].affectedRows === 1) {
-        res.json({ message: 'Successfully Registerd' })
+    try {
+        const [selectionFromUsersTable] = await connection.query(`SELECT phone_number FROM users WHERE phone_number = ? `, [phoneNumber]);
+
+        if (selectionFromUsersTable.length > 0) {
+            res.status(200).json({ message: 'Already have an account' })
+        }
+        else if (selectionFromUsersTable.length < 1) {
+            const insertionQuery = await connection.query(`INSERT INTO users (first_name ,phone_number ,email ,
+                 password , role) VALUES (?,?,?,?,?)` , [firstName, phoneNumber, email, password, selectedValue]);
+
+            if (insertionQuery) {
+                res.status(200).json({ message: 'Successfully Registerd' })
+            }
+        }
+
+    } catch (error) {
+        if (error) {
+            res.status(500).json({ message: 'Error on server' })
+        }
+
     }
-    if (result[0].affectedRows === 0) {
-        res.json({ message: 'Error in inserting data' })
-    }
+
 })
 
 
@@ -39,20 +53,31 @@ app.post('/login', async (req, res) => {
     const { phoneNumber, password } = req.body;
     const connection = await createDBConnection();
 
-    const selectionQuery = `SELECT * FROM users WHERE phone_number = ? AND password = ? `;
-    const selectedResult = await connection.query(selectionQuery, [phoneNumber, password]);
-    // it shows you why [0][0] use
-    // console.log(selectedResult[0][0].first_name);
 
 
 
-    if (selectedResult[0].length > 0) {
-        const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET);
-        res.json({ message: "User found", token: token, status: 'ok' })
+
+    try {
+        const selectionQuery = `SELECT * FROM users WHERE phone_number = ? AND password = ? `;
+        const selectedResult = await connection.query(selectionQuery, [phoneNumber, password]);
+        // it shows you why [0][0] use
+        // console.log(selectedResult[0][0].first_name);
+
+        if (selectedResult[0].length > 0) {
+            const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET);
+            res.status(200).json({ message: "User found", token: token, })
+        }
+        else if (selectedResult[0].length === 0) {
+            res.status(201).json({ message: 'User not found' });
+        }
+
+    } catch (error) {
+        if (error) {
+            res.status(500).json({ message: 'Error on server' })
+        }
+
     }
-    else if (selectedResult[0].length === 0) {
-        res.json({ message: 'User not found', status: 400 });
-    }
+
 
 
 
@@ -349,7 +374,9 @@ app.post('/recRequests', async (req, res) => {
 
 
     try {
-        const [selectionFromRecReqTable] = await connection.query(`SELECT * FROM rec_request WHERE rec_phone_number = ? `, [actualVerifiedPhoneNumber])
+        const [selectionFromRecReqTable] = await connection.query(`SELECT * FROM rec_request WHERE 
+            rec_phone_number = ? AND don_phone_number = ? `, [actualVerifiedPhoneNumber, donorPhoneNumber]);
+
 
         if (selectionFromRecReqTable.length === 0) {
             const insertionQuery = await connection.query(`INSERT INTO rec_request (rec_phone_number , don_phone_number , organ_id)
@@ -370,9 +397,6 @@ app.post('/recRequests', async (req, res) => {
     } catch (error) {
         res.status(500).json('Error on server')
     }
-
-
-
 
 })
 

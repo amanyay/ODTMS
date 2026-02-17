@@ -110,7 +110,7 @@ export default function ExpandableBox() {
                                 <View>
                                     <View style={styles.boxs}>
                                         <Text style={styles.numbers}>2.</Text><Text style={styles.texts}>
-                                            Fruits (berries, apples)ፍ
+                                            Fruits (berries, apples)
                                         </Text>
                                     </View>
                                 </View>

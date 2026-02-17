@@ -29,7 +29,7 @@ export default function map() {
         setDisplayEmail(request.data.message.email);
         setDisplayage(request.data.message.age);
         setDisplayBloodType(request.data.message.blood_type);
-        setDisplayLocation(request.data.message.locatjion)
+        setDisplayLocation(request.data.message.location)
 
     }
 

@@ -11,7 +11,7 @@ export default function organs() {
 
   const [organs, setOrgans] = useState<any>([]);
   const [notFound, setNotFound] = useState('');
-  const [eachReqError , setEachReqError] = useState('')
+  const [eachReqError, setEachReqError] = useState('')
 
 
   async function getOrganForRecs() {
@@ -29,7 +29,7 @@ export default function organs() {
     else if (request.status !== 404) {
       setOrgans(request.data.message);
       // console.log(organs)
-      console.log(request.data.message)
+      // console.log(request.data.message)
     }
   }
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function organs() {
     if (request.status === 201) {
       router.replace('/homePageContents/successful');
     }
-    else if(request.status === 200){
+    else if (request.status === 200) {
       setEachReqError("Request already sent try to send another request !!!")
     }
 
@@ -73,9 +73,9 @@ export default function organs() {
         </TouchableOpacity>
       </View>
 
-      <View style={{ height: 30, marginBottom: 20 }}>
+      <View style={{ height: 70, marginBottom: 20 }}>
         <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}>{notFound}</Text>
-
+        <Text style={style.eachReqError}>{eachReqError}</Text>
       </View>
 
 
@@ -96,7 +96,7 @@ export default function organs() {
                 <Text style={style.requestBtnText}>Send Request</Text>
               </TouchableOpacity>
             </View>
-            <Text style={style.eachReqError}>{eachReqError}</Text>
+
           </View>
         )}
 
@@ -115,7 +115,7 @@ const style = StyleSheet.create({
     width: '100%',
     // backgroundColor:'blue',
     justifyContent: 'space-between',
-    marginBottom: '7%',
+    marginBottom: '2%',
     marginTop: '7%',
     marginRight: '5%'
   },
@@ -125,7 +125,7 @@ const style = StyleSheet.create({
     width: '20%',
     marginLeft: '2%',
     justifyContent: 'center',
-    height:45
+    height: 45
   },
   box2BtnText: {
     // backgroundColor:'red',
@@ -162,7 +162,7 @@ const style = StyleSheet.create({
     marginTop: '2%',
     borderRadius: 8,
     alignContent: 'center',
-    overflow:'hidden'
+    overflow: 'hidden'
   },
   organBoxText1: {
     color: 'red',
@@ -229,16 +229,16 @@ const style = StyleSheet.create({
     fontSize: 17,
     letterSpacing: 1,
   },
-  eachReqError:{
-    width:'100%',
+  eachReqError: {
+    width: '100%',
     // backgroundColor:'blue',
-    height:40,
-    justifyContent:'center',
-    alignContent:'center',
-    textAlign:'center',
-    alignSelf:'center',
-    alignItems:'center',
-    color:'red'
+    height: 40,
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
+    color: 'black'
   }
 
 })

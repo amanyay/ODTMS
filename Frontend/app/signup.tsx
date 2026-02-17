@@ -15,7 +15,7 @@ const login = () => {
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
-    const options = ['donor','recipents'];
+    const options = ['donor', 'recipents'];
 
 
 
@@ -46,16 +46,23 @@ const login = () => {
             setError("Invalid password");
         }
         else if (phoneNumberRegex.test(phoneNumber) || emailRegex.test(email) || passwordRegex.test(password)) {
-            console.log(email);
-            console.log(password);
 
-            const response = await axios.post(`${baseUrl}/signUp`, { firstName, phoneNumber, email, password , selectedValue });
-            setError(response.data.message);
-            router.push('/login')
 
-            // if (response.status === 200) {
-            //     // router.push("/home");
-            // }
+            const response = await axios.post(`${baseUrl}/signUp`, { firstName, phoneNumber, email, password, selectedValue });
+
+            if (response.status === 200) {
+                setError(response.data.message);
+                router.push('/login')
+            }
+            else if (response.status === 201) {
+                setError(response.data.message)
+            }
+            else if (response.status === 500) {
+                setError(response.data.message)
+            }
+
+
+
 
         }
 
@@ -78,7 +85,7 @@ const login = () => {
                 <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
                 <TextInput placeholder='   Enter your email address' placeholderTextColor={'white'} style={styles.input} onChangeText={setEmail} />
                 <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
-                <Picker 
+                <Picker
                     selectedValue={selectedValue}
                     onValueChange={(itemValue) => setSelectedValue(itemValue)}
                     style={styles.picker}

@@ -28,11 +28,11 @@ const login = () => {
             setIsLoading(false);
             setError("");
 
-            if (request.data.status === "ok") {
+            if (request.status === 200) {
                 AsyncStorage.setItem('token', request.data.token)
                 router.replace('/(tabs)/home')
             }
-            else if (request.data.status === 400) {
+            else if (request.status === 201) {
                 setError(request.data.message)
             }
 
