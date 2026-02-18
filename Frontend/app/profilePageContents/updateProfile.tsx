@@ -42,8 +42,10 @@ export default function changeProfile() {
 
         const token = await AsyncStorage.getItem("token");
         const request = await axios.post(`${baseUrl}/updateProfile`, { token, firstName, lastName, email, age, location, gender, bloodType })
-        if (request.status !== 404) {
+        if (request.status === 200) {
           router.replace('/homePageContents/successful')
+        } else {
+          setError(request.data.message)
         }
       }
 

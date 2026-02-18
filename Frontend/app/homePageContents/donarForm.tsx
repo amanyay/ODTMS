@@ -39,9 +39,11 @@ export default function donarForm() {
             if (age !== "" || location !== "" || gender !== "" || lastName !== "") {
                 const tokenToBackEnd = await AsyncStorage.getItem("token");
                 const request = await axios.post(`${baseUrl}/donorsForm`, { lastName, age, location, gender, bloodType, tokenToBackEnd, organs })
-                const status = request.data.status;
-                if (status === 'ok') {
+                const status = request.status;
+                if (status === 200) {
                     router.push('/homePageContents/successful')
+                } else {
+                    setError("Please try again")
                 }
             }
 

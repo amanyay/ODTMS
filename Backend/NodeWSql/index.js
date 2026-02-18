@@ -67,7 +67,7 @@ app.post('/login', async (req, res) => {
             const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET);
             res.status(200).json({ message: "User found", token: token, })
         }
-        else if (selectedResult[0].length === 0) {
+        else if (selectedResult[0].length < 1) {
             res.status(201).json({ message: 'User not found' });
         }
 
@@ -93,38 +93,47 @@ app.post('/home', async (req, res) => {
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
 
-    const [selectionFromUser] = await connection.query(`SELECT * FROM users WHERE phone_number = ? `, [actualVerifiedPhoneNumber])
+    try {
 
-    if (selectionFromUser[0].role === 'recipents') {
-        const [getRecInfoQuery] = await connection.query(`SELECT users.* , recipents_waitinglist.phone_number , recipents_waitinglist.organ_id ,
+        const [selectionFromUser] = await connection.query(`SELECT * FROM users WHERE phone_number = ? `, [actualVerifiedPhoneNumber])
+
+        if (selectionFromUser[0].role === 'recipents') {
+            const [getRecInfoQuery] = await connection.query(`SELECT users.* , recipents_waitinglist.phone_number , recipents_waitinglist.organ_id ,
             organ.organ_id ,organ.organ_name
             FROM recipents_waitinglist 
             JOIN users ON recipents_waitinglist.phone_number = users.phone_number
             JOIN organ ON recipents_waitinglist.organ_id =  organ.organ_id 
             WHERE recipents_waitinglist.phone_number = ? ` , [actualVerifiedPhoneNumber]
 
-        )
-        res.json({
-            message: selectionFromUser[0],
-            joinMessage: getRecInfoQuery,
-            status: 'ok'
-        })
-    }
-    else if (selectionFromUser[0].role === 'donor') {
-        const [getRecInfoQuery] = await connection.query(`SELECT users.* , donations.phone_numbers , donations.organ_id ,
+            )
+            res.status(200).json({
+                message: selectionFromUser[0],
+                joinMessage: getRecInfoQuery,
+                status: 'ok'
+            })
+        }
+        else if (selectionFromUser[0].role === 'donor') {
+            const [getRecInfoQuery] = await connection.query(`SELECT users.* , donations.phone_numbers , donations.organ_id ,
             organ.organ_id ,organ.organ_name
             FROM donations 
             JOIN users ON donations.phone_numbers = users.phone_number
             JOIN organ ON donations.organ_id =  organ.organ_id 
             WHERE donations.phone_numbers = ? ` , [actualVerifiedPhoneNumber]
 
-        )
-        // console.log(getRecInfoQuery)
-        res.json({
-            message: selectionFromUser[0],
-            joinMessage: getRecInfoQuery,
-            status: 'ok'
-        })
+            )
+            // console.log(getRecInfoQuery)
+            res.status(200).json({
+                message: selectionFromUser[0],
+                joinMessage: getRecInfoQuery,
+                status: 'ok'
+            })
+        }
+
+
+    } catch (error) {
+        if (error) {
+            res.status(500).json({ message: 'Error on server' })
+        }
     }
 
 
@@ -142,20 +151,26 @@ app.post('/profile', async (req, res) => {
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
 
-    const findByPhoneNumberQuery = `SELECT * FROM users WHERE phone_number = ? `;
+    try {
+        const [findByPhoneNumberQueryResult] = await connection.query(`SELECT * FROM users WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
 
-    //findByPhoneNumberQueryResult without [] would be return the whole array [rows, fields]. and we only care about
-    //the rows (the actual data you care about), not the metadata.So [findByPhoneNumberQueryResult] is simply a neat way 
-    // to ignore the metadata and directly get the query results.
-    const [findByPhoneNumberQueryResult] = await connection.query(findByPhoneNumberQuery, [actualVerifiedPhoneNumber])
+        //findByPhoneNumberQueryResult without [] would be return the whole array [rows, fields]. and we only care about
+        //the rows (the actual data you care about), not the metadata.So [findByPhoneNumberQueryResult] is simply a neat way 
+        // to ignore the metadata and directly get the query results.
 
-    if (!findByPhoneNumberQuery) {
-        res.json({ message: 'Error' })
+        if (!findByPhoneNumberQueryResult) {
+            res.status(404).json({ message: 'Error' })
+        }
+        else if (findByPhoneNumberQueryResult) {
+            const arrayToObject = findByPhoneNumberQueryResult[0];
+            res.status(200).json({ message: arrayToObject });
+        }
+
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' })
     }
-    else if (findByPhoneNumberQuery) {
-        const arrayToObject = findByPhoneNumberQueryResult[0];
-        res.json({ message: arrayToObject });
-    }
+
 
 
 
@@ -170,44 +185,50 @@ app.post('/donorsForm', async (req, res) => {
     const verifiedPhoneNumber = JWT.verify(tokenToBackEnd, JWT_SECRET)
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
 
+    try {
 
-    const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
+        const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
         , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
 
 
-    const [selectionFromDonation] = await connection.query(`SELECT * FROM donations 
+        const [selectionFromDonation] = await connection.query(`SELECT * FROM donations 
         WHERE phone_numbers = ? ` , [actualVerifiedPhoneNumber])
 
-    if (selectionFromDonation.length > 0) {
-        const [updateDonation] = await connection.query(`UPDATE donations SET organ_id = ?
+        if (selectionFromDonation.length > 0) {
+            const [updateDonation] = await connection.query(`UPDATE donations SET organ_id = ?
                  WHERE phone_numbers = ? ` , [organs, actualVerifiedPhoneNumber])
 
-        if (updateQueryResult || updateDonation) {
-            res.json({
-                message: 'Successfully updated',
-                status: 'ok',
-                data: selectionFromDonation
-            })
+            if (updateQueryResult || updateDonation) {
+                res.status(200).json({
+                    message: 'Successfully updated',
+                    status: 'ok',
+                    data: selectionFromDonation
+                })
+            }
         }
-    }
-    else if (selectionFromDonation.length === 0) {
+        else if (selectionFromDonation.length === 0) {
 
-        const [insertToDonationTable] = await connection.query(`INSERT INTO donations (phone_numbers , organ_id) 
+            const [insertToDonationTable] = await connection.query(`INSERT INTO donations (phone_numbers , organ_id) 
             VALUES(?,?)`, [actualVerifiedPhoneNumber, organs])
 
-        if (updateQueryResult || insertToDonationTable) {
-            res.json({
-                message: 'Successfully updated',
-                status: 'ok',
-                data: selectionFromDonation
-            })
+            if (updateQueryResult || insertToDonationTable) {
+                res.status(200).json({
+                    message: 'Successfully updated',
+                    status: 'ok',
+                    data: selectionFromDonation
+                })
+            }
         }
+
+
+        if (!updateQueryResult) {
+            res.status(201).json({ message: 'Error in updating' })
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' })
     }
 
 
-    if (!updateQueryResult) {
-        res.json({ message: 'Error in updating' })
-    }
 
 })
 
@@ -218,38 +239,45 @@ app.post('/recForm', async (req, res) => {
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
     const connection = await createDBConnection();
 
-    const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
+    try {
+        const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
         , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
 
-    const [selectionFromRecTable] = await connection.query(`SELECT * FROM recipents_waitinglist WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
+        const [selectionFromRecTable] = await connection.query(`SELECT * FROM recipents_waitinglist WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
 
-    if (selectionFromRecTable.length > 1) {
-        const [updateRecTable] = await connection.query(`UPDATE donations SET organ_id = ?
+        if (selectionFromRecTable.length > 1) {
+            const [updateRecTable] = await connection.query(`UPDATE donations SET organ_id = ?
                  WHERE phone_number = ? ` , [organs, actualVerifiedPhoneNumber])
 
 
 
-        if (updateQueryResult || updateRecTable) {
-            res.json({
-                message: 'Successfully updated',
-                status: 'ok',
-                data: selectionFromRecTable[0],
-            })
+            if (updateQueryResult || updateRecTable) {
+                res.status(200).json({
+                    message: 'Successfully updated',
+                    status: 'ok',
+                    data: selectionFromRecTable[0],
+                })
+            }
         }
-    }
-    else if (selectionFromRecTable.length === 0) {
+        else if (selectionFromRecTable.length === 0) {
 
-        const [insertionToRecTable] = await connection.query(`INSERT INTO recipents_waitinglist (phone_number , organ_id ) 
+            const [insertionToRecTable] = await connection.query(`INSERT INTO recipents_waitinglist (phone_number , organ_id ) 
         VALUES (? , ? ) `, [actualVerifiedPhoneNumber, organs]);
 
-        if (updateQueryResult || insertionToRecTable) {
-            res.json({
-                message: 'Successfully updated',
-                status: 'ok',
-                data: selectionFromRecTable[0],
-            })
+            if (updateQueryResult || insertionToRecTable) {
+                res.status(200).json({
+                    message: 'Successfully updated',
+                    status: 'ok',
+                    data: selectionFromRecTable[0],
+                })
+            }
         }
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' })
     }
+
+
 })
 
 
@@ -280,8 +308,8 @@ app.post('/recOrgans', async (req, res) => {
             const ageDifference = Math.abs(donAge - recAge);
 
             if (ageDifference >= 10) {
-                res.status(404).json({
-                    status: '404'
+                res.status(201).json({
+                    status: '201'
                 })
             }
             else if (ageDifference < 10) {
@@ -293,8 +321,8 @@ app.post('/recOrgans', async (req, res) => {
 
         }
         else if (selectionFromdonation.length === 0) {
-            res.status(404).json({
-                status: '404'
+            res.status(201).json({
+                status: '201'
             })
 
         }
@@ -315,9 +343,8 @@ app.post('/donOrgans', async (req, res) => {
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber
     const connection = await createDBConnection();
-
-
-    const [selectionFromrecTable] = await connection.query(`SELECT users.first_name, users.gender , users.age , users.location , users.email,
+    try {
+        const [selectionFromrecTable] = await connection.query(`SELECT users.first_name, users.gender , users.age , users.location , users.email,
          users.blood_type, donations.phone_numbers ,organ.organ_name, organ.organ_id 
          FROM donations
          JOIN users ON donations.phone_numbers = users.phone_number
@@ -325,39 +352,45 @@ app.post('/donOrgans', async (req, res) => {
          WHERE users.phone_number = ?`, [actualVerifiedPhoneNumber]);
 
 
-    //  const [selectionFromrecTable] = await connection.query(`SELECT users.first_name, users.gender , users.age , users.location , users.email,
-    //  users.blood_type ,organ.organ_name, organ.organ_id ,recipents_waitinglist.phone_number , recipents_waitinglist.status 
-    //  FROM recipents_waitinglist 
-    //  JOIN users ON recipents_waitinglist.phone_number = users.phone_number
-    //  JOIN organ ON recipents_waitinglist.organ_id = organ.organ_id 
-    //  WHERE users.blood_type = ?`, [donBloodType]);
+        //  const [selectionFromrecTable] = await connection.query(`SELECT users.first_name, users.gender , users.age , users.location , users.email,
+        //  users.blood_type ,organ.organ_name, organ.organ_id ,recipents_waitinglist.phone_number , recipents_waitinglist.status 
+        //  FROM recipents_waitinglist 
+        //  JOIN users ON recipents_waitinglist.phone_number = users.phone_number
+        //  JOIN organ ON recipents_waitinglist.organ_id = organ.organ_id 
+        //  WHERE users.blood_type = ?`, [donBloodType]);
 
 
-    // const recAge = selectionFromrecTable[0].age;
-    // const ageDifference = Math.abs(donAge - recAge);
+        // const recAge = selectionFromrecTable[0].age;
+        // const ageDifference = Math.abs(donAge - recAge);
 
 
-    if (selectionFromrecTable.length > 0) {
+        if (selectionFromrecTable.length > 0) {
 
 
-        // if (ageDifference > 10) {
-        //     res.json({
-        //         message: '404'
-        //     })
-        // }
-        // else if (ageDifference < 10) {
-        res.json({
-            message: selectionFromrecTable[0],
-            status: 'ok'
-        })
-        // }
+            // if (ageDifference > 10) {
+            //     res.json({
+            //         message: '404'
+            //     })
+            // }
+            // else if (ageDifference < 10) {
+            res.json({
+                message: selectionFromrecTable[0],
+                status: 'ok'
+            })
+            // }
+        }
+        else if (selectionFromrecTable.length === 0) {
+            res.json({
+                message: '404'
+            })
+
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Server Error" })
     }
-    else if (selectionFromrecTable.length === 0) {
-        res.json({
-            message: '404'
-        })
 
-    }
+
+
 
 
 })
@@ -402,37 +435,37 @@ app.post('/recRequests', async (req, res) => {
 
 
 
-app.post('/donRequest', async (req, res) => {
+// app.post('/donRequest', async (req, res) => {
 
-    const { token, recPhoneNumber, organId } = req.body;
-    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
-    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
+//     const { token, recPhoneNumber, organId } = req.body;
+//     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+//     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+//     const connection = await createDBConnection();
 
-    // try {r
+//     // try {r
 
-    const insertionQuery = await connection.query("INSERT INTO don_request (don_phone_number , rec_phone_number , organ_id) VALUES (?,?,?)", [actualVerifiedPhoneNumber, recPhoneNumber, organId]);
+//     const insertionQuery = await connection.query("INSERT INTO don_request (don_phone_number , rec_phone_number , organ_id) VALUES (?,?,?)", [actualVerifiedPhoneNumber, recPhoneNumber, organId]);
 
-    if (insertionQuery) {
-        res.json({
-            status: 'ok'
-        })
-    }
+//     if (insertionQuery) {
+//         res.json({
+//             status: 'ok'
+//         })
+//     }
 
-    // } catch (error) {
-    //     if(error.code === 'Duplicate entry'){
-    //         res.json({
-    //             status:'no'
-    //         })
+//     // } catch (error) {
+//     //     if(error.code === 'Duplicate entry'){
+//     //         res.json({
+//     //             status:'no'
+//     //         })
 
-    //     }
+//     //     }
 
-    // }
-
-
+//     // }
 
 
-})
+
+
+// })
 
 app.post('/userNotification', async (req, res) => {
 
@@ -440,12 +473,13 @@ app.post('/userNotification', async (req, res) => {
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
     const connection = await createDBConnection();
+    try {
 
-    const [selectionRole] = await connection.query(`SELECT role from users WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
+        const [selectionRole] = await connection.query(`SELECT role from users WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
 
 
-    if (selectionRole[0].role === 'recipents') {
-        const [approvedRecipentSelectionQuery] = await connection.query(`SELECT  rec_request.id , u1.first_name AS rec_name, 
+        if (selectionRole[0].role === 'recipents') {
+            const [approvedRecipentSelectionQuery] = await connection.query(`SELECT  rec_request.id , u1.first_name AS rec_name, 
         rec_request.rec_phone_number , rec_request.don_phone_number,rec_request.date,
         organ.organ_name, organ.organ_id, u2.first_name AS don_name
         FROM rec_request
@@ -456,21 +490,21 @@ app.post('/userNotification', async (req, res) => {
 
 
 
-        if (approvedRecipentSelectionQuery < 1) {
-            res.json({
-                status: '404'
-            })
-        } else if (approvedRecipentSelectionQuery.length > 0) {
-            res.json({
-                message: approvedRecipentSelectionQuery,
-                status: 'ok',
-                arrow: '←'
-            })
-        }
+            if (approvedRecipentSelectionQuery < 1) {
+                res.status(201).json({
+                    status: '404'
+                })
+            } else if (approvedRecipentSelectionQuery.length > 0) {
+                res.status(200).json({
+                    message: approvedRecipentSelectionQuery,
+                    status: 'ok',
+                    arrow: '←'
+                })
+            }
 
-    }
-    else if (selectionRole[0].role === 'donor') {
-        const [approvedDonorSelectionQuery] = await connection.query(`SELECT rec_request.id , u2.first_name AS rec_name, rec_request.rec_phone_number ,
+        }
+        else if (selectionRole[0].role === 'donor') {
+            const [approvedDonorSelectionQuery] = await connection.query(`SELECT rec_request.id , u2.first_name AS rec_name, rec_request.rec_phone_number ,
         rec_request.don_phone_number,
         organ.organ_name, organ.organ_id, u1.first_name AS don_name
         FROM rec_request
@@ -479,22 +513,28 @@ app.post('/userNotification', async (req, res) => {
         JOIN users AS u2 ON rec_request.don_phone_number = u2.phone_number
         WHERE rec_request.don_phone_number = ? AND status = ? `, [actualVerifiedPhoneNumber, 'Approved']);
 
-        console.log(approvedDonorSelectionQuery)
+            // console.log(approvedDonorSelectionQuery)
 
-        if (approvedDonorSelectionQuery.length < 1) {
-            res.json({
-                status: '404'
-            })
+            if (approvedDonorSelectionQuery.length < 1) {
+                res.status(201).json({
+                    status: '404'
+                })
+            }
+            if (approvedDonorSelectionQuery.length > 0) {
+                res.status(200).json({
+                    message: approvedDonorSelectionQuery,
+                    status: 'ok',
+                    arrow: '→'
+                })
+            }
         }
-        if (approvedDonorSelectionQuery.length > 0) {
-            res.json({
-                message: approvedDonorSelectionQuery,
-                status: 'ok',
-                arrow: '→'
-            })
+
+
+    } catch (error) {
+        if (error) {
+            res.json({ message: error })
         }
     }
-
 
 
 
@@ -509,7 +549,8 @@ app.post("/updateProfile", async (req, res) => {
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
     const connection = await createDBConnection();
 
-    const updateUsersTable = await connection.query(`UPDATE users SET 
+    try {
+        const updateUsersTable = await connection.query(`UPDATE users SET 
         first_name = ? , 
         last_name = ?,
         email = ?,
@@ -519,19 +560,27 @@ app.post("/updateProfile", async (req, res) => {
         blood_type = ? 
         WHERE phone_number = ? `, [firstName, lastName, email, age, location, gender, bloodType, actualVerifiedPhoneNumber])
 
-    if (updateUsersTable) {
-        const [selectionFromUsersTable] = await connection.query('SELECT * FROM users WHERE phone_number = ?', [actualVerifiedPhoneNumber])
-        if (selectionFromUsersTable.length > 0) {
-            res.status(201).json({
-                message: selectionFromUsersTable[0]
-            })
+        if (updateUsersTable) {
+            const [selectionFromUsersTable] = await connection.query('SELECT * FROM users WHERE phone_number = ?', [actualVerifiedPhoneNumber])
+            if (selectionFromUsersTable.length > 0) {
+                res.status(200).json({
+                    message: selectionFromUsersTable[0]
+                })
+            }
+            else if (selectionFromUsersTable.length < 1) {
+                res.status(201).json({
+                    message: '404'
+                })
+            }
         }
-        else if (selectionFromUsersTable.length < 1) {
-            res.status(404).json({
-                message: '404'
-            })
+
+    } catch (error) {
+        if (error) {
+            res.json({ message: error })
         }
     }
+
+
 })
 
 app.post('/deleteAccount', async (req, res) => {
@@ -575,7 +624,7 @@ app.post('/history', async (req, res) => {
             WHERE rec_phone_number = ?` , [actualVerifiedPhoneNumber])
         // console.log(selectionFromRecReqTable)
 
-        res.json({
+        res.status(200).json({
             message: selectionFromRecReqTable,
             text: 'Ask to Recieve'
         })
@@ -587,9 +636,9 @@ app.post('/history', async (req, res) => {
             JOIN organ ON donations.organ_id = organ.organ_id 
             JOIN users ON donations.phone_numbers = users.phone_number
             WHERE phone_numbers = ?` , [actualVerifiedPhoneNumber])
-        console.log(selectionFromDonTable)
+        // console.log(selectionFromDonTable)
 
-        res.json({
+        res.status(200).json({
             message: selectionFromDonTable,
             text: 'Ask to donate'
         })

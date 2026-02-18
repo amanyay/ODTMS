@@ -10,7 +10,7 @@ export default function notification() {
 
     const [approvedData, setApprovedData] = useState<any>([])
     const [notFound, setNotFound] = useState('');
-    const [arrow , setArrow] = useState('')
+    const [arrow, setArrow] = useState('')
 
 
 
@@ -19,13 +19,15 @@ export default function notification() {
         const token = await AsyncStorage.getItem('token');
         const request = await axios.post(`${baseUrl}/userNotification`, { token })
 
-        if (request.data.status === 'ok') {
+        if (request.status === 200) {
 
             setApprovedData(request.data.message)
             setArrow(request.data.arrow)
         }
-        else if (request.data.status === '404') {
+        else if (request.status === 201) {
             setNotFound('Empty Notification');
+        } else {
+            setNotFound(request.data.message)
         }
 
     }
@@ -55,7 +57,7 @@ export default function notification() {
                 </View>
 
                 <View style={{ height: 35 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue', fontWeight: 'bold' ,marginTop:"2%" }}>{notFound}</Text>
+                    <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue', fontWeight: 'bold', marginTop: "2%" }}>{notFound}</Text>
                 </View>
 
                 <FlatList
@@ -63,7 +65,7 @@ export default function notification() {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <View style={styless.eachNotificationBox}>
-                            <Text style={{fontWeight:'bold', fontFamily:'fantasy'}}>   Date : {item.date}</Text>
+                            <Text style={{ fontWeight: 'bold', fontFamily: 'fantasy' }}>   Date : {item.date}</Text>
                             <Text style={styless.texts}>Dear, <Text style={styless.userName}>{item.rec_name}</Text> <Text>
                                 We are excited to inform you that a suitable organ match has been
                                 found for your request. It means the system found compatible organ for you
@@ -136,11 +138,11 @@ const styless = StyleSheet.create({
         fontSize: 16,
         padding: 10
     },
-    texts1:{
-        fontWeight:'bold',
+    texts1: {
+        fontWeight: 'bold',
         fontSize: 16,
         padding: 10,
-        color:'red'
+        color: 'red'
     },
     userName: {
         color: 'black',

@@ -23,10 +23,10 @@ export default function organs() {
     const recBloodType = await AsyncStorage.getItem('recBloodType');
     const request = await axios.post(`${baseUrl}/recOrgans`, { token, recAge, recBloodType, userOrgan });
 
-    if (request.status === 404) {
+    if (request.status === 201) {
       setNotFound('No match found');
     }
-    else if (request.status !== 404) {
+    else if (request.status !== 201) {
       setOrgans(request.data.message);
       // console.log(organs)
       // console.log(request.data.message)
@@ -46,6 +46,8 @@ export default function organs() {
     }
     else if (request.status === 200) {
       setEachReqError("Request already sent try to send another request !!!")
+    } else {
+      setNotFound("Server Error please try again")
     }
 
   }
