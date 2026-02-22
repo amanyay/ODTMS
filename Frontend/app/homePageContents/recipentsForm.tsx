@@ -31,23 +31,34 @@ export default function donarForm() {
 
     async function submit() {
 
-        if (age === "" || location === "" || gender === "" || lastName === "") {
-            setError('Please fill all field');
-        }
-
-        else {
-            if (age !== "" || location !== "" || gender !== "" || lastName !== "") {
-                const tokenToBackEnd = await AsyncStorage.getItem("token");
-                const request = await axios.post(`${baseUrl}/recForm`, { lastName, age, location, gender, bloodType, tokenToBackEnd, organs })
-                const status = request.status;
-                console.log(status);
-
-                if (status === 200) {
-                    router.push('/homePageContents/successful')
-                }
+        try {
+            if (age === "" || location === "" || gender === "" || lastName === "") {
+                setError('Please fill all field');
             }
 
+            else {
+                if (age !== "" || location !== "" || gender !== "" || lastName !== "") {
+                    const tokenToBackEnd = await AsyncStorage.getItem("token");
+                    const request = await axios.post(`${baseUrl}/recForm`, { lastName, age, location, gender, bloodType, tokenToBackEnd, organs })
+                    const status = request.status;
+
+
+                    if (status === 200) {
+                        setError(request.data.message)
+                        router.push('/homePageContents/successful')
+                    }
+                    else if (status !== 200) {
+                        setError(request.data.err)
+                    }
+                }
+
+            }
+        } catch (error: any) {
+            setError(error.response.data.err)
+
         }
+
+
 
 
     }
@@ -125,6 +136,7 @@ export default function donarForm() {
                 >
                     <Picker.Item label="1.Kidney" value="1" />
                     <Picker.Item label="2.Liver" value="2" />
+                    <Picker.Item label="4.Error cause" value="4" />
                 </Picker>
             </View>
             <Text style={style.error}>{error}</Text>

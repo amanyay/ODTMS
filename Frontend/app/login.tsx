@@ -17,29 +17,39 @@ const login = () => {
         router.push("/signup");
     }
 
+
+
     const submit = async () => {
-
-        if (phoneNumber === "" || password === "") {
-            setError("Please fill all field !!!");
-        }
-        else {
-            setIsLoading(true);
-            const request = await axios.post(`${baseUrl}/login`, { phoneNumber, password });
-            setIsLoading(false);
-            setError("");
-
-            if (request.status === 200) {
-                AsyncStorage.setItem('token', request.data.token)
-                router.replace('/(tabs)/home')
+        try {
+            if (phoneNumber === "" || password === "") {
+                setError("Please fill all field !!!");
             }
-            else if (request.status === 201) {
-                setError(request.data.message)
+            else {
+                setIsLoading(true);
+                const request = await axios.post(`${baseUrl}/login`, { phoneNumber, password });
+                setIsLoading(false);
+                setError("");
+
+                if (request.status === 200) {
+                    AsyncStorage.setItem('token', request.data.token)
+                    router.replace('/(tabs)/home')
+                }
+                else if (request.status === 201) {
+                    setError(request.data.message)
+                }
+
             }
+
 
         }
 
-
+        catch (error: any) {
+            setError(error.response.data.err)
+        }
     }
+
+
+
 
     return (
         <ImageBackground

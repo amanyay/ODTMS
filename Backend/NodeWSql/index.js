@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 
 app.listen(3000, () => {
     console.log("server running in port 3000");
+
 })
 
 
@@ -38,8 +39,9 @@ app.post("/signUp", async (req, res) => {
         }
 
     } catch (error) {
+
         if (error) {
-            res.status(500).json({ message: 'Error on server' })
+            res.status(500).json({ err: 'Error on server' })
         }
 
     }
@@ -54,14 +56,13 @@ app.post('/login', async (req, res) => {
     const connection = await createDBConnection();
 
 
-
-
-
     try {
         const selectionQuery = `SELECT * FROM users WHERE phone_number = ? AND password = ? `;
         const selectedResult = await connection.query(selectionQuery, [phoneNumber, password]);
         // it shows you why [0][0] use
         // console.log(selectedResult[0][0].first_name);
+
+
 
         if (selectedResult[0].length > 0) {
             const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET);
@@ -72,8 +73,9 @@ app.post('/login', async (req, res) => {
         }
 
     } catch (error) {
+
         if (error) {
-            res.status(500).json({ message: 'Error on server' })
+            res.status(500).json({ err: 'Error on server' })
         }
 
     }
@@ -132,7 +134,7 @@ app.post('/home', async (req, res) => {
 
     } catch (error) {
         if (error) {
-            res.status(500).json({ message: 'Error on server' })
+            res.status(500).json({ err: 'Error on server' })
         }
     }
 
@@ -168,7 +170,9 @@ app.post('/profile', async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({ message: 'Server error' })
+        if (error) {
+            res.status(500).json({ err: 'Error on server' })
+        }
     }
 
 
@@ -225,7 +229,9 @@ app.post('/donorsForm', async (req, res) => {
             res.status(201).json({ message: 'Error in updating' })
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server error' })
+        if (error) {
+            res.status(500).json({ err: 'Error on server' })
+        }
     }
 
 
@@ -240,13 +246,17 @@ app.post('/recForm', async (req, res) => {
     const connection = await createDBConnection();
 
     try {
-        const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
-        , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
 
         const [selectionFromRecTable] = await connection.query(`SELECT * FROM recipents_waitinglist WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
 
-        if (selectionFromRecTable.length > 1) {
-            const [updateRecTable] = await connection.query(`UPDATE donations SET organ_id = ?
+        if (selectionFromRecTable.length >= 1) {
+
+
+            const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
+                , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
+
+
+            const [updateRecTable] = await connection.query(`UPDATE recipents_waitinglist SET organ_id = ?
                  WHERE phone_number = ? ` , [organs, actualVerifiedPhoneNumber])
 
 
@@ -260,9 +270,11 @@ app.post('/recForm', async (req, res) => {
             }
         }
         else if (selectionFromRecTable.length === 0) {
+            const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
+                , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
 
-            const [insertionToRecTable] = await connection.query(`INSERT INTO recipents_waitinglist (phone_number , organ_id ) 
-        VALUES (? , ? ) `, [actualVerifiedPhoneNumber, organs]);
+            const [insertionToRecTable] = await connection.query(`INSERT INTO recipents_waitinglist 
+                (phone_number , organ_id ) VALUES (? , ? ) `, [actualVerifiedPhoneNumber, organs]);
 
             if (updateQueryResult || insertionToRecTable) {
                 res.status(200).json({
@@ -274,7 +286,11 @@ app.post('/recForm', async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).json({ message: 'Server error' })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
     }
 
 
@@ -327,7 +343,11 @@ app.post('/recOrgans', async (req, res) => {
 
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
     }
 
 
@@ -386,7 +406,11 @@ app.post('/donOrgans', async (req, res) => {
 
         }
     } catch (error) {
-        res.status(500).json({ message: "Server Error" })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
     }
 
 
@@ -428,7 +452,11 @@ app.post('/recRequests', async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json('Error on server')
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
     }
 
 })
@@ -531,8 +559,10 @@ app.post('/userNotification', async (req, res) => {
 
 
     } catch (error) {
-        if (error) {
-            res.json({ message: error })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
         }
     }
 
@@ -575,8 +605,10 @@ app.post("/updateProfile", async (req, res) => {
         }
 
     } catch (error) {
-        if (error) {
-            res.json({ message: error })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
         }
     }
 
@@ -599,7 +631,11 @@ app.post('/deleteAccount', async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).json({ message: 'server error' })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
     }
 
 })
