@@ -16,7 +16,7 @@ export default function Tablayout() {
             <Tabs.Screen name='analaytics' options={{
                 headerShown: false,
                 tabBarIcon: ({ color, size }) => (<MaterialIcons name="analytics" size={28} color="black" />),
-                tabBarLabel: 'Analaytics'
+                tabBarLabel: 'Statstics'
             }} />
             <Tabs.Screen name='history' options={{
                 headerShown: false,

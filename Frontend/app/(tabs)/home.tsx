@@ -2,7 +2,6 @@
 import baseUrl from '@/src/api';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -17,6 +16,8 @@ export default function home() {
     const [bloodType, setBloodType] = useState('')
     const [role, setRole] = useState('');
     const [organs, setOrgans] = useState<any>([]);
+    const [hidden, setHidden] = useState(true);
+
 
     async function getData() {
 
@@ -150,14 +151,13 @@ export default function home() {
                     <ImageBackground style={styless.boxImage} imageStyle={styless.boxImage}
                         source={require('../../Desgin Templete and Docmentation/home backgorund 1.jpg')}
                     >
-                        <Text style={styless.orderNumber}>{bloodType}</Text>
+                        <Text style={styless.orderNumber}>{hidden ? ('*****') : (bloodType)}  <TouchableOpacity onPress={() => { setHidden(!hidden) }}>
+                            <Feather name="eye" size={20} color="white" />
+                        </TouchableOpacity>  </Text>
                         <View style={styless.text}>
-                            <Text style={styless.statusText}>Name  : {userNameDisplay} </Text>
-                            <Text style={styless.statusText}>Role    : {role} </Text>
-                            <Text style={styless.statusText}>Organ : {organs}</Text>
-                            {/* <TouchableOpacity>
-                                <Feather name="eye" size={22} color="white" />
-                            </TouchableOpacity> */}
+                            <Text style={styless.statusText}>Name  :  {hidden ? ('*****') : (userNameDisplay)} </Text>
+                            <Text style={styless.statusText}>Role    :  {hidden ? ('*****') : (role)} </Text>
+                            <Text style={styless.statusText}>Organ :  {hidden ? ('*****') : (role)}</Text>
                         </View>
 
 
@@ -167,35 +167,31 @@ export default function home() {
                     <View style={styless.box3}>
                         <Text style={styless.box3Title}>Top services</Text>
                         <View style={styless.items}>
-                            <TouchableOpacity style={styless.servicesBtn} onPress={toDonorForm}>
+                            <TouchableOpacity style={styless.servicesBtn1} onPress={toDonorForm}>
                                 <Text><AntDesign name="form" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Donate</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styless.servicesBtn} onPress={toRecForm}>
+                            <TouchableOpacity style={styless.servicesBtn1} onPress={toRecForm}>
                                 <Text><MaterialIcons name="healing" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Organs</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styless.servicesBtn} onPress={() => { router.push('/homePageContents/search') }}>
+                            {/* <TouchableOpacity style={styless.servicesBtn} onPress={() => { router.push('/homePageContents/search') }}>
                                 <Text><Feather name="search" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Search</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styless.servicesBtn} onPress={() => { router.push('/homePageContents/help') }}>
+                            </TouchableOpacity> */}
+                            <TouchableOpacity style={styless.servicesBtn1} onPress={() => { router.push('/homePageContents/help') }}>
                                 <Text><Feather name="help-circle" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Help</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styless.servicesBtn} onPress={() => { router.push('/homePageContents/calculator') }}>
+                            <TouchableOpacity style={styless.servicesBtn1} onPress={() => { router.push('/homePageContents/calculator') }}>
                                 <Text><AntDesign name="calculator" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Calculator</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styless.servicesBtn}>
-                                <Text><FontAwesome6 name="newspaper" size={24} color="black" /></Text>
-                                <Text style={styless.logoTitiles}>News</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styless.servicesBtn}>
+                            <TouchableOpacity style={styless.servicesBtn1}>
                                 <Text><Ionicons name="chatbubble-ellipses-outline" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Chat bot</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styless.servicesBtn} onPress={() => { router.push('/homePageContents/foods') }}>
+                            <TouchableOpacity style={styless.servicesBtn1} onPress={() => { router.push('/homePageContents/foods') }}>
                                 <Text><MaterialCommunityIcons name="food-fork-drink" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Foods</Text>
                             </TouchableOpacity>
@@ -320,6 +316,16 @@ const styless = StyleSheet.create({
     servicesBtn: {
         height: 90,
         width: '21%',
+        backgroundColor: "rgba(42, 146, 201, 0.1)",
+        opacity: 1,
+        margin: 7,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 7
+    },
+    servicesBtn1: {
+        height: 85,
+        width: '29%',
         backgroundColor: "rgba(42, 146, 201, 0.1)",
         opacity: 1,
         margin: 7,
