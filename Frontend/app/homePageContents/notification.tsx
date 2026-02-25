@@ -15,19 +15,24 @@ export default function notification() {
 
 
     async function getNotificationdata() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const request = await axios.post(`${baseUrl}/userNotification`, { token })
 
-        const token = await AsyncStorage.getItem('token');
-        const request = await axios.post(`${baseUrl}/userNotification`, { token })
+            if (request.status === 200) {
 
-        if (request.status === 200) {
+                setApprovedData(request.data.message)
+                setArrow(request.data.arrow)
+            }
+            else if (request.status === 201) {
+                setNotFound('Empty Notification');
+            } else {
+                setNotFound(request.data.message)
+            }
 
-            setApprovedData(request.data.message)
-            setArrow(request.data.arrow)
-        }
-        else if (request.status === 201) {
-            setNotFound('Empty Notification');
-        } else {
-            setNotFound(request.data.message)
+        } catch (error: any) {
+            setNotFound(error.response.data.err)
+
         }
 
     }

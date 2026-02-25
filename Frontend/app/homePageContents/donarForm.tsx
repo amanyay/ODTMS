@@ -31,23 +31,29 @@ export default function donarForm() {
 
     async function submit() {
 
-        if (age === "" || location === "" || gender === "" || lastName === "") {
-            setError('Please fill all field');
-        }
-
-        else {
-            if (age !== "" || location !== "" || gender !== "" || lastName !== "") {
-                const tokenToBackEnd = await AsyncStorage.getItem("token");
-                const request = await axios.post(`${baseUrl}/donorsForm`, { lastName, age, location, gender, bloodType, tokenToBackEnd, organs })
-                const status = request.status;
-                if (status === 200) {
-                    router.push('/homePageContents/successful')
-                } else {
-                    setError("Please try again")
-                }
+        try {
+            if (age === "" || location === "" || gender === "" || lastName === "") {
+                setError('Please fill all field');
             }
 
+            else {
+                if (age !== "" || location !== "" || gender !== "" || lastName !== "") {
+                    const tokenToBackEnd = await AsyncStorage.getItem("token");
+                    const request = await axios.post(`${baseUrl}/donorsForm`, { lastName, age, location, gender, bloodType, tokenToBackEnd, organs })
+                    const status = request.status;
+                    if (status === 200) {
+                        router.push('/homePageContents/successful')
+                    } else {
+                        setError("Please try again")
+                    }
+                }
+
+            }
+        } catch (error: any) {
+            setError(error.response.data.err)
+
         }
+
 
 
     }

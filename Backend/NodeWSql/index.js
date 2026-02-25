@@ -40,8 +40,10 @@ app.post("/signUp", async (req, res) => {
 
     } catch (error) {
 
-        if (error) {
-            res.status(500).json({ err: 'Error on server' })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
         }
 
     }
@@ -74,8 +76,10 @@ app.post('/login', async (req, res) => {
 
     } catch (error) {
 
-        if (error) {
-            res.status(500).json({ err: 'Error on server' })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
         }
 
     }
@@ -133,8 +137,10 @@ app.post('/home', async (req, res) => {
 
 
     } catch (error) {
-        if (error) {
-            res.status(500).json({ err: 'Error on server' })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
         }
     }
 
@@ -170,8 +176,10 @@ app.post('/profile', async (req, res) => {
 
 
     } catch (error) {
-        if (error) {
-            res.status(500).json({ err: 'Error on server' })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
         }
     }
 
@@ -229,8 +237,10 @@ app.post('/donorsForm', async (req, res) => {
             res.status(201).json({ message: 'Error in updating' })
         }
     } catch (error) {
-        if (error) {
-            res.status(500).json({ err: 'Error on server' })
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
         }
     }
 

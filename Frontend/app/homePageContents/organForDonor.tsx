@@ -15,18 +15,23 @@ export default function organs() {
     async function getOrganForDon() {
 
 
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const donAge = await AsyncStorage.getItem('donAge');
+            const donBloodType = await AsyncStorage.getItem('donBloodType');
+            const request = await axios.post(`${baseUrl}/donOrgans`, { token, donAge, donBloodType });
 
-        const token = await AsyncStorage.getItem('token');
-        const donAge = await AsyncStorage.getItem('donAge');
-        const donBloodType = await AsyncStorage.getItem('donBloodType');
-        const request = await axios.post(`${baseUrl}/donOrgans`, { token, donAge, donBloodType });
+            if (request.data.message === '404') {
+                setNotFound('No match found');
+            }
+            else if (request.data.message !== '404') {
+                setOrgans(request.data.message);
+            }
+        } catch (error: any) {
+            setNotFound(error.response.data.err)
 
-        if (request.data.message === '404') {
-            setNotFound('No match found');
         }
-        else if (request.data.message !== '404') {
-            setOrgans(request.data.message);
-        }
+
 
     }
 

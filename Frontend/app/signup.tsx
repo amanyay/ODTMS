@@ -29,42 +29,49 @@ const login = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const passwordRegex = /[0-9A-Za-z]{2,}/
 
+        try {
 
+            if (firstName === "" || phoneNumber === "" || email === "" || password === "" || selectedValue === "") {
 
-        if (firstName === "" || phoneNumber === "" || email === "" || password === "" || selectedValue === "") {
+                setError("Please fill all field !!!");
 
-            setError("Please fill all field !!!");
-
-        }
-        else if (!phoneNumberRegex.test(phoneNumber)) {
-            setError("Invalid phone number");
-        }
-        else if (!emailRegex.test(email)) {
-            setError("Invalid email");
-        }
-        else if (!passwordRegex.test(password)) {
-            setError("Invalid password");
-        }
-        else if (phoneNumberRegex.test(phoneNumber) || emailRegex.test(email) || passwordRegex.test(password)) {
-
-
-            const response = await axios.post(`${baseUrl}/signUp`, { firstName, phoneNumber, email, password, selectedValue });
-
-            if (response.status === 200) {
-                setError(response.data.message);
-                router.push('/login')
             }
-            else if (response.status === 201) {
-                setError(response.data.message)
+            else if (!phoneNumberRegex.test(phoneNumber)) {
+                setError("Invalid phone number");
             }
-            else if (response.status === 500) {
-                setError(response.data.message)
+            else if (!emailRegex.test(email)) {
+                setError("Invalid email");
             }
+            else if (!passwordRegex.test(password)) {
+                setError("Invalid password");
+            }
+            else if (phoneNumberRegex.test(phoneNumber) || emailRegex.test(email) || passwordRegex.test(password)) {
+
+
+                const response = await axios.post(`${baseUrl}/signUp`, { firstName, phoneNumber, email, password, selectedValue });
+
+                if (response.status === 200) {
+                    setError(response.data.message);
+                    router.push('/login')
+                }
+                else if (response.status === 201) {
+                    setError(response.data.message)
+                }
+                else if (response.status === 500) {
+                    setError(response.data.message)
+                }
 
 
 
+
+            }
+        } catch (error: any) {
+
+            setError(error.response.data.err)
 
         }
+
+
 
 
     }

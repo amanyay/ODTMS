@@ -16,20 +16,26 @@ export default function organs() {
 
   async function getOrganForRecs() {
 
+    try {
 
-    const token = await AsyncStorage.getItem('token');
-    const recAge = await AsyncStorage.getItem('recAge');
-    const userOrgan = await AsyncStorage.getItem('userOrgan');
-    const recBloodType = await AsyncStorage.getItem('recBloodType');
-    const request = await axios.post(`${baseUrl}/recOrgans`, { token, recAge, recBloodType, userOrgan });
+      const token = await AsyncStorage.getItem('token');
+      const recAge = await AsyncStorage.getItem('recAge');
+      const userOrgan = await AsyncStorage.getItem('userOrgan');
+      const recBloodType = await AsyncStorage.getItem('recBloodType');
+      const request = await axios.post(`${baseUrl}/recOrgans`, { token, recAge, recBloodType, userOrgan });
 
-    if (request.status === 201) {
-      setNotFound('No match found');
-    }
-    else if (request.status !== 201) {
-      setOrgans(request.data.message);
-      // console.log(organs)
-      // console.log(request.data.message)
+      if (request.status === 201) {
+        setNotFound('No match found');
+      }
+      else if (request.status !== 201) {
+        setOrgans(request.data.message);
+        // console.log(organs)
+        // console.log(request.data.message)
+      }
+    } catch (error: any) {
+
+      setNotFound(error.response.data.err)
+
     }
   }
   useEffect(() => {
@@ -38,17 +44,24 @@ export default function organs() {
 
   async function sendRequest(item: any) {
 
-    const token = await AsyncStorage.getItem('token');
-    const request = await axios.post(`${baseUrl}/recRequests`, { token, donorPhoneNumber: item.phone_numbers, organId: item.organ_id });
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const request = await axios.post(`${baseUrl}/recRequests`, { token, donorPhoneNumber: item.phone_numbers, organId: item.organ_id });
 
-    if (request.status === 201) {
-      router.replace('/homePageContents/successful');
+      if (request.status === 201) {
+        router.replace('/homePageContents/successful');
+      }
+      else if (request.status === 200) {
+        setEachReqError("Request already sent try to send another request !!!")
+      } else {
+        setNotFound("Server Error please try again")
+      }
+    } catch (error: any) {
+
+      setNotFound(error.response.data.err)
+
     }
-    else if (request.status === 200) {
-      setEachReqError("Request already sent try to send another request !!!")
-    } else {
-      setNotFound("Server Error please try again")
-    }
+
 
   }
 

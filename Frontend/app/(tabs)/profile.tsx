@@ -15,21 +15,29 @@ export default function map() {
     const [displayAge, setDisplayage] = useState('');
     const [displayBloodType, setDisplayBloodType] = useState('');
     const [displayLocation, setDisplayLocation] = useState('');
-    // const [error, setError] = useState('');
+    const [error, setError] = useState('');
 
 
     async function displayUsersData() {
 
-        const token = await AsyncStorage.getItem('token');
+        try {
+            const token = await AsyncStorage.getItem('token');
 
-        const request = await axios.post(`${baseUrl}/profile`, { token });
+            const request = await axios.post(`${baseUrl}/profile`, { token });
 
-        setDisplayName(request.data.message.first_name);
-        setDisplayPhoneNumber(request.data.message.phone_number);
-        setDisplayEmail(request.data.message.email);
-        setDisplayage(request.data.message.age);
-        setDisplayBloodType(request.data.message.blood_type);
-        setDisplayLocation(request.data.message.location)
+            setDisplayName(request.data.message.first_name);
+            setDisplayPhoneNumber(request.data.message.phone_number);
+            setDisplayEmail(request.data.message.email);
+            setDisplayage(request.data.message.age);
+            setDisplayBloodType(request.data.message.blood_type);
+            setDisplayLocation(request.data.message.location)
+        } catch (error: any) {
+
+            setError(error.response.data.err)
+
+        }
+
+
 
     }
 
@@ -39,13 +47,22 @@ export default function map() {
         router.replace('/login')
     }
     async function deleteAccount() {
-        const token = await AsyncStorage.getItem('token');
-        const request = await axios.post(`${baseUrl}/deleteAccount`, { token })
 
-        if (request.status === 200) {
-            await AsyncStorage.removeItem('token');
-            router.replace('/login')
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const request = await axios.post(`${baseUrl}/deleteAccount`, { token })
+
+            if (request.status === 200) {
+                await AsyncStorage.removeItem('token');
+                router.replace('/login')
+            }
+        } catch (error: any) {
+
+            setError(error.response.data.err)
+
         }
+
+
 
 
     }
@@ -72,6 +89,7 @@ export default function map() {
                     </TouchableOpacity>
                     <Text style={style.title}>Edit Profile</Text>
                 </View>
+                <Text style={style.error}>{error}</Text>
                 <View style={style.profileImageBox}>
                     <View style={style.profileImage}>
 
@@ -152,6 +170,10 @@ const style = StyleSheet.create({
         fontSize: 25,
         color: 'white',
         fontWeight: 'bold'
+    },
+    error: {
+        marginTop: 10,
+        textAlign: 'center'
     },
     profileImageBox: {
         // backgroundColor:'blue',

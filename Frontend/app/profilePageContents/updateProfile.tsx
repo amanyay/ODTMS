@@ -31,25 +31,31 @@ export default function changeProfile() {
 
 
 
-
-
-    if (firstName === "" || lastName === "" || age === "" || location === "" || gender === "" || email === "" || bloodType === "") {
-      setError('Please fill all field !!!');
-    }
-
-    else {
-      if (firstName !== "" || lastName !== "" || age !== "" || location !== "" || gender !== "" || email !== "" || bloodType !== "") {
-
-        const token = await AsyncStorage.getItem("token");
-        const request = await axios.post(`${baseUrl}/updateProfile`, { token, firstName, lastName, email, age, location, gender, bloodType })
-        if (request.status === 200) {
-          router.replace('/homePageContents/successful')
-        } else {
-          setError(request.data.message)
-        }
+    try {
+      if (firstName === "" || lastName === "" || age === "" || location === "" || gender === "" || email === "" || bloodType === "") {
+        setError('Please fill all field !!!');
       }
 
+      else {
+        if (firstName !== "" || lastName !== "" || age !== "" || location !== "" || gender !== "" || email !== "" || bloodType !== "") {
+
+          const token = await AsyncStorage.getItem("token");
+          const request = await axios.post(`${baseUrl}/updateProfile`, { token, firstName, lastName, email, age, location, gender, bloodType })
+          if (request.status === 200) {
+            router.replace('/homePageContents/successful')
+          } else {
+            setError(request.data.message)
+          }
+        }
+
+      }
+    } catch (error: any) {
+
+      setError(error.response.data.err)
+
     }
+
+
 
 
 

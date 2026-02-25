@@ -15,17 +15,26 @@ export default function history() {
 
   async function allhistory() {
 
-    const token = await AsyncStorage.getItem('token');
-    const request = await axios.post(`${baseUrl}/history`, { token });
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const request = await axios.post(`${baseUrl}/history`, { token });
 
 
-    if (request.data.message.length > 0) {
-      setRequests(request.data.message)
-      setTextType(request.data.text)
+      if (request.data.message.length > 0) {
+        setRequests(request.data.message)
+        setTextType(request.data.text)
+      }
+      else if (request.data.message.length < 1) {
+        setError('No request found')
+      }
+
+    } catch (error: any) {
+
+      setError(error.response.data.err)
+
     }
-    else if (request.data.message.length < 1) {
-      setError('No request found')
-    }
+
+
 
 
   }
@@ -51,21 +60,21 @@ export default function history() {
       </TouchableOpacity>
       <Text style={style.box1}>{error}</Text>
 
-          <FlatList
-            data={requests}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={style.eachRequests}>
-                <Text style={style.eachRequestsData1}>{item.first_name}</Text>
-                <Text style={style.eachRequestsData2}>Track Id : {item.id}</Text>
-                <Text style={style.eachRequestsData2}>{textType}  → {item.organ_name}</Text>
-                <Text style={style.eachRequestsData3}>Date : {item.date}</Text>
-                <Text style={style.eachRequestsData3}>Status : {item.status === "Pending" ? (<Text><Entypo name="dot-single" size={23} color="red" />Pending</Text>) : (<Text><Entypo name="dot-single" size={28} color="green" />Approved</Text>)}</Text>
+      <FlatList
+        data={requests}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={style.eachRequests}>
+            <Text style={style.eachRequestsData1}>{item.first_name}</Text>
+            <Text style={style.eachRequestsData2}>Track Id : {item.id}</Text>
+            <Text style={style.eachRequestsData2}>{textType}  → {item.organ_name}</Text>
+            <Text style={style.eachRequestsData3}>Date : {item.date}</Text>
+            <Text style={style.eachRequestsData3}>Status : {item.status === "Pending" ? (<Text><Entypo name="dot-single" size={23} color="red" />Pending</Text>) : (<Text><Entypo name="dot-single" size={28} color="green" />Approved</Text>)}</Text>
 
-              </View>
-            )}
-          />
-       
+          </View>
+        )}
+      />
+
 
 
 

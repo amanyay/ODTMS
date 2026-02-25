@@ -17,29 +17,39 @@ export default function home() {
     const [role, setRole] = useState('');
     const [organs, setOrgans] = useState<any>([]);
     const [hidden, setHidden] = useState(true);
+    const [error, setError] = useState("")
 
 
     async function getData() {
 
-        const token = await AsyncStorage.getItem("token");
-        if (!token) {
-            router.push('/login')
-        } else {
-            const request = await axios.post(`${baseUrl}/home`, { token });
+
+        try {
+            const token = await AsyncStorage.getItem("token");
+            if (!token) {
+                router.push('/login')
+            } else {
+                const request = await axios.post(`${baseUrl}/home`, { token });
 
 
 
-            setUserNameDisplay(request.data.message.first_name)
-            setBloodType(request.data.message.blood_type)
-            setRole(request.data.message.role);
-            if (request.data.joinMessage.length > 0) {
-                setOrgans(request.data.joinMessage[0].organ_name);
-            } else if (request.data.joinMessage.length < 1) {
-                setOrgans('')
+                setUserNameDisplay(request.data.message.first_name)
+                setBloodType(request.data.message.blood_type)
+                setRole(request.data.message.role);
+                if (request.data.joinMessage.length > 0) {
+                    setOrgans(request.data.joinMessage[0].organ_name);
+                } else if (request.data.joinMessage.length < 1) {
+                    setOrgans('')
+                }
+
+
             }
+        } catch (error: any) {
 
+            setError(error.response.data.err)
 
         }
+
+
 
     }
 
@@ -56,63 +66,80 @@ export default function home() {
 
     async function toDonorForm() {
 
-        const token = await AsyncStorage.getItem('token');
-        const request = await axios.post(`${baseUrl}/home`, { token });
-        const userRole = request.data.message.role;
-        const length = request.data.joinMessage;
-        const userBloodType = request.data.message.blood_type;
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const request = await axios.post(`${baseUrl}/home`, { token });
+            const userRole = request.data.message.role;
+            const length = request.data.joinMessage;
+            const userBloodType = request.data.message.blood_type;
 
-        // console.log(recAge)
+            // console.log(recAge)
 
-        if (userRole === 'recipents') {
+            if (userRole === 'recipents') {
 
-            Alert.alert("You are recipents not allowed")
+                Alert.alert("You are recipents not allowed")
+
+            }
+            else {
+                if (userBloodType === null || length.length < 1) {
+                    router.push('/homePageContents/donarForm')
+                }
+                else if (userBloodType !== null) {
+                    const donAge = request.data.message.age.toString();
+                    const userOrgan = request.data.joinMessage[0].organ_id.toString();
+                    AsyncStorage.setItem('donAge', donAge)
+                    AsyncStorage.setItem('donBloodType', userBloodType)
+                    AsyncStorage.setItem('userOrgan', userOrgan);
+                    router.push('/homePageContents/organForDonor')
+                }
+
+            }
+        } catch (error: any) {
+
+            setError(error.response.data.err)
 
         }
-        else {
-            if (userBloodType === null || length.length < 1) {
-                router.push('/homePageContents/donarForm')
-            }
-            else if (userBloodType !== null) {
-                const donAge = request.data.message.age.toString();
-                const userOrgan = request.data.joinMessage[0].organ_id.toString();
-                AsyncStorage.setItem('donAge', donAge)
-                AsyncStorage.setItem('donBloodType', userBloodType)
-                AsyncStorage.setItem('userOrgan', userOrgan);
-                router.push('/homePageContents/organForDonor')
-            }
 
-        }
+
 
     }
 
     async function toRecForm() {
 
-        const token = await AsyncStorage.getItem('token');
-        const request = await axios.post(`${baseUrl}/home`, { token });
-        const userBloodType = request.data.message.blood_type;
-        const userRole = request.data.message.role;
-        const length = request.data.joinMessage;
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const request = await axios.post(`${baseUrl}/home`, { token });
+            const userBloodType = request.data.message.blood_type;
+            const userRole = request.data.message.role;
+            const length = request.data.joinMessage;
 
-        if (userRole === 'donor') {
+            if (userRole === 'donor') {
 
-            Alert.alert("You are donor not allowed")
+                Alert.alert("You are donor not allowed")
+
+            }
+            else {
+
+                if (userBloodType === null || length.length < 1) {
+                    router.push('/homePageContents/recipentsForm')
+                }
+                else if (userBloodType !== null) {
+                    const recAge = request.data.message.age.toString();
+                    const userOrgan = request.data.joinMessage[0].organ_id.toString();
+                    AsyncStorage.setItem('recAge', recAge)
+                    AsyncStorage.setItem('recBloodType', userBloodType)
+                    AsyncStorage.setItem('userOrgan', userOrgan);
+                    router.push('/homePageContents/organs')
+                }
+            }
+
+        } catch (error: any) {
+
+            setError(error.response.data.err)
 
         }
-        else {
 
-            if (userBloodType === null || length.length < 1) {
-                router.push('/homePageContents/recipentsForm')
-            }
-            else if (userBloodType !== null) {
-                const recAge = request.data.message.age.toString();
-                const userOrgan = request.data.joinMessage[0].organ_id.toString();
-                AsyncStorage.setItem('recAge', recAge)
-                AsyncStorage.setItem('recBloodType', userBloodType)
-                AsyncStorage.setItem('userOrgan', userOrgan);
-                router.push('/homePageContents/organs')
-            }
-        }
+
 
 
 
@@ -157,11 +184,14 @@ export default function home() {
                         <View style={styless.text}>
                             <Text style={styless.statusText}>Name  :  {hidden ? ('*****') : (userNameDisplay)} </Text>
                             <Text style={styless.statusText}>Role    :  {hidden ? ('*****') : (role)} </Text>
-                            <Text style={styless.statusText}>Organ :  {hidden ? ('*****') : (role)}</Text>
+                            <Text style={styless.statusText}>Organ :  {hidden ? ('*****') : (organs)}</Text>
                         </View>
 
 
                     </ImageBackground>
+                </View>
+                <View style={styless.error}>
+                    <Text style={styless.errorText}>{error}</Text>
                 </View>
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 50 }}>
                     <View style={styless.box3}>
@@ -291,10 +321,20 @@ const styless = StyleSheet.create({
         fontFamily: 'monospace',
         flexDirection: 'column'
     },
+    error: {
+        // backgroundColor: 'red',
+        marginTop: 10,
+        marginBottom: '0%',
+        alignItems: 'center'
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14
+    },
     box3: {
         // backgroundColor: 'yellow',
         marginLeft: '0%',
-        marginTop: '2%',
+        marginTop: '0%',
         width: '98%'
     },
     box3Title: {
