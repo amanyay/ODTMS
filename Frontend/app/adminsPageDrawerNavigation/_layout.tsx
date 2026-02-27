@@ -31,7 +31,28 @@ export default function Layout() {
           title: 'Requests',
         }}
       />
-      
+      <Drawer.Screen
+        name="editCompleteTransplant"
+        options={{
+          drawerLabel: 'Edit complete request',
+          title: 'Complete Transplant',
+        }}
+      />
+      <Drawer.Screen
+        name="editAdmins"
+        options={{
+          drawerLabel: 'Edit admins',
+          title: 'Admins',
+        }}
+      />
+      <Drawer.Screen
+        name="adminProfile"
+        options={{
+          drawerLabel: 'My profile',
+          headerShown: false
+        }}
+      />
+
     </Drawer>
   );
 }

@@ -1,22 +1,32 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import EvilIcons from '@expo/vector-icons/EvilIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function editDonors() {
 
 
 
   const [donors, setDonors] = useState<any>([])
+  const [error, setError] = useState("")
 
   async function getDonors() {
 
-    const token = await AsyncStorage.getItem('token');
-    const request = await axios.post(`${baseUrl}/adminDonorsData`, { token });
-    setDonors(request.data.message)
+    try {
+
+      const token = await AsyncStorage.getItem('token');
+      const request = await axios.post(`${baseUrl}/adminDonorsData`, { token });
+      setDonors(request.data.message)
+
+    } catch (error: any) {
+
+      setError(error.response.data.err)
+
+    }
+
 
   }
 
@@ -36,15 +46,15 @@ export default function editDonors() {
         <TouchableOpacity style={style.box2Btn}>
           <Text style={style.box2BtnText}>ADD</Text>
         </TouchableOpacity>
-        <TextInput placeholder='  Search' style={style.box2Input} placeholderTextColor={'white'} />
+        <Text>{error}</Text>
         <TouchableOpacity style={style.box2BtnRefresh} onPress={(getDonors)}>
-                    <Text style={style.box2BtnText}><EvilIcons name="refresh" size={40} color="black" /></Text>
-                </TouchableOpacity>
+          <Text style={style.box2BtnText}><Text><AntDesign name="reload" size={30} color="black" /></Text></Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
         data={donors}
-        keyExtractor={(item) => item.phone_number.toString()}
+        keyExtractor={(item) => item.phone_numbers.toString()}
         //organ is an object inside array
         //item represent one object at a time from the array tha recive from database 
         renderItem={({ item }) => (
@@ -60,9 +70,6 @@ export default function editDonors() {
             <Text style={style.organBoxText4}>Date -  <Text style={style.datas}>{item.donation_date}</Text></Text>
             <Text style={style.organBoxText4}>Status -  <Text style={style.datas}>{item.status}</Text></Text>
             <View style={style.updateAndRemoveBtn}>
-              <TouchableOpacity style={style.updateBtnBox}>
-                <Text style={style.updateBtnText}>Update</Text>
-              </TouchableOpacity>
               <TouchableOpacity style={style.removeBtnBox}>
                 <Text style={style.removeBtnText}>Remove</Text>
               </TouchableOpacity>
@@ -103,12 +110,12 @@ const style = StyleSheet.create({
     fontSize: 18
   },
   box2BtnRefresh: {
-        marginRight: '5%',
-        // backgroundColor: "rgba(42, 146, 201, 0.7)",
-        width: '8%',
-        marginLeft: '1%',
-        justifyContent: 'center',
-    },
+    marginRight: '5%',
+    // backgroundColor: "rgba(42, 146, 201, 0.7)",
+    width: '8%',
+    marginLeft: '1%',
+    justifyContent: 'center',
+  },
   box2Input: {
     fontSize: 19,
     width: '50%',

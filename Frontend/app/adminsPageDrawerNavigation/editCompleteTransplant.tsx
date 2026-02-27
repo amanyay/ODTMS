@@ -12,17 +12,18 @@ export default function editDonors() {
 
     const [donors, setDonors] = useState<any>([])
     const [error, setError] = useState("")
+    const [notFound, setNotFound] = useState('');
 
     async function getRequest() {
         try {
             const token = await AsyncStorage.getItem('token');
-            const request = await axios.post(`${baseUrl}/adminRequestData`, { token });
+            const request = await axios.post(`${baseUrl}/adminCompleteRequestData`, { token });
             if (request.status === 200) {
                 setDonors(request.data.message)
+            } else if (request.status === 201) {
+                setNotFound(request.data.message)
             }
-            else if (request.status === 201) {
-                setError(request.data.message)
-            }
+
 
         } catch (error: any) {
 
@@ -36,13 +37,11 @@ export default function editDonors() {
     async function approve(item: any) {
         try {
             const token = await AsyncStorage.getItem('token');
-            const request = await axios.post(`${baseUrl}/adminRequestApp`, { token, requestId: item.id, status: item.status });
+            const request = await axios.post(`${baseUrl}/adminCompleteReq`, { token, requestId: item.id, status: item.status, rec_phone_number: item.rec_phone_number, don_phone_number: item.don_phone_number });
             if (request.status === 200) {
                 setError(request.data.message)
             }
-            else if (request.status === 201) {
-                setError(request.data.message)
-            }
+
         } catch (error: any) {
 
             setError(error.response.data.err)
@@ -74,6 +73,9 @@ export default function editDonors() {
                     <Text style={style.box2BtnText}><AntDesign name="reload" size={30} color="black" /></Text>
                 </TouchableOpacity>
             </View>
+            <View style={{ height: 40, marginBottom: 10 }}>
+                <Text style={{ textAlign: 'center', fontSize: 21, color: 'red' }}>{notFound}</Text>
+            </View>
 
             <FlatList
                 data={donors}
@@ -96,7 +98,7 @@ export default function editDonors() {
                         <Text style={style.organBoxText4}>Status -  <Text style={style.datas}>{item.status}</Text></Text>
                         <View style={style.updateAndRemoveBtn}>
                             <TouchableOpacity style={style.removeBtnBox} onPress={() => approve(item)}>
-                                <Text style={style.removeBtnText}>Approve</Text>
+                                <Text style={style.removeBtnText}>Completed</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -114,9 +116,9 @@ const style = StyleSheet.create({
     box2: {
         flexDirection: 'row',
         width: '100%',
-        // backgroundColor:'blue',
+        // backgroundColor: 'blue',
         justifyContent: 'space-between',
-        marginBottom: '7%',
+        marginBottom: '3%',
         marginTop: '7%',
         marginRight: '5%'
     },

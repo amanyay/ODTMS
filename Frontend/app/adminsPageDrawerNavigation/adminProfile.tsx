@@ -115,9 +115,9 @@ export default function map() {
                     </View>
                     <TouchableOpacity style={style.changeProfile}><Text style={style.changeProfileText}>Edit Profile Picture</Text></TouchableOpacity>
                 </View>
-                <TouchableOpacity style={style.toAdminPanel} onPress={() => { router.push("/adminsPageDrawerNavigation/editOrgans") }}>
+                {/* <TouchableOpacity style={style.toAdminPanel} onPress={() => { router.push("/adminsPageDrawerNavigation/editOrgans") }}>
                     <Text style={style.toAdminPanelText}>Admin Panel</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <ScrollView style={{ flex: 1, paddingBottom: 80 }}>
                     <View style={style.box3}>
                         <Text style={style.box3Text}>Name</Text>

@@ -1,22 +1,29 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import EvilIcons from '@expo/vector-icons/EvilIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function editDonors() {
 
 
 
   const [recipents, setrecipents] = useState<any>([])
-
+  const [error, setError] = useState("")
   async function getRec() {
 
-    const token = await AsyncStorage.getItem('token');
-    const request = await axios.post(`${baseUrl}/adminRecipentsData`, { token });
-    setrecipents(request.data.message)
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const request = await axios.post(`${baseUrl}/adminRecipentsData`, { token });
+      setrecipents(request.data.message)
+    } catch (error: any) {
+
+      setError(error.response.data.err)
+
+    }
+
 
   }
 
@@ -36,9 +43,9 @@ export default function editDonors() {
         <TouchableOpacity style={style.box2Btn}>
           <Text style={style.box2BtnText}>ADD</Text>
         </TouchableOpacity>
-        <TextInput placeholder='  Search' style={style.box2Input} placeholderTextColor={'white'} />
+        <Text>{error}</Text>
         <TouchableOpacity style={style.box2BtnRefresh} onPress={(getRec)}>
-          <Text style={style.box2BtnText}><EvilIcons name="refresh" size={40} color="black" /></Text>
+          <Text style={style.box2BtnText}><AntDesign name="reload" size={30} color="black" /></Text>
         </TouchableOpacity>
       </View>
 
@@ -60,9 +67,6 @@ export default function editDonors() {
             <Text style={style.organBoxText4}>Date -  <Text style={style.datas}>{item.reg_date}</Text></Text>
             <Text style={style.organBoxText4}>Status -  <Text style={style.datas}>{item.status}</Text></Text>
             <View style={style.updateAndRemoveBtn}>
-              <TouchableOpacity style={style.updateBtnBox}>
-                <Text style={style.updateBtnText}>Update</Text>
-              </TouchableOpacity>
               <TouchableOpacity style={style.removeBtnBox}>
                 <Text style={style.removeBtnText}>Remove</Text>
               </TouchableOpacity>

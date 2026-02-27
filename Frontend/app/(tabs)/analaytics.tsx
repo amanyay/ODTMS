@@ -109,7 +109,7 @@ const style = StyleSheet.create({
     },
     dataBox: {
         backgroundColor: 'rgba(255, 244, 244, 0.86)',
-        width: '40%',
+        width: '41%',
         margin: '4%',
         marginLeft: '5%',
         marginTop: '15%',
@@ -123,7 +123,7 @@ const style = StyleSheet.create({
     },
     dataBoxText2: {
         marginTop: '30%',
-        fontSize: 20
+        fontSize: 20,
     },
     error: {
         width: '100%',

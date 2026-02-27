@@ -8,14 +8,12 @@ import { ActivityIndicator, ImageBackground, StyleSheet, Text, TextInput, Toucha
 
 
 
-const login = () => {
+const administrator = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState('');
     const [loading, setIsLoading] = useState(false);
-    function toSignupPage() {
-        router.replace("/signup");
-    }
+
 
 
 
@@ -26,13 +24,13 @@ const login = () => {
             }
             else {
                 setIsLoading(true);
-                const request = await axios.post(`${baseUrl}/login`, { phoneNumber, password });
+                const request = await axios.post(`${baseUrl}/adminLogin`, { phoneNumber, password });
                 setIsLoading(false);
                 setError("");
 
                 if (request.status === 200) {
                     AsyncStorage.setItem('token', request.data.token)
-                    router.replace('/(tabs)/home')
+                    router.replace('/adminsPageDrawerNavigation/editOrgans')
                 }
                 else if (request.status === 201) {
                     setError(request.data.message)
@@ -53,24 +51,23 @@ const login = () => {
 
     return (
         <ImageBackground
-            source={require('../Desgin Templete and Docmentation/background 3.jpg')}
+            source={require('../Desgin Templete and Docmentation/background 2.jpg')}
             style={styles.box}
             resizeMode="cover"
         >
             <View style={styles.box1}>
-                <Text style={styles.title}>Login</Text>
+                <Text style={styles.title}>Administrator login</Text>
             </View>
             <View style={styles.box2}>
                 <TextInput inputMode="numeric" placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
                 <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
                 <Text style={styles.errorMessage}>{error}</Text>
-                <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Login</Text></TouchableOpacity>
-                <Text style={styles.signUpBox}>Don{"'"}t have an account ? <TouchableOpacity onPress={toSignupPage}><Text style={styles.commonText}> sign up</Text></TouchableOpacity></Text>
+                <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Login as admin</Text></TouchableOpacity>
                 {loading ? (<ActivityIndicator size="large" color="#0000ff" />) : (<Text></Text>)}
             </View>
             <View>
-                <TouchableOpacity style={styles.asAdmin} onPress={() => { router.replace("/AdminstratorLogin") }}>
-                    <Text>Login as Administrator</Text>
+                <TouchableOpacity style={styles.asAdmin} onPress={() => { router.replace("/login") }}>
+                    <Text>Login as user</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>
@@ -79,7 +76,7 @@ const login = () => {
 
 }
 
-export default login
+export default administrator
 
 const styles = StyleSheet.create({
 
@@ -100,16 +97,16 @@ const styles = StyleSheet.create({
         height: '55%'
     },
     title: {
-        fontSize: 35,
+        fontSize: 34,
         fontWeight: '500',
         marginBottom: '3%',
-        color: 'black',
-        letterSpacing: 1,
+        color: 'white',
+        letterSpacing: 0,
         marginLeft: "10%",
 
     },
     commonText: {
-        color: 'blue',
+        color: 'red',
         fontSize: 18
     },
     input: {
@@ -151,7 +148,7 @@ const styles = StyleSheet.create({
     },
     signUpBox: {
         marginLeft: '6%',
-        color: 'black',
+        color: 'white',
         alignSelf: 'center',
         marginBottom: "5%"
     },

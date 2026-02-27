@@ -69,7 +69,7 @@ export default function history() {
             <Text style={style.eachRequestsData2}>Track Id : {item.id}</Text>
             <Text style={style.eachRequestsData2}>{textType}  → {item.organ_name}</Text>
             <Text style={style.eachRequestsData3}>Date : {item.date}</Text>
-            <Text style={style.eachRequestsData3}>Status : {item.status === "Pending" ? (<Text><Entypo name="dot-single" size={23} color="red" />Pending</Text>) : (<Text><Entypo name="dot-single" size={28} color="green" />Approved</Text>)}</Text>
+            <Text style={style.eachRequestsData3}>Status : {item.status === "Pending" ? (<Text><Entypo name="dot-single" size={23} color="red" />Pending</Text>) : (<Text><Entypo name="dot-single" size={28} color="green" />{item.status}</Text>)}</Text>
 
           </View>
         )}

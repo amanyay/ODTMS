@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import EvilIcons from '@expo/vector-icons/EvilIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 
 
 export default function organs() {
 
   const [organ, setOrgans] = useState<any>([]);
+  const [error, setError] = useState('')
   // type Organ = {
   //   id: number;
   //   type: string;
@@ -20,11 +20,20 @@ export default function organs() {
 
 
   async function getOrgansdata() {
+    try {
 
-    const token = await AsyncStorage.getItem("token");
+      const token = await AsyncStorage.getItem("token");
+      const request = await axios.post(`${baseUrl}/adminOrgansData`, { token });
+      setOrgans(request.data.message);
 
-    const request = await axios.post(`${baseUrl}/adminOrgansData`, { token });
-    setOrgans(request.data.message);
+    } catch (error: any) {
+
+      setError(error.response.data.err)
+
+    }
+
+
+
 
   }
 
@@ -45,9 +54,9 @@ export default function organs() {
         <TouchableOpacity style={style.box2Btn} onPress={() => { router.push('/profilePageContents/adminAddOrgans') }}>
           <Text style={style.box2BtnText}>ADD</Text>
         </TouchableOpacity>
-        <TextInput placeholder='  Search' style={style.box2Input} placeholderTextColor={'white'} />
+        <Text>{error}</Text>
         <TouchableOpacity style={style.box2BtnRefresh} onPress={(getOrgansdata)}>
-          <Text style={style.box2BtnText}><EvilIcons name="refresh" size={40} color="black" /></Text>
+          <Text><AntDesign name="reload" size={30} color="black" /></Text>
         </TouchableOpacity>
       </View>
 

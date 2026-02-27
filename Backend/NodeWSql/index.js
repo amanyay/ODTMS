@@ -13,9 +13,41 @@ app.use(bodyParser.json());
 
 app.listen(3000, () => {
     console.log("server running in port 3000");
-
 })
 
+
+app.post('/adminLogin', async (req, res) => {
+
+    const { phoneNumber, password } = req.body;
+    const connection = await createDBConnection();
+
+
+    try {
+        const [selectedResult] = await connection.query(`SELECT * FROM users WHERE phone_number = ? AND password = ?
+            AND role = ?  `, [phoneNumber, password, 'admin']);
+        console.log(selectedResult)
+        // it shows you why [0][0] use
+
+        if (selectedResult.length > 0) {
+            const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET);
+            res.status(200).json({ message: "Admin found", token: token, })
+        }
+        else if (selectedResult.length < 1) {
+            res.status(201).json({ message: 'Admin not found' });
+        }
+
+    } catch (error) {
+
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
+
+    }
+
+
+})
 
 
 app.post("/signUp", async (req, res) => {
@@ -59,18 +91,15 @@ app.post('/login', async (req, res) => {
 
 
     try {
-        const selectionQuery = `SELECT * FROM users WHERE phone_number = ? AND password = ? `;
-        const selectedResult = await connection.query(selectionQuery, [phoneNumber, password]);
+        const [selectedResult] = await connection.query(`SELECT * FROM users WHERE phone_number = ? AND password = ? `, [phoneNumber, password]);
+        console.log(selectedResult)
         // it shows you why [0][0] use
-        // console.log(selectedResult[0][0].first_name);
 
-
-
-        if (selectedResult[0].length > 0) {
+        if (selectedResult.length > 0) {
             const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET);
             res.status(200).json({ message: "User found", token: token, })
         }
-        else if (selectedResult[0].length < 1) {
+        else if (selectedResult.length < 1) {
             res.status(201).json({ message: 'User not found' });
         }
 
@@ -719,7 +748,7 @@ app.post('/statstics', async (req, res) => {
         if (token) {
 
             const [totalRequestPending] = await connection.query(`SELECT COUNT(*) AS
-            total_request_pending FROM rec_request WHERE status = ? `, ["Pending"]);
+            total_request_pending FROM rec_request WHERE status != ? `, ["Complete"]);
 
             const [totalDonors] = await connection.query(`SELECT COUNT(*) AS
             total_donors FROM donations `);
@@ -734,12 +763,13 @@ app.post('/statstics', async (req, res) => {
 
             const completeAmount = totalRequestComplete[0].total_request_complete;
             const totalRequestAmount = totalRequests[0].total_request;
-            const percentage = (completeAmount / totalRequestAmount) * 100;
+            const percentages = (completeAmount / totalRequestAmount) * 100;
+            const percentage = percentages.toFixed(3)
 
 
-            console.log(completeAmount)
-            console.log(totalRequestAmount)
-            console.log(percentage)
+            // console.log(completeAmount)
+            // console.log(totalRequestAmount)
+            // console.log(percentage)
 
             if (totalRequestPending || totalDonors || totalRecipents || totalRequestComplete) {
                 res.status(200).json(
@@ -798,15 +828,28 @@ app.post('/adminOrgansData', async (req, res) => {
     const { token } = req.body;
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
 
-    const [selectionOrganQuery] = await connection.query(`SELECT * FROM organ `);
+    try {
 
-    if (selectionOrganQuery.length > 0) {
-        res.json({
-            message: selectionOrganQuery
-        })
+
+        const connection = await createDBConnection();
+
+        const [selectionOrganQuery] = await connection.query(`SELECT * FROM organ `);
+
+        if (selectionOrganQuery.length > 0) {
+            res.json({
+                message: selectionOrganQuery
+            })
+        }
+
+    } catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
     }
+
 })
 
 
@@ -815,19 +858,30 @@ app.post('/adminDonorsData', async (req, res) => {
     const { token } = req.body;
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
 
-    const [selectionFromUser] = await connection.query(`SELECT users.first_name , users.age , users.location  , users.gender ,
-        users.blood_type , organ.organ_id , organ.organ_name , donations.phone_number , donations.donation_date , donations.status
+    try {
+
+        const connection = await createDBConnection();
+        const [selectionFromUser] = await connection.query(`SELECT users.first_name , users.age , users.location  , users.gender ,
+        users.blood_type , organ.organ_id , organ.organ_name , donations.phone_numbers , donations.donation_date , donations.status
         FROM donations 
-        JOIN users ON donations.phone_number = users.phone_number 
-        JOIN organ ON donations.organ_id = organ.organ_id  `);
+        JOIN users ON donations.phone_numbers = users.phone_number 
+        JOIN organ ON donations.organ_id = organ.organ_id `);
 
-    if (selectionFromUser.length > 0) {
-        res.json({
-            message: selectionFromUser
-        })
+        if (selectionFromUser.length > 0) {
+            res.json({
+                message: selectionFromUser
+            })
+        }
+
+    } catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
     }
+
 
 
 })
@@ -838,19 +892,29 @@ app.post('/adminRecipentsData', async (req, res) => {
     const { token } = req.body;
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
 
-    const [selectionFromUser] = await connection.query(`SELECT users.first_name , users.age , users.location  , users.gender ,
+    try {
+        const connection = await createDBConnection();
+        const [selectionFromUser] = await connection.query(`SELECT users.first_name , users.age , users.location  , users.gender ,
         users.blood_type , organ.organ_id , organ.organ_name , recipents_waitinglist.phone_number , recipents_waitinglist.reg_date , recipents_waitinglist.status
         FROM recipents_waitinglist
         JOIN users ON recipents_waitinglist.phone_number = users.phone_number 
         JOIN organ ON recipents_waitinglist.organ_id = organ.organ_id  `);
 
-    if (selectionFromUser.length > 0) {
-        res.json({
-            message: selectionFromUser
-        })
+        if (selectionFromUser.length > 0) {
+            res.json({
+                message: selectionFromUser
+            })
+        }
+
+    } catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
     }
+
 
 
 })
@@ -861,34 +925,147 @@ app.post('/adminRequestData', async (req, res) => {
     const { token, requestId, status } = req.body;
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
 
 
-    const [selectionFromRequest] = await connection.query(`SELECT users.first_name , users.age ,
+    try {
+        const connection = await createDBConnection();
+        const [selectionFromRequest] = await connection.query(`SELECT users.first_name , users.age ,
         users.location  , users.gender ,
         users.blood_type , organ.organ_id , organ.organ_name ,rec_request.id, 
         rec_request.rec_phone_number , rec_request.don_phone_number ,rec_request.organ_id ,
         rec_request.status ,rec_request.date
         FROM rec_request
         JOIN users ON rec_request.rec_phone_number = users.phone_number 
-        JOIN organ ON rec_request.organ_id = organ.organ_id`);
+        JOIN organ ON rec_request.organ_id = organ.organ_id
+        WHERE status = ? ` , ['Pending']);
 
 
-    if (selectionFromRequest.length > 0) {
-        res.json({
-            message: selectionFromRequest
-        })
-    }
 
-    if (status === 'Pending') {
-        const [makeApproveQuery] = await connection.query(`UPDATE rec_request SET status = ? WHERE id = ?  `, ['Approved', requestId]);
-        if (makeApproveQuery) {
-            res.json({
-                message: makeApproveQuery
+        if (selectionFromRequest.length > 0) {
+            res.status(200).json({
+                message: selectionFromRequest
             })
+        }
+        else if (selectionFromRequest.length < 1) {
+            res.status(201).json({
+                message: "Not pending data found"
+            })
+        }
+
+    }
+    catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
         }
     }
 
 
+
+})
+
+app.post('/adminRequestApp', async (req, res) => {
+    const { token, requestId, status } = req.body;
+    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+
+
+    try {
+        const connection = await createDBConnection();
+        if (status === 'Pending') {
+            const [makeApproveQuery] = await connection.query(`UPDATE rec_request SET status = ? WHERE id = ?  `, ['Approved', requestId]);
+            if (makeApproveQuery) {
+                res.status(200).json({
+                    message: "Successfull approved"
+                })
+            }
+        }
+    }
+
+    catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
+    }
+})
+
+
+
+app.post('/adminCompleteRequestData', async (req, res) => {
+
+    const { token, requestId, status } = req.body;
+    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+    const connection = await createDBConnection();
+    // console.log(requestId)
+
+    try {
+        const [selectionFromRequest] = await connection.query(`SELECT users.first_name , users.age ,
+        users.location  , users.gender ,
+        users.blood_type , organ.organ_id , organ.organ_name ,rec_request.id, 
+        rec_request.rec_phone_number , rec_request.don_phone_number ,rec_request.organ_id ,
+        rec_request.status ,rec_request.date
+        FROM rec_request
+        JOIN users ON rec_request.rec_phone_number = users.phone_number 
+        JOIN organ ON rec_request.organ_id = organ.organ_id 
+        WHERE status = ? ` , ['Approved']);
+
+
+        if (selectionFromRequest.length > 0) {
+            res.status(200).json({
+                message: selectionFromRequest
+            })
+        }
+        else if (selectionFromRequest.length === 0) {
+            res.status(201).json({
+                message: "Not approved user found "
+            })
+
+        }
+
+
+
+    } catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
+    }
+
+})
+
+app.post('/adminCompleteReq', async (req, res) => {
+
+    const { token, rec_phone_number, don_phone_number, requestId, status } = req.body;
+    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+    const connection = await createDBConnection();
+    console.log(status)
+    try {
+
+        if (status === 'Approved') {
+            const [makeApproveQuery] = await connection.query(`UPDATE rec_request SET status = ? WHERE id = ?  `, ['Completed', requestId]);
+            if (makeApproveQuery) {
+                const [updateQueryDonations] = await connection.query(`UPDATE donations SET status = ? WHERE phone_numbers = ?  `, ['Completed', don_phone_number]);
+                const [updateQueryRecipents] = await connection.query(`UPDATE recipents_waitinglist SET status = ? WHERE phone_number = ?  `, ['Completed', rec_phone_number]);
+                if (updateQueryRecipents || updateQueryDonations) {
+                    res.status(200).json({
+                        message: 'Transplant Success'
+                    })
+                }
+            }
+        }
+    }
+    catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
+    }
 
 })
