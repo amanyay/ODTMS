@@ -100,7 +100,7 @@ export default function map() {
     return (
         <View style={style.box}>
             <ImageBackground
-                source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
+                source={require('../../Desgin Templete and Docmentation/background 1.jpg')}
                 style={{ flex: 1 }} >
                 <View style={style.box1}>
                     <TouchableOpacity>
@@ -198,7 +198,7 @@ const style = StyleSheet.create({
         // backgroundColor:'blue',
         width: '100%',
         height: '30%',
-        marginTop: '8%',
+        marginTop: '1%',
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: '2%'

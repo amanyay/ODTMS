@@ -3,20 +3,20 @@ import baseUrl from '@/src/api';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, LayoutAnimation, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
 
 export default function organs() {
 
   const [organ, setOrgans] = useState<any>([]);
+  const [newOrgan, setNewOrgans] = useState("");
   const [error, setError] = useState('')
-  // type Organ = {
-  //   id: number;
-  //   type: string;
-  //   dateAdded: string;
-  // };
+  const [errornewOrgan, setnewOrganError] = useState('')
+  const [expanded, setExpanded] = useState(false);
+  const organRegex = /[A-Za-z]{2,}/
+
 
 
   async function getOrgansdata() {
@@ -36,10 +36,42 @@ export default function organs() {
 
 
   }
+  async function addNewOrgan() {
+    try {
+
+      if (newOrgan === "") {
+        setnewOrganError("Please fill the input")
+      }
+      else if (!organRegex.test(newOrgan)) {
+        setnewOrganError("Please insert only letters")
+      }
+      else if (organRegex.test(newOrgan)) {
+        const token = await AsyncStorage.getItem("token");
+        const request = await axios.post(`${baseUrl}/adminAddOrgan`, { token, newOrgan });
+        if (request.status === 200) {
+          setnewOrganError(request.data.message);
+        }
+
+      }
+
+
+    } catch (error: any) {
+
+      setnewOrganError(error.response.data.err)
+
+    }
+  }
+
+  const toggleExpand = () => {
+    // Animate the transition for smooth expand/collapse
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpanded(!expanded);
+  };
+
+
 
   useEffect(() => {
     getOrgansdata();
-
   }, [])
 
 
@@ -47,18 +79,45 @@ export default function organs() {
 
   return (
     <ImageBackground style={style.box}
-      source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
+      source={require('../../Desgin Templete and Docmentation/background 1.jpg')}
     >
 
       <View style={style.box2}>
-        <TouchableOpacity style={style.box2Btn} onPress={() => { router.push('/profilePageContents/adminAddOrgans') }}>
+        <TouchableOpacity style={style.box2Btn} onPress={toggleExpand}>
           <Text style={style.box2BtnText}>ADD</Text>
         </TouchableOpacity>
         <Text>{error}</Text>
         <TouchableOpacity style={style.box2BtnRefresh} onPress={(getOrgansdata)}>
-          <Text><AntDesign name="reload" size={30} color="black" /></Text>
+          <Text><AntDesign name="reload" size={30} color="white" /></Text>
         </TouchableOpacity>
       </View>
+      <View style={style.container}>
+
+        {/* - {expanded && (...)}
+        This is a conditional rendering expression.
+        - If expanded is true, the code inside the parentheses will render.
+        - If expanded is false, nothing will render.
+        This is a common React pattern for showing/hiding UI sections. */}
+
+        {expanded && (
+          <ScrollView style={style.scrollView}>
+            <View>
+              <Text style={style.titles}>Enter organ name to add </Text>
+              <View style={style.boxs}>
+                <TextInput placeholder='  Enter organ name' placeholderTextColor={'white'} style={style.box2Input} onChangeText={setNewOrgans} />
+                <TouchableOpacity style={style.btn} onPress={addNewOrgan}>
+                  <Text>Add Organ</Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={{ color: 'red', textAlign: 'center', width: '100%' }}>{errornewOrgan}</Text>
+            </View>
+
+          </ScrollView>
+
+
+        )}
+      </View>
+
 
       <FlatList
         data={organ}
@@ -70,7 +129,7 @@ export default function organs() {
             <Text style={style.organBoxText1}>Organ ID - <Text style={style.datas}>{item.organ_id}</Text></Text>
             <Text style={style.organBoxText2}>Organ Type  -  <Text style={style.datas}>{item.organ_name}</Text></Text>
             <Text style={style.organBoxText3}>Date - <Text style={style.datas}>{item.organ_date}</Text></Text>
-            <Text style={style.organBoxText4}>Status -  <Text style={style.datas}>{item.status}</Text></Text>
+            <Text style={style.organBoxText4}>Status -  <Text style={style.datas}>{item.statuss}</Text></Text>
             <View style={style.updateAndRemoveBtn}>
               <TouchableOpacity style={style.updateBtnBox}>
                 <Text style={style.updateBtnText}>Update</Text>
@@ -80,7 +139,8 @@ export default function organs() {
               </TouchableOpacity>
             </View>
           </View>
-        )}
+        )
+        }
       />
     </ImageBackground >
   )
@@ -90,6 +150,14 @@ const style = StyleSheet.create({
   box: {
     flex: 1,
     // backgroundColor: 'red'
+  },
+  scrollView: {
+    paddingBottom: 80,
+    height: 150,
+    borderWidth: 2,
+    padding: 10,
+    flexDirection: 'row',
+    borderColor: 'white'
   },
   box2: {
     flexDirection: 'row',
@@ -122,12 +190,27 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   box2Input: {
-    fontSize: 19,
-    width: '50%',
+    fontSize: 10,
+    width: 180,
     backgroundColor: "rgba(42, 146, 201, 0.2)",
-    marginRight: '5%',
+    margin: '5%',
     borderRadius: 5
   },
+  // container: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
+  boxAddorgan: {
+    width: 200,
+    height: 100,
+    backgroundColor: '#ffa07a',
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+
   box3: {
     // backgroundColor:'red',
     flex: 1
@@ -199,6 +282,64 @@ const style = StyleSheet.create({
     fontFamily: 'arial',
     fontWeight: 'bold',
     fontSize: 17
-  }
+  },
+  container: {
+    padding: 20
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center'
+  },
+  // box: {
+  //   overflow: 'hidden',
+  //   borderRadius: 5,
+  //   padding: 10,
+  // },
+  titles: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'white'
+  },
+  collapsed: {
+    height: 0
+  },
+  expanded: {
+    minHeight: 60
+  },
+  text: {
+    color: '#333'
+  },
+  boxs: {
+    flexDirection: 'row',
+    margin: '3%',
+    marginLeft: '3%',
+    marginTop: '3%',
+  },
+  numbers: {
+    color: 'white',
+    fontWeight: 'bold'
+  },
+  texts: {
+    marginLeft: "2%",
+    color: 'white'
+  },
+  btn: {
+    backgroundColor: "#231650",
+    width: '40%',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    borderRadius: 8,
+    marginTop: '5%',
+    marginBottom: '5%',
+    marginRight: '10%'
+  },
 
 })

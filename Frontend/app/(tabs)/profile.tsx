@@ -1,3 +1,4 @@
+ 
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -111,13 +112,13 @@ export default function map() {
                 <Text style={style.error}>{error}</Text>
                 <View style={style.profileImageBox}>
                     <View style={style.profileImage}>
-                        {/* {profileImage && <Image source={{ uri: profileImage }} style={{ width: 200, height: 200 }} />} */}
+                        {/* <Image source={{ uri: profileImage }} /> */}
                     </View>
                     <TouchableOpacity style={style.changeProfile}><Text style={style.changeProfileText}>Edit Profile Picture</Text></TouchableOpacity>
                 </View>
-                <TouchableOpacity style={style.toAdminPanel} onPress={() => { router.push("/adminsPageDrawerNavigation/editOrgans") }}>
+                {/* <TouchableOpacity style={style.toAdminPanel} onPress={() => { router.push("/adminsPageDrawerNavigation/editOrgans") }}>
                     <Text style={style.toAdminPanelText}>Admin Panel</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <ScrollView style={{ flex: 1, paddingBottom: 80 }}>
                     <View style={style.box3}>
                         <Text style={style.box3Text}>Name</Text>
@@ -188,17 +189,19 @@ const style = StyleSheet.create({
         marginLeft: '24%',
         fontSize: 25,
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+
     },
     error: {
         marginTop: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        // backgroundColor:'red',
     },
     profileImageBox: {
         // backgroundColor:'blue',
         width: '100%',
         height: '30%',
-        marginTop: '8%',
+        marginTop: '1%',
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: '2%'

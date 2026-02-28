@@ -61,7 +61,7 @@ export default function editDonors() {
 
     return (
         <ImageBackground style={style.box}
-            source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
+            source={require('../../Desgin Templete and Docmentation/background 1.jpg')}
         >
 
             <View style={style.box2}>

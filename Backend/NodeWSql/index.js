@@ -3,16 +3,18 @@ const bodyParser = require('body-parser')
 const mysql = require('mysql2/promise');
 const createDBConnection = require('./db');
 const JWT = require('jsonwebtoken');
+require('dotenv').config();
 
 
 
 const app = express();
-const JWT_SECRET = "ajd82hAHSJH82hjsahj@#92hjsa8h2hjsa";
+const JWT_SECRET = process.env.JWT_SECRET;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
-app.listen(3000, () => {
-    console.log("server running in port 3000");
+app.listen(port, () => {
+    console.log("server running in port", port);
 })
 
 
@@ -25,7 +27,7 @@ app.post('/adminLogin', async (req, res) => {
     try {
         const [selectedResult] = await connection.query(`SELECT * FROM users WHERE phone_number = ? AND password = ?
             AND role = ?  `, [phoneNumber, password, 'admin']);
-        console.log(selectedResult)
+        // console.log(selectedResult)
         // it shows you why [0][0] use
 
         if (selectedResult.length > 0) {
@@ -863,7 +865,7 @@ app.post('/adminDonorsData', async (req, res) => {
 
         const connection = await createDBConnection();
         const [selectionFromUser] = await connection.query(`SELECT users.first_name , users.age , users.location  , users.gender ,
-        users.blood_type , organ.organ_id , organ.organ_name , donations.phone_numbers , donations.donation_date , donations.status
+        users.blood_type , organ.organ_id , organ.organ_name , donations.phone_numbers ,donations.donation_id, donations.donation_date , donations.status
         FROM donations 
         JOIN users ON donations.phone_numbers = users.phone_number 
         JOIN organ ON donations.organ_id = organ.organ_id `);
@@ -1061,6 +1063,72 @@ app.post('/adminCompleteReq', async (req, res) => {
         }
     }
     catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
+    }
+
+})
+app.post('/adminAddNewAdmin', async (req, res) => {
+
+    const { firstName, lastName, age, phoneNumber, email, password, location, gender, bloodType } = req.body;
+
+    try {
+        const connection = await createDBConnection();
+        const [addNewAdmin] = await connection.query(`INSERT INTO users (first_name , last_name , age , role , location ,
+            password , phone_number , gender , email , blood_type) 
+            VALUES (?,?,?,?,?,?,?,?,?,?)` ,
+            [firstName, lastName, age, 'admin', location, password, phoneNumber, gender, email, bloodType]);
+
+        if (addNewAdmin) {
+            res.status(200).json({ message: "New admin created successfully" })
+        }
+
+    } catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
+    }
+})
+app.post('/adminAddOrgan', async (req, res) => {
+
+    const { token, newOrgan } = req.body;
+
+    try {
+        const connection = await createDBConnection();
+        const [addNewOrgan] = await connection.query(`INSERT INTO organ (organ_name) VALUES (?)`, [newOrgan])
+        if (addNewOrgan) {
+            res.status(200).json({ message: 'Organ Add' });
+        }
+
+    } catch (error) {
+        if (error.message) {
+            res.status(409).json({ err: "Database error " })
+        } else {
+            res.status(500).json({ err: "Server error" })
+        }
+    }
+
+})
+app.post('/deleteDonors', async (req, res) => {
+
+    const { token, organID } = req.body
+    console.log(organID)
+    try {
+
+        const connection = await createDBConnection();
+        const [deleteOrgans] = await connection.query(`DELETE FROM donations WHERE donation_id = ? `, [organID]);
+        if (deleteOrgans) {
+            res.status(200).json({
+                message: 'Successfully deleted'
+            })
+        }
+
+    } catch (error) {
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

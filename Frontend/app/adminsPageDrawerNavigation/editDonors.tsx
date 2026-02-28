@@ -29,6 +29,15 @@ export default function editDonors() {
 
 
   }
+  async function removeOrgans(item: any) {
+
+    const token = await AsyncStorage.getItem("token");
+    const request = await axios.post(`${baseUrl}/deleteDonors`, { token, organID: item.donation_id })
+    if (request.status === 200) {
+      setError(request.data.message)
+    }
+
+  }
 
   useEffect(() => {
     getDonors();
@@ -39,16 +48,16 @@ export default function editDonors() {
 
   return (
     <ImageBackground style={style.box}
-      source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
+      source={require('../../Desgin Templete and Docmentation/background 1.jpg')}
     >
 
       <View style={style.box2}>
-        <TouchableOpacity style={style.box2Btn}>
+        {/* <TouchableOpacity style={style.box2Btn}>
           <Text style={style.box2BtnText}>ADD</Text>
-        </TouchableOpacity>
-        <Text>{error}</Text>
+        </TouchableOpacity> */}
+        <Text style={{ color: 'red', textAlign: 'center', marginLeft: '44%' }}>{error}</Text>
         <TouchableOpacity style={style.box2BtnRefresh} onPress={(getDonors)}>
-          <Text style={style.box2BtnText}><Text><AntDesign name="reload" size={30} color="black" /></Text></Text>
+          <Text style={style.box2BtnText}><Text><AntDesign name="reload" size={30} color="white" /></Text></Text>
         </TouchableOpacity>
       </View>
 
@@ -59,6 +68,7 @@ export default function editDonors() {
         //item represent one object at a time from the array tha recive from database 
         renderItem={({ item }) => (
           <View style={style.organBox}>
+            <Text style={style.organBoxText1}>Donoation id - <Text style={style.datas}>{item.donation_id}</Text></Text>
             <Text style={style.organBoxText1}>Donor Name - <Text style={style.datas}>{item.first_name}</Text></Text>
             <Text style={style.organBoxText2}>Donor age  -  <Text style={style.datas}>{item.age}</Text></Text>
             <Text style={style.organBoxText4}>Donated Organ -  <Text style={style.datas}>{item.organ_name}</Text></Text>
@@ -70,7 +80,7 @@ export default function editDonors() {
             <Text style={style.organBoxText4}>Date -  <Text style={style.datas}>{item.donation_date}</Text></Text>
             <Text style={style.organBoxText4}>Status -  <Text style={style.datas}>{item.status}</Text></Text>
             <View style={style.updateAndRemoveBtn}>
-              <TouchableOpacity style={style.removeBtnBox}>
+              <TouchableOpacity style={style.removeBtnBox} onPress={() => { removeOrgans(item) }}>
                 <Text style={style.removeBtnText}>Remove</Text>
               </TouchableOpacity>
             </View>
@@ -89,8 +99,9 @@ const style = StyleSheet.create({
   box2: {
     flexDirection: 'row',
     width: '100%',
-    // backgroundColor:'blue',
-    justifyContent: 'space-between',
+    // backgroundColor: 'blue',
+    // justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: '7%',
     marginTop: '7%',
     marginRight: '5%'
@@ -112,8 +123,8 @@ const style = StyleSheet.create({
   box2BtnRefresh: {
     marginRight: '5%',
     // backgroundColor: "rgba(42, 146, 201, 0.7)",
-    width: '8%',
-    marginLeft: '1%',
+    width: '100%',
+    marginLeft: -65,
     justifyContent: 'center',
   },
   box2Input: {

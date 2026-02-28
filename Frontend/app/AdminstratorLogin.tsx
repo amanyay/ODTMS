@@ -51,7 +51,7 @@ const administrator = () => {
 
     return (
         <ImageBackground
-            source={require('../Desgin Templete and Docmentation/background 2.jpg')}
+            source={require('../Desgin Templete and Docmentation/background 1.jpg')}
             style={styles.box}
             resizeMode="cover"
         >
