@@ -52,6 +52,10 @@ export default function HomePageContentLayout() {
         name="foods"
         options={{ headerShown: true, title: 'foods' }}
       />
+      <Stack.Screen
+        name="chatBot"
+        options={{ headerShown: true, title: 'Our AI', headerTintColor: 'white', headerStyle: { backgroundColor: '#022934' } }}
+      />
     </Stack>
   );
 }

@@ -217,7 +217,7 @@ export default function home() {
                                 <Text><AntDesign name="calculator" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Calculator</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styless.servicesBtn1}>
+                            <TouchableOpacity style={styless.servicesBtn1} onPress={() => { router.push('/homePageContents/chatBot') }}>
                                 <Text><Ionicons name="chatbubble-ellipses-outline" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Chat bot</Text>
                             </TouchableOpacity>
