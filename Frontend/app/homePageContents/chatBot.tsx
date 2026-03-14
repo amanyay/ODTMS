@@ -17,13 +17,18 @@ export default function chatBot() {
         setResponseLoading(true)
 
         try {
-
-            const token = await AsyncStorage.getItem('token');
-            const request = await axios.post(`${baseUrl}/chatBot`, { token, userQuestion });
-            if (request.status === 200) {
-                setResponseLoading(false);
-                setAiResponse(request.data.message)
+            if (userQuestion === "") {
+                setAiResponse("Please ask question")
             }
+            else {
+                const token = await AsyncStorage.getItem('token');
+                const request = await axios.post(`${baseUrl}/chatBot`, { token, userQuestion });
+                if (request.status === 200) {
+                    setResponseLoading(false);
+                    setAiResponse(request.data.message)
+                }
+            }
+
 
 
         } catch (error: any) {
@@ -119,6 +124,6 @@ const style = StyleSheet.create({
     },
     response: {
         width: '100%',
-        color:'white'
+        color: 'white'
     }
 })

@@ -29,7 +29,7 @@ export default function home() {
                 router.push('/login')
             } else {
                 const request = await axios.post(`${baseUrl}/home`, { token });
-
+                
 
 
                 setUserNameDisplay(request.data.message.first_name)

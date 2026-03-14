@@ -4,12 +4,13 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { router } from "expo-router";
 import { useState } from "react";
-import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 
 
-const login = () => {
+const signup = () => {
     const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -31,7 +32,7 @@ const login = () => {
 
         try {
 
-            if (firstName === "" || phoneNumber === "" || email === "" || password === "" || selectedValue === "") {
+            if (firstName === "" || lastName === "" || phoneNumber === "" || email === "" || password === "" || selectedValue === "") {
 
                 setError("Please fill all field !!!");
 
@@ -48,7 +49,7 @@ const login = () => {
             else if (phoneNumberRegex.test(phoneNumber) || emailRegex.test(email) || passwordRegex.test(password)) {
 
 
-                const response = await axios.post(`${baseUrl}/signUp`, { firstName, phoneNumber, email, password, selectedValue });
+                const response = await axios.post(`${baseUrl}/signUp`, { firstName, lastName, phoneNumber, email, password, selectedValue });
 
                 if (response.status === 200) {
                     setError(response.data.message);
@@ -84,36 +85,41 @@ const login = () => {
             style={styles.box}
             resizeMode="cover"
         >
-            <View style={styles.box1}>
-                <Text style={styles.title}>Sign Up</Text>
-            </View>
-            <View style={styles.box2}>
-                <TextInput placeholder='   Enter your first name' placeholderTextColor={'white'} style={styles.input} onChangeText={setFirstName} />
-                <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
-                <TextInput placeholder='   Enter your email address' placeholderTextColor={'white'} style={styles.input} onChangeText={setEmail} />
-                <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
-                <Picker
-                    selectedValue={selectedValue}
-                    onValueChange={(itemValue) => setSelectedValue(itemValue)}
-                    style={styles.picker}
-                >
-                    <Picker.Item label="Select an option..." value="" />
-                    {options.map((option, index) => (
-                        <Picker.Item key={index} label={option} value={option} />
-                    ))}
-                </Picker>
 
-                <Text style={styles.errorMessage}>{error}</Text>
-                <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Sign Up</Text></TouchableOpacity>
-                <Text style={styles.signUpBox}>Already have an account ? <TouchableOpacity onPress={toSignInPage}><Text style={styles.commonText}>sign in</Text></TouchableOpacity></Text>
-            </View>
+            <ScrollView style={{ flex: 1, width: '90%' }}>
+                <View style={styles.box1}>
+                    <Text style={styles.title}>Sign Up</Text>
+                </View>
+                <View style={styles.box2}>
+                    <TextInput placeholder='   Enter your first name' placeholderTextColor={'white'} style={styles.input} onChangeText={setFirstName} />
+                    <TextInput placeholder='   Enter your last name' placeholderTextColor={'white'} style={styles.input} onChangeText={setLastName} />
+                    <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
+                    <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
+                    <TextInput placeholder='   Enter your email address' placeholderTextColor={'white'} style={styles.input} onChangeText={setEmail} />
+                    <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
+                    <Picker
+                        selectedValue={selectedValue}
+                        onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="Select an option..." value="" />
+                        {options.map((option, index) => (
+                            <Picker.Item key={index} label={option} value={option} />
+                        ))}
+                    </Picker>
+
+                    <Text style={styles.errorMessage}>{error}</Text>
+                    <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Sign Up</Text></TouchableOpacity>
+                    <Text style={styles.signUpBox}>Already have an account ? <TouchableOpacity onPress={toSignInPage}><Text style={styles.commonText}>sign in</Text></TouchableOpacity></Text>
+                </View>
+            </ScrollView>
         </ImageBackground>
 
     )
 
 }
 
-export default login
+export default signup
 
 const styles = StyleSheet.create({
 
@@ -125,14 +131,14 @@ const styles = StyleSheet.create({
     },
     box1: {
         width: '100%',
-        height: '8%',
+        height: 70,
         marginBottom: "2%",
+        marginTop: '25%',
         justifyContent: 'flex-start',
-        // backgroundColor:'red'
+        // backgroundColor: 'red'
     },
     box2: {
         width: '100%',
-        height: '65%',
         // backgroundColor:'blue',
         marginBottom: '10%'
     },
@@ -154,16 +160,16 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         borderRadius: 3,
         marginTop: '10%',
-        marginLeft: '10%',
-        width: "80%",
+        marginLeft: '5%',
+        width: "90%",
         textAlign: 'left',
-        height: '11%',
+        height: 55,
         color: 'white',
         fontSize: 13,
         letterSpacing: 0.5
     },
     picker: {
-        height: 50,
+        height: 80,
         width: '70%',
         marginLeft: '18%',
         marginRight: '5%'
@@ -177,15 +183,15 @@ const styles = StyleSheet.create({
     },
     btn: {
         backgroundColor: "#231650",
-        width: '80%',
-        height: '11%',
+        width: '90%',
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'flex-end',
         borderRadius: 8,
         marginTop: '5%',
         marginBottom: '5%',
-        marginRight: '10%'
+        marginRight: '5%'
     },
     btnText: {
         color: 'white',
