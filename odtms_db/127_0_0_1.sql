@@ -4,12 +4,95 @@ USE `odtms`;
 
 
 CREATE TABLE `donations` (
-  `donation_id` int(11) NOT NULL,
+  `donation_id` int(11) NOT NULL AUTO_INCREMENT,
   `phone_numbers` varchar(50) DEFAULT NULL,
   `organ_id` int(11) DEFAULT NULL,
   `donation_date` datetime DEFAULT current_timestamp(),
-  `status` varchar(50) DEFAULT 'Pending'
+  `status` varchar(50) DEFAULT 'Pending',
+    PRIMARY KEY (`donation_id`),
+  FOREIGN KEY (`phone_numbers`) REFERENCES `users`(`phone_number`) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`organ_id`) REFERENCES `organ`(`organ_id`) 
+    ON DELETE CASCADE ON UPDATE CASCADE
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Table structure for table `organ`
+--
+
+CREATE TABLE `organ` (
+  `organ_id` int(11) NOT NULL AUTO_INCREMENT,
+  `organ_name` varchar(50) DEFAULT NULL,
+  `organ_date` datetime DEFAULT current_timestamp(),
+  `statuss` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`organ_id`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Table structure for table `recipents_waitinglist`
+--
+
+CREATE TABLE `recipents_waitinglist` (
+  `wait_id` int(11) NOT NULL AUTO_INCREMENT,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `organ_id` int(11) DEFAULT NULL,
+  `reg_date` date NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(50) DEFAULT 'Pending',
+    PRIMARY KEY (`wait_id`),
+  FOREIGN KEY (`phone_number`) REFERENCES `users`(`phone_number`) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`organ_id`) REFERENCES `organ`(`organ_id`) 
+    ON DELETE CASCADE ON UPDATE CASCADE
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+--
+-- Table structure for table `rec_request`
+--
+
+CREATE TABLE `rec_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rec_phone_number` varchar(20) NOT NULL,
+  `don_phone_number` varchar(20) NOT NULL,
+  `organ_id` int(11) NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(50) NOT NULL DEFAULT 'Pending',
+    PRIMARY KEY (`id`),
+  FOREIGN KEY (`rec_phone_number`) REFERENCES `users`(`phone_number`) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`don_phone_number`) REFERENCES `users`(`phone_number`) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`organ_id`) REFERENCES `organ`(`organ_id`) 
+    ON DELETE CASCADE ON UPDATE CASCADE
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `role` varchar(100) DEFAULT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(20) NOT NULL,
+  `gender` varchar(30) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `blood_type` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`phone_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 
 
 INSERT INTO `donations` (`donation_id`, `phone_numbers`, `organ_id`, `donation_date`, `status`) VALUES
@@ -22,16 +105,7 @@ INSERT INTO `donations` (`donation_id`, `phone_numbers`, `organ_id`, `donation_d
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `organ`
---
 
-CREATE TABLE `organ` (
-  `organ_id` int(11) NOT NULL,
-  `organ_name` varchar(50) DEFAULT NULL,
-  `organ_date` datetime DEFAULT current_timestamp(),
-  `statuss` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `organ`
@@ -43,17 +117,6 @@ INSERT INTO `organ` (`organ_id`, `organ_name`, `organ_date`, `statuss`) VALUES
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `recipents_waitinglist`
---
-
-CREATE TABLE `recipents_waitinglist` (
-  `wait_id` int(11) NOT NULL,
-  `phone_number` varchar(20) DEFAULT NULL,
-  `organ_id` int(11) DEFAULT NULL,
-  `reg_date` date NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(50) DEFAULT 'Pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `recipents_waitinglist`
@@ -67,18 +130,6 @@ INSERT INTO `recipents_waitinglist` (`wait_id`, `phone_number`, `organ_id`, `reg
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `rec_request`
---
-
-CREATE TABLE `rec_request` (
-  `id` int(11) NOT NULL,
-  `rec_phone_number` varchar(20) NOT NULL,
-  `don_phone_number` varchar(20) NOT NULL,
-  `organ_id` int(11) NOT NULL,
-  `date` datetime NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(50) NOT NULL DEFAULT 'Pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rec_request`
@@ -90,24 +141,7 @@ INSERT INTO `rec_request` (`id`, `rec_phone_number`, `don_phone_number`, `organ_
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `users`
---
 
-CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
-  `first_name` varchar(50) DEFAULT NULL,
-  `last_name` varchar(50) DEFAULT NULL,
-  `age` int(11) DEFAULT NULL,
-  `role` varchar(100) DEFAULT NULL,
-  `location` varchar(100) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `phone_number` varchar(20) NOT NULL,
-  `gender` varchar(30) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `blood_type` varchar(50) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -134,100 +168,100 @@ INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `age`, `role`, `locat
 -- Indexes for dumped tables
 --
 
---
--- Indexes for table `donations`
---
-ALTER TABLE `donations`
-  ADD PRIMARY KEY (`donation_id`),
-  ADD KEY `phone_number` (`phone_numbers`),
-  ADD KEY `organ_id` (`organ_id`);
+-- --
+-- -- Indexes for table `donations`
+-- --
+-- ALTER TABLE `donations`
+--   ADD PRIMARY KEY (`donation_id`),
+--   ADD KEY `phone_number` (`phone_numbers`),
+--   ADD KEY `organ_id` (`organ_id`);
 
---
--- Indexes for table `organ`
---
-ALTER TABLE `organ`
-  ADD PRIMARY KEY (`organ_id`);
+-- --
+-- -- Indexes for table `organ`
+-- --
+-- ALTER TABLE `organ`
+--   ADD PRIMARY KEY (`organ_id`);
 
---
--- Indexes for table `recipents_waitinglist`
---
-ALTER TABLE `recipents_waitinglist`
-  ADD PRIMARY KEY (`wait_id`),
-  ADD KEY `fk_waitinglist_userphone` (`phone_number`),
-  ADD KEY `fk_waitinglist_organ` (`organ_id`);
+-- --
+-- -- Indexes for table `recipents_waitinglist`
+-- --
+-- ALTER TABLE `recipents_waitinglist`
+--   ADD PRIMARY KEY (`wait_id`),
+--   ADD KEY `fk_waitinglist_userphone` (`phone_number`),
+--   ADD KEY `fk_waitinglist_organ` (`organ_id`);
 
---
--- Indexes for table `rec_request`
---
-ALTER TABLE `rec_request`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uniqueReq` (`don_phone_number`),
-  ADD KEY `fk_rec_phone_num` (`rec_phone_number`),
-  ADD KEY `fk_organ_id` (`organ_id`);
+-- --
+-- -- Indexes for table `rec_request`
+-- --
+-- ALTER TABLE `rec_request`
+--   ADD PRIMARY KEY (`id`),
+--   ADD UNIQUE KEY `uniqueReq` (`don_phone_number`),
+--   ADD KEY `fk_rec_phone_num` (`rec_phone_number`),
+--   ADD KEY `fk_organ_id` (`organ_id`);
 
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`phone_number`),
-  ADD UNIQUE KEY `user_id` (`user_id`);
+-- --
+-- -- Indexes for table `users`
+-- --
+-- ALTER TABLE `users`
+--   ADD PRIMARY KEY (`phone_number`),
+--   ADD UNIQUE KEY `user_id` (`user_id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
+-- --
+-- -- AUTO_INCREMENT for dumped tables
+-- --
 
---
--- AUTO_INCREMENT for table `donations`
---
-ALTER TABLE `donations`
-  MODIFY `donation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+-- --
+-- -- AUTO_INCREMENT for table `donations`
+-- --
+-- ALTER TABLE `donations`
+--   MODIFY `donation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
---
--- AUTO_INCREMENT for table `organ`
---
-ALTER TABLE `organ`
-  MODIFY `organ_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+-- --
+-- -- AUTO_INCREMENT for table `organ`
+-- --
+-- ALTER TABLE `organ`
+--   MODIFY `organ_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
---
--- AUTO_INCREMENT for table `recipents_waitinglist`
---
-ALTER TABLE `recipents_waitinglist`
-  MODIFY `wait_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+-- --
+-- -- AUTO_INCREMENT for table `recipents_waitinglist`
+-- --
+-- ALTER TABLE `recipents_waitinglist`
+--   MODIFY `wait_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
---
--- AUTO_INCREMENT for table `rec_request`
---
-ALTER TABLE `rec_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+-- --
+-- -- AUTO_INCREMENT for table `rec_request`
+-- --
+-- ALTER TABLE `rec_request`
+--   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+-- --
+-- -- AUTO_INCREMENT for table `users`
+-- --
+-- ALTER TABLE `users`
+--   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
---
--- Constraints for dumped tables
---
+-- --
+-- -- Constraints for dumped tables
+-- --
 
---
--- Constraints for table `donations`
---
-ALTER TABLE `donations`
-  ADD CONSTRAINT `donations_ibfk_1` FOREIGN KEY (`phone_numbers`) REFERENCES `users` (`phone_number`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `donations_ibfk_2` FOREIGN KEY (`organ_id`) REFERENCES `organ` (`organ_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- --
+-- -- Constraints for table `donations`
+-- --
+-- ALTER TABLE `donations`
+--   ADD CONSTRAINT `donations_ibfk_1` FOREIGN KEY (`phone_numbers`) REFERENCES `users` (`phone_number`) ON DELETE CASCADE ON UPDATE CASCADE,
+--   ADD CONSTRAINT `donations_ibfk_2` FOREIGN KEY (`organ_id`) REFERENCES `organ` (`organ_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---
--- Constraints for table `recipents_waitinglist`
---
-ALTER TABLE `recipents_waitinglist`
-  ADD CONSTRAINT `fk_waitinglist_organ` FOREIGN KEY (`organ_id`) REFERENCES `organ` (`organ_id`),
-  ADD CONSTRAINT `fk_waitinglist_userphone` FOREIGN KEY (`phone_number`) REFERENCES `users` (`phone_number`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- --
+-- -- Constraints for table `recipents_waitinglist`
+-- --
+-- ALTER TABLE `recipents_waitinglist`
+--   ADD CONSTRAINT `fk_waitinglist_organ` FOREIGN KEY (`organ_id`) REFERENCES `organ` (`organ_id`),
+--   ADD CONSTRAINT `fk_waitinglist_userphone` FOREIGN KEY (`phone_number`) REFERENCES `users` (`phone_number`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---
--- Constraints for table `rec_request`
---
-ALTER TABLE `rec_request`
-  ADD CONSTRAINT `fk_don_phone_num` FOREIGN KEY (`don_phone_number`) REFERENCES `users` (`phone_number`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_organ_id` FOREIGN KEY (`organ_id`) REFERENCES `organ` (`organ_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_rec_phone_num` FOREIGN KEY (`rec_phone_number`) REFERENCES `users` (`phone_number`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- --
+-- -- Constraints for table `rec_request`
+-- --
+-- ALTER TABLE `rec_request`
+--   ADD CONSTRAINT `fk_don_phone_num` FOREIGN KEY (`don_phone_number`) REFERENCES `users` (`phone_number`) ON DELETE CASCADE ON UPDATE CASCADE,
+--   ADD CONSTRAINT `fk_organ_id` FOREIGN KEY (`organ_id`) REFERENCES `organ` (`organ_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+--   ADD CONSTRAINT `fk_rec_phone_num` FOREIGN KEY (`rec_phone_number`) REFERENCES `users` (`phone_number`) ON DELETE CASCADE ON UPDATE CASCADE;
