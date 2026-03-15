@@ -66,12 +66,10 @@ export default function editDonors() {
         >
 
             <View style={style.box2}>
-                <TouchableOpacity style={style.box2Btn}>
-                    <Text style={style.box2BtnText}>ADD</Text>
-                </TouchableOpacity>
-                <Text>{error}</Text>
+
+                <Text style={style.box2Btn}>{error}</Text>
                 <TouchableOpacity style={style.box2BtnRefresh} onPress={(getRequest)}>
-                    <Text style={style.box2BtnText}><AntDesign name="reload" size={30} color="black" /></Text>
+                    <Text style={style.box2BtnText}><AntDesign name="reload" size={30} color="white" /></Text>
                 </TouchableOpacity>
             </View>
 
@@ -121,11 +119,9 @@ const style = StyleSheet.create({
         marginRight: '5%'
     },
     box2Btn: {
-        marginRight: '5%',
-        backgroundColor: "rgba(42, 146, 201, 0.7)",
-        width: '20%',
-        marginLeft: '5%',
-        justifyContent: 'center',
+        color: 'red',
+        marginLeft: '25%',
+        marginTop: '5%'
     },
     box2BtnText: {
         // backgroundColor:'red',

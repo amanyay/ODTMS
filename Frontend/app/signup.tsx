@@ -48,7 +48,6 @@ const signup = () => {
             }
             else if (phoneNumberRegex.test(phoneNumber) || emailRegex.test(email) || passwordRegex.test(password)) {
 
-
                 const response = await axios.post(`${baseUrl}/signUp`, { firstName, lastName, phoneNumber, email, password, selectedValue });
 
                 if (response.status === 200) {
@@ -93,7 +92,6 @@ const signup = () => {
                 <View style={styles.box2}>
                     <TextInput placeholder='   Enter your first name' placeholderTextColor={'white'} style={styles.input} onChangeText={setFirstName} />
                     <TextInput placeholder='   Enter your last name' placeholderTextColor={'white'} style={styles.input} onChangeText={setLastName} />
-                    <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
                     <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
                     <TextInput placeholder='   Enter your email address' placeholderTextColor={'white'} style={styles.input} onChangeText={setEmail} />
                     <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />

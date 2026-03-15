@@ -39,6 +39,7 @@ const statstics = require('./routes/statstics')
 const updateProfile = require('./routes/updateProfile')
 const userNotification = require('./routes/userNotification')
 const adminRequestApp = require('./routes/adminRequestApp')
+const adminAddOrgan = require('./routes/adminAddOrgan');
 
 
 
@@ -84,4 +85,4 @@ app.use('/adminCompleteRequestData', adminCompleteRequestDataRoutes)
 app.use('/adminCompleteReq', adminCompleteReqRoutes)
 app.use('/adminAddNewAdmin', adminAddNewAdminRoutes)
 app.use('/deleteDonors', deleteDonors)
-
+app.use('/adminAddOrgan', adminAddOrgan)

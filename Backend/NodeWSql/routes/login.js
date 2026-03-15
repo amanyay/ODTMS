@@ -22,9 +22,9 @@ router.post('/', async (req, res) => {
 
 
     try {
-        const [selectedResult] = await connection.query(`SELECT * FROM users WHERE phone_number = ? AND password = ? `, [phoneNumber, password]);
-        // console.log(selectedResult)
-        // it shows you why [0][0] use
+        const [selectedResult] = await connection.query(`SELECT * FROM users 
+            WHERE phone_number = ? AND password = ? AND role != ?  `, [phoneNumber, password, 'admin']);
+
 
         if (selectedResult.length > 0) {
             const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET);

@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 // import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function map() {
 
@@ -86,6 +85,22 @@ export default function map() {
 
     }
 
+    function confirmDelete() {
+        Alert.alert("Delete Account ", "Are you sure you want to delete your account?",
+            [
+                {
+                    text: "Cancel",
+                    style: 'cancel'
+                },
+                {
+                    text: 'Delete',
+                    onPress: () => { deleteAccount() },
+                    style: 'destructive'
+                }
+            ]
+        );
+    }
+
     useEffect(() => {
         displayUsersData();
     }, [])
@@ -102,12 +117,6 @@ export default function map() {
             <ImageBackground
                 source={require('../../Desgin Templete and Docmentation/background 1.jpg')}
                 style={{ flex: 1 }} >
-                <View style={style.box1}>
-                    <TouchableOpacity>
-                        <Text><MaterialIcons name="arrow-back-ios" size={30} color="white" /></Text>
-                    </TouchableOpacity>
-                    <Text style={style.title}>Edit Profile</Text>
-                </View>
                 <Text style={style.error}>{error}</Text>
                 <View style={style.profileImageBox}>
                     <View style={style.profileImage}>
@@ -156,7 +165,7 @@ export default function map() {
                             <TouchableOpacity style={style.saveBtnBox} onPress={logout}>
                                 <Text style={style.saveBtn}>Log Out</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={style.saveBtnBox} onPress={deleteAccount}>
+                            <TouchableOpacity style={style.saveBtnBox} onPress={confirmDelete}>
                                 <Text style={style.saveBtn}>Delete Account</Text>
                             </TouchableOpacity>
                         </View>
@@ -185,7 +194,7 @@ const style = StyleSheet.create({
         paddingLeft: '5%'
     },
     title: {
-        marginLeft: '24%',
+        marginLeft: '30%',
         fontSize: 25,
         color: 'white',
         fontWeight: 'bold'

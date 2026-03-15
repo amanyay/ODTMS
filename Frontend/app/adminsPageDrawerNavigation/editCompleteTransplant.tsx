@@ -65,9 +65,6 @@ export default function editDonors() {
         >
 
             <View style={style.box2}>
-                <TouchableOpacity style={style.box2Btn}>
-                    <Text style={style.box2BtnText}>ADD</Text>
-                </TouchableOpacity>
                 <Text>{error}</Text>
                 <TouchableOpacity style={style.box2BtnRefresh} onPress={(getRequest)}>
                     <Text style={style.box2BtnText}><AntDesign name="reload" size={30} color="black" /></Text>

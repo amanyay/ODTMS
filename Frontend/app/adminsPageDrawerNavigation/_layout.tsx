@@ -49,7 +49,7 @@ export default function Layout() {
         name="adminProfile"
         options={{
           drawerLabel: 'My profile',
-          headerShown: false
+          title:'Edit Profile'
         }}
       />
 

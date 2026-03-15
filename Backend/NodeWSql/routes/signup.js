@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyParser.json());
 router.post("/", async (req, res) => {
 
-    const { firstName, phoneNumber, email, password, selectedValue } = req.body;
+    const { firstName, lastName, phoneNumber, email, password, selectedValue } = req.body;
     const connection = await createDBConnection();
 
     try {
@@ -25,18 +25,19 @@ router.post("/", async (req, res) => {
             res.status(200).json({ message: 'Already have an account' })
         }
         else if (selectionFromUsersTable.length < 1) {
-            const insertionQuery = await connection.query(`INSERT INTO users (first_name ,phone_number ,email ,
-                 password , role) VALUES (?,?,?,?,?)` , [firstName, phoneNumber, email, password, selectedValue]);
+            const insertionQuery = await connection.query(`INSERT INTO users (first_name, last_name ,phone_number ,email ,
+                 password , role) VALUES (?,?,?,?,?,?)` , [firstName, lastName, phoneNumber, email, password, selectedValue]);
 
             if (insertionQuery) {
                 res.status(200).json({ message: 'Successfully Registerd' })
-            }
+            } 
         }
 
     } catch (error) {
 
         if (error.message) {
             res.status(409).json({ err: "Database error " })
+            console.log(error.message)
         } else {
             res.status(500).json({ err: "Server error" })
         }

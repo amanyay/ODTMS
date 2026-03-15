@@ -1,4 +1,4 @@
- 
+
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -7,7 +7,7 @@ import axios from 'axios';
 // import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function map() {
 
@@ -81,10 +81,22 @@ export default function map() {
             setError(error.response.data.err)
 
         }
+    }
 
-
-
-
+    function confirmDelete() {
+        Alert.alert("Delete Account ", "Are you sure you want to delete your account?",
+            [
+                {
+                    text: "Cancel",
+                    style: 'cancel'
+                },
+                {
+                    text: 'Delete',
+                    onPress: () => { deleteAccount() },
+                    style: 'destructive'
+                }
+            ]
+        );
     }
 
     useEffect(() => {
@@ -157,7 +169,7 @@ export default function map() {
                             <TouchableOpacity style={style.saveBtnBox} onPress={logout}>
                                 <Text style={style.saveBtn}>Log Out</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={style.saveBtnBox} onPress={deleteAccount}>
+                            <TouchableOpacity style={style.saveBtnBox} onPress={confirmDelete}>
                                 <Text style={style.saveBtn}>Delete Account</Text>
                             </TouchableOpacity>
                         </View>

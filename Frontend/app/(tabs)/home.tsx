@@ -29,7 +29,7 @@ export default function home() {
                 router.push('/login')
             } else {
                 const request = await axios.post(`${baseUrl}/home`, { token });
-                
+
 
 
                 setUserNameDisplay(request.data.message.first_name)
@@ -228,7 +228,7 @@ export default function home() {
                         </View>
                     </View>
                     <View style={styless.box4}>
-                        <Text style={styless.box3Title}>What blood type donate and receive</Text>
+                        <Text style={styless.box3Title}>Blood Compatibility Guide</Text>
                         <TouchableOpacity style={styless.box4Btn}>
                             <Text style={styless.text1}><Text style={{ fontWeight: 'bold' }}>🩸 O− Universal Donor </Text>
                                 Can donate to everyone because it has no A, B, or Rh antigens.{'\n'}
