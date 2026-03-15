@@ -40,6 +40,7 @@ const updateProfile = require('./routes/updateProfile')
 const userNotification = require('./routes/userNotification')
 const adminRequestApp = require('./routes/adminRequestApp')
 const adminAddOrgan = require('./routes/adminAddOrgan');
+const qr = require('./routes/qr')
 
 
 
@@ -86,3 +87,4 @@ app.use('/adminCompleteReq', adminCompleteReqRoutes)
 app.use('/adminAddNewAdmin', adminAddNewAdminRoutes)
 app.use('/deleteDonors', deleteDonors)
 app.use('/adminAddOrgan', adminAddOrgan)
+app.use('/qr' , qr)

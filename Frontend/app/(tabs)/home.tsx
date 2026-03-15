@@ -166,7 +166,7 @@ export default function home() {
                     <TouchableOpacity style={styless.headerIcons} onPress={toNotification}>
                         <Text><Ionicons name="notifications-outline" size={30} color="black" /></Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styless.headerIcons} >
+                    <TouchableOpacity style={styless.headerIcons} onPress={() => { router.push('/homePageContents/qr') }}>
                         <Text><MaterialIcons name="qr-code-scanner" size={36} color="black" /></Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styless.headerIcons} onPress={getData}>
