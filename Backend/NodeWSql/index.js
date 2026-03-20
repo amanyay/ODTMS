@@ -58,6 +58,9 @@ app.use(bodyParser.json());
 app.listen(port, () => {
     console.log("server running in port", port);
 })
+app.get('/', (req, res) => {
+    res.send("ODTMS APP is running")
+})
 
 app.use('/login', loginRoutes)
 app.use('/adminLogin', adminLogin)
@@ -87,4 +90,4 @@ app.use('/adminCompleteReq', adminCompleteReqRoutes)
 app.use('/adminAddNewAdmin', adminAddNewAdminRoutes)
 app.use('/deleteDonors', deleteDonors)
 app.use('/adminAddOrgan', adminAddOrgan)
-app.use('/qr' , qr)
+app.use('/qr', qr)

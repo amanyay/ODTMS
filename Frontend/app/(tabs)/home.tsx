@@ -19,7 +19,6 @@ export default function home() {
     const [hidden, setHidden] = useState(true);
     const [error, setError] = useState("")
 
-
     async function getData() {
 
 
