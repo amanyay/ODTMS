@@ -56,7 +56,7 @@ export default function search() {
                 </View>
                 <View>
                     <Text style={style.inputText}>Height</Text>
-                    <TextInput style={style.input} placeholder='Height / cm' onChangeText={setTextInput1} keyboardType='number-pad' />
+                    <TextInput style={style.input} placeholder='Height / m' onChangeText={setTextInput1} keyboardType='number-pad' />
                     <Text style={style.inputText}>Weight</Text>
                     <TextInput style={style.input} placeholder='Weight / kg' onChangeText={setTextInput2} keyboardType='number-pad' />
                     <TouchableOpacity style={style.btn} onPress={() => { Calculate() }}>

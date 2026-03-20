@@ -116,10 +116,15 @@ const style = StyleSheet.create({
         height: '30%',
         alignItems: 'center',
         borderRadius: 8,
+        borderColor:'black',
+        borderWidth:1
     },
     dataBoxText1: {
         marginTop: '5%',
-        fontSize: 14
+        fontSize: 14,
+        borderBottomWidth:2,
+        width:'100%',
+        textAlign:'center',
     },
     dataBoxText2: {
         marginTop: '30%',

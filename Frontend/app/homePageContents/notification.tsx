@@ -54,7 +54,7 @@ export default function notification() {
 
                 <View style={styless.box1}>
                     <Text style={styless.notification}>
-                        Notification
+                        All Notification
                     </Text>
                     <TouchableOpacity style={styless.box2BtnRefresh} onPress={getNotificationdata}>
                         <Text style={styless.box2BtnText}><EvilIcons name="refresh" size={50} color="black" /></Text>
@@ -101,9 +101,9 @@ const styless = StyleSheet.create({
     box1: {
         width: '100%',
         paddingBottom: '1%',
-        marginTop: '10%',
+        marginTop: '0%',
         // backgroundColor:'darkgray',
-        height: '10%',
+        height: '7%',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',

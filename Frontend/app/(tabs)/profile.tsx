@@ -126,7 +126,7 @@ export default function map() {
                     <View style={style.profileImage}>
                         {/* <Image source={{ uri: profileImage }} /> */}
                     </View>
-                    <TouchableOpacity style={style.changeProfile}><Text style={style.changeProfileText}>Edit Profile Picture</Text></TouchableOpacity>
+                    <TouchableOpacity style={style.changeProfile}><Text style={style.changeProfileText}>Profile Picture</Text></TouchableOpacity>
                 </View>
                 {/* <TouchableOpacity style={style.toAdminPanel} onPress={() => { router.push("/adminsPageDrawerNavigation/editOrgans") }}>
                     <Text style={style.toAdminPanelText}>Admin Panel</Text>

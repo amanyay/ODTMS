@@ -27,9 +27,9 @@ router.use('/', async (req, res) => {
 
     try {
         const connection = await createDBConnection();
-        const [selectForqr] = await connection.query(`SELECT phone_number FROM users 
+        const [selectForqr] = await connection.query(`SELECT phone_number , first_name FROM users 
             WHERE phone_number = ? `, [actualVerifiedPhoneNumber])
-            
+
 
         if (selectForqr.length > 0) {
             res.status(200).json({ message: selectForqr[0] })

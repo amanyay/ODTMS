@@ -34,7 +34,7 @@ export default function HomePageContentLayout() {
       />
       <Stack.Screen
         name="notification"
-        options={{ headerShown: false }}
+        options={{ headerShown: true, title: 'Notification' }}
       />
       <Stack.Screen
         name="search"
@@ -63,7 +63,7 @@ export default function HomePageContentLayout() {
         name="qr"
         options={{
           headerShown: true, title: 'qr', headerTintColor: 'black',
-         
+
         }}
       />
     </Stack>
