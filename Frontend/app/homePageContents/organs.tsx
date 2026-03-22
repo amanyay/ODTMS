@@ -29,7 +29,7 @@ export default function organs() {
       }
       else if (request.status !== 201) {
         setOrgans(request.data.message);
-        // console.log(organs)
+
         // console.log(request.data.message)
       }
     } catch (error: any) {

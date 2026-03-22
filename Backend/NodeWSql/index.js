@@ -44,6 +44,7 @@ const qr = require('./routes/qr')
 
 
 
+
 const endpoint = "https://router.huggingface.co/v1";
 
 
@@ -69,6 +70,7 @@ app.use('/home', home)
 app.use('/profile', profile)
 app.use('/donorsForm', donorsForm)
 app.use('/recForm', recForm)
+app.use('/recOrgans', recOrgans)
 app.use('/donOrgans', donOrgans)
 app.use('/recRequests', recRequests)
 app.use('/userNotification', userNotification)
@@ -77,6 +79,7 @@ app.use('/deleteAccount', deleteAccount)
 app.use('/history', history)
 app.use('/statstics', statstics)
 app.use('/chatBot', chatBot)
+
 
 //          ADMIN API
 

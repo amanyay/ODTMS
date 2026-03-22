@@ -349,7 +349,7 @@ const styless = StyleSheet.create({
         flexWrap: 'wrap',
         textAlign: 'center',
         alignItems: 'center',
-        marginLeft: '3%',
+        marginLeft: '8%',
         // backgroundColor: 'red'
     },
     servicesBtn: {
@@ -363,11 +363,12 @@ const styless = StyleSheet.create({
         borderRadius: 7
     },
     servicesBtn1: {
-        height: 85,
-        width: '29%',
+        height: 80,
+        width: '24%',
         backgroundColor: "rgba(42, 146, 201, 0.1)",
         opacity: 1,
-        margin: 7,
+        margin: 14,
+        marginRight: 10,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 7
@@ -386,7 +387,7 @@ const styless = StyleSheet.create({
         width: '97%'
     },
     box4Btn: {
-        height: 140,
+        height: 200,
         // width: '19%',
         backgroundColor: "rgba(42, 146, 201, 0.7)",
         opacity: 1,
@@ -396,7 +397,7 @@ const styless = StyleSheet.create({
         borderRadius: 7
     },
     box4Btn2: {
-        height: 100,
+        height: 150,
         // width: '19%',
         backgroundColor: "rgba(42, 146, 201, 0.7)",
         opacity: 1,

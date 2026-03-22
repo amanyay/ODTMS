@@ -14,13 +14,12 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.post('/recOrgans', async (req, res) => {
+router.post('/', async (req, res) => {
 
     const { token, recAge, recBloodType, userOrgan } = req.body;
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
     const connection = await createDBConnection();
-
 
 
     const [selectionFromdonation] = await connection.query(`SELECT users.first_name, users.gender , users.age , users.location , users.email,
@@ -29,6 +28,7 @@ app.post('/recOrgans', async (req, res) => {
          JOIN users ON donations.phone_numbers = users.phone_number
          JOIN organ ON donations.organ_id = organ.organ_id 
          WHERE users.blood_type = ? AND donations.organ_id = ? `, [recBloodType, userOrgan]);
+
 
 
     try {
