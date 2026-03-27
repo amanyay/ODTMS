@@ -19,10 +19,13 @@ router.post('/', async (req, res) => {
     const { token, recAge, recBloodType, userOrgan } = req.body;
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
 
 
-    const [selectionFromdonation] = await connection.query(`SELECT users.first_name, users.gender , users.age , users.location , users.email,
+
+    try {
+
+        const connection = await createDBConnection();
+        const [selectionFromdonation] = await connection.query(`SELECT users.first_name, users.gender , users.age , users.location , users.email,
          users.blood_type ,organ.organ_name , organ.organ_id , donations.phone_numbers , donations.status 
          FROM donations 
          JOIN users ON donations.phone_numbers = users.phone_number
@@ -30,8 +33,9 @@ router.post('/', async (req, res) => {
          WHERE users.blood_type = ? AND donations.organ_id = ? `, [recBloodType, userOrgan]);
 
 
+        const [requestSelection] = await connection.query(`SELECT * FROM rec_request WHERE rec_phone_number = ? `
+            , [actualVerifiedPhoneNumber])
 
-    try {
 
         if (selectionFromdonation.length > 0) {
             const donAge = selectionFromdonation[0].age;
@@ -45,7 +49,8 @@ router.post('/', async (req, res) => {
             else if (ageDifference < 10) {
                 res.status(200).json({
                     message: selectionFromdonation,
-                    status: 'ok'
+                    status: 'ok',
+                    rec_request: requestSelection
                 })
             }
 

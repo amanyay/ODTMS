@@ -1,18 +1,20 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function organs() {
 
   const [organs, setOrgans] = useState<any>([]);
   const [notFound, setNotFound] = useState('');
   const [eachReqError, setEachReqError] = useState('')
-
+  // const [checkRequest, setCheckRequest] = useState(true)
 
   async function getOrganForRecs() {
 
@@ -27,10 +29,13 @@ export default function organs() {
       if (request.status === 201) {
         setNotFound('No match found');
       }
-      else if (request.status !== 201) {
+      else if (request.status === 200) {
         setOrgans(request.data.message);
 
-        // console.log(request.data.message)
+        // if (request.data.rec_request > 0) {
+        //   setCheckRequest(false)
+        // }
+        // // console.log(request.data.message)
       }
     } catch (error: any) {
 
@@ -88,7 +93,7 @@ export default function organs() {
         </TouchableOpacity>
       </View>
 
-      <View style={{ height: 70, marginBottom: 20 }}>
+      <View style={{ height: 50, marginBottom: 10 }}>
         <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}>{notFound}</Text>
         <Text style={style.eachReqError}>{eachReqError}</Text>
       </View>
@@ -99,16 +104,32 @@ export default function organs() {
         keyExtractor={(item) => item.phone_numbers.toString()}
         renderItem={({ item }) => (
           <View style={style.organBox}>
-            <Text style={style.organBoxText1}>Donor Name - <Text style={style.datas}>{item.first_name}</Text></Text>
-            <Text style={style.organBoxText2}>Donor age  -  <Text style={style.datas}>{item.age}</Text></Text>
-            <Text style={style.organBoxText4}>Donate Organ -  <Text style={style.datas}>{item.organ_name}</Text></Text>
-            <Text style={style.organBoxText3}>Location - <Text style={style.datas}>{item.location}</Text></Text>
-            <Text style={style.organBoxText4}>Phone Number -  <Text style={style.datas}>{item.phone_numbers}</Text></Text>
-            <Text style={style.organBoxText4}>Gender -  <Text style={style.datas}>{item.gender}</Text></Text>
-            <Text style={style.organBoxText4}>Blood Type -  <Text style={style.datas}>{item.blood_type}</Text></Text>
+
+            <View style={style.organBox1}>
+
+              <View style={style.boxHeaderIcon}>
+                <FontAwesome5 name="briefcase-medical" size={24} color="black" />
+              </View>
+              <View style={style.boxHeaderText}>
+                <Text style={style.boxHeaderText1}>Information about matched organ</Text>
+                {/* {checkRequest ? (<Text style={style.boxHeaderText2}>Request not Sent</Text>) : (<Text style={style.boxHeaderText2}>Request sent</Text>)} */}
+              </View>
+
+            </View>
+            <ScrollView style={{flex:1}}>
+              <View style={style.organBoxText}>
+                <Text style={style.organBoxText1}>Donor Name  </Text><Text style={style.datas}>{item.first_name}</Text>
+                <Text style={style.organBoxText1}>Donor age   </Text><Text style={style.datas}>{item.age}</Text>
+                <Text style={style.organBoxText1}>Donate Organ </Text><Text style={style.datas}>{item.organ_name}</Text>
+                <Text style={style.organBoxText1}>Location </Text><Text style={style.datas}>{item.location}</Text>
+                <Text style={style.organBoxText1}>Phone Number  </Text><Text style={style.datas}>{item.phone_numbers}</Text>
+                <Text style={style.organBoxText1}>Gender  </Text><Text style={style.datas}>{item.gender}</Text>
+                <Text style={style.organBoxText1}>Blood Type  </Text><Text style={style.datas}>{item.blood_type}</Text>
+              </View>
+            </ScrollView>
             <View style={style.updateAndRemoveBtn}>
               <TouchableOpacity style={style.requestBtnBox} onPress={() => sendRequest(item)}>
-                <Text style={style.requestBtnText}>Send Request</Text>
+                <Text style={style.requestBtnText}>Send Request <FontAwesome name="send" size={20} color="black" /></Text>
               </TouchableOpacity>
             </View>
 
@@ -128,7 +149,7 @@ const style = StyleSheet.create({
   box2: {
     flexDirection: 'row',
     width: '100%',
-    // backgroundColor:'blue',
+    // backgroundColor: 'blue',
     justifyContent: 'space-between',
     marginBottom: '2%',
     marginTop: '7%',
@@ -166,75 +187,130 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     padding: '3%'
   },
+  eachReqError: {
+    width: '100%',
+    // backgroundColor: 'blue',
+    height: 20,
+    justifyContent: 'flex-start',
+    alignContent: 'center',
+    textAlign: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
+    color: 'red'
+  },
   box3: {
     // backgroundColor:'red',
     flex: 1
   },
+
   organBox: {
-    backgroundColor: 'rgba(36, 36, 36 , 0.9)',
-    height: 450,
+    backgroundColor: '#bebaae',
+    height: 350,
     margin: '3%',
     marginTop: '2%',
     borderRadius: 8,
     alignContent: 'center',
     overflow: 'hidden'
   },
+  boxHeaderIcon: {
+    // backgroundColor: 'red',
+    width: '18%',
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center'
+  },
+  boxHeaderText: {
+    // backgroundColor: 'blue',
+    width: '100%'
+  },
+  boxHeaderText1: {
+    // backgroundColor:'red',
+    fontSize: 16,
+    padding: '1%',
+    fontWeight: 'bold',
+    marginTop: '4%',
+    marginLeft: '3%',
+  },
+  boxHeaderText2: {
+    // backgroundColor: 'blue',
+    marginLeft: '5%',
+    marginTop: '1%',
+    backgroundColor: 'red',
+    width: '35%',
+    textAlign: 'center',
+    borderRadius: 10
+  },
+  organBox1: {
+    backgroundColor: '#b9ccec',
+    height: 75,
+    flexDirection: 'row'
+  },
+  organBoxText: {
+    backgroundColor: '#bebaae',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    borderWidth: 0
+  },
   organBoxText1: {
-    color: 'red',
+    // backgroundColor: 'red',
+    color: '#77746d',
     fontWeight: 'bold',
-    fontSize: 22,
-    marginLeft: '5%',
+    fontSize: 15,
+    marginLeft: '7%',
     marginTop: '5%',
+    width: '33%',
+
   },
-  organBoxText2: {
-    color: 'red',
-    fontWeight: 'bold',
-    fontSize: 22,
-    marginLeft: '5%',
-    marginTop: '5%',
-  },
-  organBoxText3: {
-    color: 'red',
-    fontWeight: 'bold',
-    fontSize: 22,
-    marginLeft: '5%',
-    marginTop: '5%',
-  },
-  organBoxText4: {
-    color: 'red',
-    fontWeight: 'bold',
-    fontSize: 22,
-    marginLeft: '5%',
-    marginTop: '5%',
-  },
+  // organBoxText3: {
+  //   color: 'red',
+  //   fontWeight: 'bold',
+  //   fontSize: 22,
+  //   marginLeft: '5%',
+  //   marginTop: '5%',
+  // },
+  // organBoxText4: {
+  //   color: 'red',
+  //   fontWeight: 'bold',
+  //   fontSize: 22,
+  //   marginLeft: '5%',
+  //   marginTop: '5%',
+  // },
   datas: {
-    color: 'white',
-    fontWeight: '400'
+    // backgroundColor: 'yellow',
+    color: '#302e2c',
+    fontSize: 15,
+    fontWeight: 'bold',
+    width: '50%',
+    alignSelf: 'flex-end'
+
   },
   updateAndRemoveBtn: {
     flexDirection: 'row',
     justifyContent: 'center',
+    backgroundColor: '#bebaae',
+    borderWidth: 0,
+    marginTop: '0%'
   },
-  updateBtnBox: {
-    backgroundColor: "rgba(42, 146, 201, 0.7)",
-    margin: '7%',
-    width: '30%',
-    alignItems: 'center',
-    padding: '2%'
-  },
+  // updateBtnBox: {
+  //   backgroundColor: "rgba(42, 146, 201, 0.7)",
+  //   margin: '7%',
+  //   width: '30%',
+  //   alignItems: 'center',
+  //   padding: '2%'
+  // },
   updateBtnText: {
     fontFamily: 'arial',
     fontWeight: 'bold',
     fontSize: 17
   },
   requestBtnBox: {
-    backgroundColor: "red",
+    // backgroundColor: "red",
     marginRight: '7%',
     marginBottom: '2%',
     marginLeft: '7%',
-    marginTop: '7%',
-    width: '40%',
-    height: 50,
+    marginTop: '4%',
+    width: '50%',
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -243,17 +319,5 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
     letterSpacing: 1,
-  },
-  eachReqError: {
-    width: '100%',
-    // backgroundColor:'blue',
-    height: 40,
-    justifyContent: 'center',
-    alignContent: 'center',
-    textAlign: 'center',
-    alignSelf: 'center',
-    alignItems: 'center',
-    color: 'black'
   }
-
 })

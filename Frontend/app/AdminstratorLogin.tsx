@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
 import { router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ImageBackground, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 
 
@@ -55,21 +55,30 @@ const administrator = () => {
             style={styles.box}
             resizeMode="cover"
         >
-            <View style={styles.box1}>
-                <Text style={styles.title}>Administrator login</Text>
-            </View>
-            <View style={styles.box2}>
-                <TextInput inputMode="numeric" placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
-                <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
-                <Text style={styles.errorMessage}>{error}</Text>
-                <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Login as admin</Text></TouchableOpacity>
-                {loading ? (<ActivityIndicator size="large" color="#0000ff" />) : (<Text></Text>)}
-            </View>
-            <View>
-                <TouchableOpacity style={styles.asAdmin} onPress={() => { router.replace("/login") }}>
-                    <Text>Login as user</Text>
-                </TouchableOpacity>
-            </View>
+            <KeyboardAvoidingView
+                style={{ flex: 1, width: '100%', alignItems: 'center', }}
+                behavior="padding"
+            >
+
+
+                <ScrollView style={{ flex: 1, width: '90%' }}>
+                    <View style={styles.box1}>
+                        <Text style={styles.title}>Administrator login</Text>
+                    </View>
+                    <View style={styles.box2}>
+                        <TextInput inputMode="numeric" placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
+                        <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
+                        <Text style={styles.errorMessage}>{error}</Text>
+                        <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Login as admin</Text></TouchableOpacity>
+                        {loading ? (<ActivityIndicator size="large" color="#0000ff" />) : (<Text></Text>)}
+                    </View>
+                    <View style={styles.asAdminBox}>
+                        <TouchableOpacity style={styles.asAdmin} onPress={() => { router.replace("/login") }}>
+                            <Text>Login as user</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </ImageBackground>
 
     )
@@ -81,20 +90,22 @@ export default administrator
 const styles = StyleSheet.create({
 
     box: {
-        height: '100%',
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
 
     },
     box1: {
+        // backgroundColor: 'red',
         width: '100%',
-        height: '30%',
+        height: '45%',
         marginBottom: "2%",
         justifyContent: 'flex-end'
     },
     box2: {
+        // backgroundColor: 'red',
         width: '100%',
-        height: '55%'
+        marginBottom: '18%'
     },
     title: {
         fontSize: 34,
@@ -114,10 +125,10 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         borderRadius: 3,
         marginTop: '10%',
-        marginLeft: '10%',
-        width: "80%",
+        marginLeft: '5%',
+        width: "90%",
         textAlign: 'left',
-        height: '11%',
+        height: 55,
         color: 'white',
         fontSize: 13,
         letterSpacing: 0.5
@@ -132,7 +143,7 @@ const styles = StyleSheet.create({
     btn: {
         backgroundColor: "#231650",
         width: '80%',
-        height: '11%',
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'flex-end',
@@ -152,9 +163,24 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: "5%"
     },
+    asAdminBox: {
+        // backgroundColor: 'red',
+        marginTop: '18%',
+        width: '70%',
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        borderRadius: 8,
+        marginBottom: '5%',
+    },
     asAdmin: {
         backgroundColor: '#D3AF37',
-        padding: '4%'
+        padding: '4%',
+        height: 50,
+        width: '50%',
+        justifyContent: 'center',
+        textAlign: 'center'
     },
     asAdminText: {
 

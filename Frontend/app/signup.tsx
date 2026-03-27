@@ -4,7 +4,14 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { router } from "expo-router";
 import { useState } from "react";
-import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+    ActivityIndicator,
+    ImageBackground,
+    KeyboardAvoidingView,
+    ScrollView,
+    StyleSheet, Text, TextInput,
+    TouchableOpacity, View
+} from "react-native";
 
 
 
@@ -16,6 +23,7 @@ const signup = () => {
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
+    const [loading, setIsLoading] = useState(false);
     const options = ['donor', 'recipents'];
 
 
@@ -48,11 +56,14 @@ const signup = () => {
             }
             else if (phoneNumberRegex.test(phoneNumber) || emailRegex.test(email) || passwordRegex.test(password)) {
 
+                setIsLoading(true);
+
                 const response = await axios.post(`${baseUrl}/signUp`, { firstName, lastName, phoneNumber, email, password, selectedValue });
 
                 if (response.status === 200) {
+                    setIsLoading(false);
                     setError(response.data.message);
-                    router.push('/login')
+                    // router.push('/login')
                 }
                 else if (response.status === 201) {
                     setError(response.data.message)
@@ -85,32 +96,40 @@ const signup = () => {
             resizeMode="cover"
         >
 
-            <ScrollView style={{ flex: 1, width: '90%' }}>
-                <View style={styles.box1}>
-                    <Text style={styles.title}>Sign Up</Text>
-                </View>
-                <View style={styles.box2}>
-                    <TextInput placeholder='   Enter your first name' placeholderTextColor={'white'} style={styles.input} onChangeText={setFirstName} />
-                    <TextInput placeholder='   Enter your last name' placeholderTextColor={'white'} style={styles.input} onChangeText={setLastName} />
-                    <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
-                    <TextInput placeholder='   Enter your email address' placeholderTextColor={'white'} style={styles.input} onChangeText={setEmail} />
-                    <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
-                    <Picker
-                        selectedValue={selectedValue}
-                        onValueChange={(itemValue) => setSelectedValue(itemValue)}
-                        style={styles.picker}
-                    >
-                        <Picker.Item label="Select an option..." value="" />
-                        {options.map((option, index) => (
-                            <Picker.Item key={index} label={option} value={option} />
-                        ))}
-                    </Picker>
 
-                    <Text style={styles.errorMessage}>{error}</Text>
-                    <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Sign Up</Text></TouchableOpacity>
-                    <Text style={styles.signUpBox}>Already have an account ? <TouchableOpacity onPress={toSignInPage}><Text style={styles.commonText}>sign in</Text></TouchableOpacity></Text>
-                </View>
-            </ScrollView>
+            <KeyboardAvoidingView
+                style={{ flex: 1, width: '100%',alignItems:'center' }}
+                behavior="padding"
+            >
+
+                <ScrollView style={{ flex: 1, width: '90%' }}>
+                    <View style={styles.box1}>
+                        <Text style={styles.title}>Sign Up</Text>
+                    </View>
+                    <View style={styles.box2}>
+                        <TextInput placeholder='   Enter your first name' placeholderTextColor={'white'} style={styles.input} onChangeText={setFirstName} />
+                        <TextInput placeholder='   Enter your last name' placeholderTextColor={'white'} style={styles.input} onChangeText={setLastName} />
+                        <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
+                        <TextInput placeholder='   Enter your email address' placeholderTextColor={'white'} style={styles.input} onChangeText={setEmail} />
+                        <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
+                        <Picker
+                            selectedValue={selectedValue}
+                            onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                            style={styles.picker}
+                        >
+                            <Picker.Item label="Select an option..." value="" />
+                            {options.map((option, index) => (
+                                <Picker.Item key={index} label={option} value={option} />
+                            ))}
+                        </Picker>
+                        {loading && (<ActivityIndicator size="large" color="#0000ff" />)}
+                        <Text style={styles.errorMessage}>{error}</Text>
+                        <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Sign Up</Text></TouchableOpacity>
+                        <Text style={styles.signUpBox}>Already have an account ? <TouchableOpacity onPress={toSignInPage}><Text style={styles.commonText}>sign in</Text></TouchableOpacity></Text>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+
         </ImageBackground>
 
     )
@@ -174,7 +193,7 @@ const styles = StyleSheet.create({
     },
     errorMessage: {
         color: 'red',
-        marginTop: '5%',
+        marginTop: '2%',
         alignSelf: 'center',
         fontSize: 15,
         letterSpacing: 1

@@ -65,11 +65,19 @@ export default function history() {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={style.eachRequests}>
-            <Text style={style.eachRequestsData1}>{item.first_name}</Text>
-            <Text style={style.eachRequestsData2}>Track Id : {item.id}</Text>
-            <Text style={style.eachRequestsData2}>{textType}  → {item.organ_name}</Text>
-            <Text style={style.eachRequestsData3}>Date : {item.date}</Text>
-            <Text style={style.eachRequestsData3}>Status : {item.status === "Pending" ? (<Text><Entypo name="dot-single" size={23} color="red" />Pending</Text>) : (<Text><Entypo name="dot-single" size={28} color="green" />{item.status}</Text>)}</Text>
+            <View style={style.eachRequestsBox1}>
+              <Text style={[style.eachRequestsData3,{fontWeight:'bold'}]}>{new Date(item.date).toLocaleTimeString()}</Text>
+              <Text style={[style.eachRequestsData3,{}]}>{new Date(item.date).toLocaleDateString()}</Text>
+            </View>
+            <View style={style.eachRequestsBox2}>
+              <Text style={style.eachRequestsData1}>{item.first_name}</Text>
+              <Text style={style.eachRequestsData2}>Track Id : {item.id}</Text>
+              <Text style={style.eachRequestsData2}>{textType}  → {item.organ_name}</Text>
+
+              <View style={style.eachRequestsData4}>
+                {item.status === "Pending" ? (<Text style={style.pendingMessage}>Pending</Text>) : (<Text style={[style.pendingMessage, {backgroundColor:'red'}]}><Entypo name="dot-single" size={28} color="green" />{item.status}</Text>)}
+              </View>
+            </View>
 
           </View>
         )}
@@ -111,14 +119,28 @@ const style = StyleSheet.create({
     width: '100%'
   },
   eachRequests: {
-    height: 130,
-    width: '95%',
-    backgroundColor: "rgba(255, 255, 255, 0.35)",
+    height: 120,
+    width: '70%',
+    backgroundColor: 'white',
     opacity: 1.9,
-    margin: 7,
+    margin: 10,
     alignItems: 'flex-start',
-    // justifyContent: 'center',
-    borderRadius: 7
+    flexDirection: 'row',
+    borderRadius: 10
+  },
+  eachRequestsBox1: {
+    backgroundColor: '#4259c1',
+    width: '38%',
+    height: 120,
+    borderRadius: 10,
+    borderBottomRightRadius: 0,
+    justifyContent: 'center'
+  },
+  eachRequestsBox2: {
+    backgroundColor: '#faebd7',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10
   },
   eachRequestsData1: {
     padding: 2,
@@ -134,5 +156,23 @@ const style = StyleSheet.create({
   eachRequestsData3: {
     padding: 2,
     paddingLeft: 15,
+  },
+  eachRequestsData4: {
+    // backgroundColor: 'blue',
+    width: '45%',
+    height: '20%',
+    alignSelf: 'flex-end',
+    marginRight: '10%',
+    marginTop: '5%',
+    textAlign: 'center',
+    alignItems: 'center'
+  },
+  pendingMessage: {
+    backgroundColor: 'green',
+    height: '100%',
+    width: "80%",
+    textAlign: 'center',
+    borderRadius: 18,
+    fontSize: 15
   }
 })
