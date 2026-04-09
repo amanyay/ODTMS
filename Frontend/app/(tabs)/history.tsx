@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Entypo from '@expo/vector-icons/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -75,7 +74,7 @@ export default function history() {
               <Text style={style.eachRequestsData2}>{textType}  → {item.organ_name}</Text>
 
               <View style={style.eachRequestsData4}>
-                {item.status === "Pending" ? (<Text style={style.pendingMessage}>Pending</Text>) : (<Text style={[style.pendingMessage, {backgroundColor:'red'}]}><Entypo name="dot-single" size={28} color="green" />{item.status}</Text>)}
+                {item.status === "Pending" ? (<Text style={style.pendingMessage}>Pending</Text>) : (<Text style={style.pendingMessage1}>{item.status}</Text>)}
               </View>
             </View>
 
@@ -159,7 +158,7 @@ const style = StyleSheet.create({
   },
   eachRequestsData4: {
     // backgroundColor: 'blue',
-    width: '45%',
+    width: '50%',
     height: '20%',
     alignSelf: 'flex-end',
     marginRight: '10%',
@@ -168,11 +167,19 @@ const style = StyleSheet.create({
     alignItems: 'center'
   },
   pendingMessage: {
-    backgroundColor: 'green',
-    height: '100%',
+    backgroundColor: 'red',
+    height: '90%',
     width: "80%",
     textAlign: 'center',
-    borderRadius: 18,
+    borderRadius: 50,
     fontSize: 15
+  },
+  pendingMessage1: {
+    backgroundColor: 'green',
+    height:'90%',
+    width: "80%",
+    textAlign: 'center',
+    borderRadius: 50,
+    fontSize: 15,
   }
 })

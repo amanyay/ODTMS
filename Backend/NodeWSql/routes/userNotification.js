@@ -32,7 +32,8 @@ router.post('/', async (req, res) => {
         JOIN organ ON rec_request.organ_id = organ.organ_id 
         JOIN users AS u1 ON rec_request.rec_phone_number = u1.phone_number
         JOIN users AS u2 ON rec_request.don_phone_number = u2.phone_number
-        WHERE rec_request.rec_phone_number = ? AND status = ? `, [actualVerifiedPhoneNumber, 'Approved']);
+        WHERE rec_request.rec_phone_number = ? AND status != ? 
+        ORDER BY rec_request.date DESC`, [actualVerifiedPhoneNumber, 'Pending']);
 
 
 

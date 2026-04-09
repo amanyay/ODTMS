@@ -1,0 +1,33 @@
+import { Drawer } from 'expo-router/drawer'
+
+export default function _layout() {
+    return (
+        <Drawer>
+            <Drawer.Screen
+                name='kidneyDonor'
+                options={{ headerShown: true, drawerLabel: 'Kidney Donors', title: 'Kidney Donors' }}
+            />
+            <Drawer.Screen
+                name='kidneyRecipents'
+                options={{ headerShown: true, drawerLabel: 'Kidney Recipents', title: 'Kidney Recipents' }}
+            />
+            <Drawer.Screen
+                name='kidneyEdit'
+                options={{ headerShown: true, drawerLabel: 'Kidney Edit', title: 'Kidney Edit' }}
+            />
+            <Drawer.Screen
+                name='kidneyRequests'
+                options={{ headerShown: true, drawerLabel: 'Kidney Requests', title: 'Kidney Requests' }}
+            />
+            <Drawer.Screen
+                name='kidneyTransplantComplete'
+                options={{ headerShown: true, drawerLabel: 'On Going Transplant', title: 'On Going Transplant' }}
+            />
+            <Drawer.Screen
+                name='adminProfile'
+                options={{ headerShown: true, drawerLabel: 'My Profile', title: 'My Profile' ,headerTitleAlign:'center'}}
+            />
+
+        </Drawer>
+    )
+}

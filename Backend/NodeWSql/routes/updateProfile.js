@@ -4,6 +4,10 @@ const bodyParser = require('body-parser')
 const mysql = require('mysql2/promise');
 const createDBConnection = require('../db');
 const JWT = require('jsonwebtoken');
+const multer = require('multer')
+const path = require('path');
+
+
 
 require('dotenv').config();
 
@@ -11,20 +15,28 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const port = process.env.PORT;
 const app = express();
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, '../uploads')); // make sure uploads/ exists
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
 
-app.use(bodyParser.json());
+const upload = multer({ storage });
 
 
 
+router.post('/', upload.single('PPImage'), async (req, res) => {
 
-router.post("/", async (req, res) => {
-
-    const { token, firstName, lastName, email, age, location, gender, bloodType, role } = req.body;
+    const { firstname, lastName, age, location, gender, email, bloodType, token } = req.body
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
+    const fileName = req.file.filename;
 
     try {
+        const connection = await createDBConnection();
         const updateUsersTable = await connection.query(`UPDATE users SET 
         first_name = ? , 
         last_name = ?,
@@ -32,8 +44,9 @@ router.post("/", async (req, res) => {
         age = ? , 
         location = ? , 
         gender = ? , 
-        blood_type = ? 
-        WHERE phone_number = ? `, [firstName, lastName, email, age, location, gender, bloodType, actualVerifiedPhoneNumber])
+        blood_type = ? ,
+        profile_image = ?
+        WHERE phone_number = ? `, [firstname, lastName, email, age, location, gender, bloodType, fileName, actualVerifiedPhoneNumber])
 
         if (updateUsersTable) {
             const [selectionFromUsersTable] = await connection.query('SELECT * FROM users WHERE phone_number = ?', [actualVerifiedPhoneNumber])

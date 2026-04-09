@@ -36,7 +36,7 @@ const signup = () => {
 
         const phoneNumberRegex = /^[0-9]{10}$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const passwordRegex = /[0-9A-Za-z]{2,}/
+        const passwordRegex = /^[A-Za-z0-9?]{4,}$/;
 
         try {
 
@@ -98,7 +98,7 @@ const signup = () => {
 
 
             <KeyboardAvoidingView
-                style={{ flex: 1, width: '100%',alignItems:'center' }}
+                style={{ flex: 1, width: '100%', alignItems: 'center' }}
                 behavior="padding"
             >
 

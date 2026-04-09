@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import EvilIcons from '@expo/vector-icons/EvilIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -53,11 +53,9 @@ export default function notification() {
                 style={{ flex: 1 }} >
 
                 <View style={styless.box1}>
-                    <Text style={styless.notification}>
-                        All Notification
-                    </Text>
+                    
                     <TouchableOpacity style={styless.box2BtnRefresh} onPress={getNotificationdata}>
-                        <Text style={styless.box2BtnText}><EvilIcons name="refresh" size={50} color="black" /></Text>
+                        <Text style={styless.box2BtnText}><AntDesign name="reload" size={35} color="black" /></Text>
                     </TouchableOpacity>
                 </View>
 
@@ -70,10 +68,10 @@ export default function notification() {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <View style={styless.eachNotificationBox}>
-                            <Text style={{ fontWeight: 'bold', fontFamily: 'fantasy' }}>   Date : {item.date}</Text>
+                            <Text style={{ fontWeight: 'bold', fontFamily: 'fantasy' }}>   Date : {new Date(item.date).toLocaleDateString()}</Text>
                             <Text style={styless.texts}>Dear, <Text style={styless.userName}>{item.rec_name}</Text> <Text>
                                 We are excited to inform you that a suitable organ match has been
-                                found for your request. It means the system found compatible organ for you
+                                found for your request. The system found compatible organ for you
                                 with your blood type and organ.
                             </Text></Text>
                             <Text style={styless.texts1}>{item.rec_name} {arrow}  {item.don_name}  </Text>
@@ -104,9 +102,6 @@ const styless = StyleSheet.create({
         marginTop: '0%',
         // backgroundColor:'darkgray',
         height: '7%',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'flex-end',
         borderBottomWidth: 1.2
     },
@@ -123,10 +118,11 @@ const styless = StyleSheet.create({
         fontSize: 18
     },
     box2BtnRefresh: {
-        marginRight: '5%',
+        marginRight: '8%',
         // backgroundColor: "rgba(42, 146, 201, 0.7)",
-        width: '8%',
-        marginLeft: '1%',
+        width: '10%',
+        marginTop:'1.5%',
+        alignSelf:'flex-end',
         justifyContent: 'center',
     },
     eachNotificationBox: {

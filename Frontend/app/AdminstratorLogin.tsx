@@ -29,8 +29,19 @@ const administrator = () => {
                 setError("");
 
                 if (request.status === 200) {
-                    AsyncStorage.setItem('token', request.data.token)
-                    router.replace('/adminsPageDrawerNavigation/editOrgans')
+                    if (request.data.message.ID === 0) {
+                        AsyncStorage.setItem('token', request.data.token)
+                        router.replace('/adminsPageDrawerNavigation/editOrgans')
+                    }
+                    else if (request.data.message.ID === 1) {
+                        AsyncStorage.setItem('token', request.data.token)
+                        router.replace('/adminsPageForKidenyTransplant/kidneyDonor')
+                    }
+                    else if (request.data.message.ID === 2) {
+                        AsyncStorage.setItem('token', request.data.token)
+                        router.replace('/adminsPageForEyeTransplant/eyeDonor')
+                    }
+
                 }
                 else if (request.status === 201) {
                     setError(request.data.message)
@@ -180,7 +191,7 @@ const styles = StyleSheet.create({
         height: 50,
         width: '50%',
         justifyContent: 'center',
-        textAlign: 'center'
+        alignItems: 'center'
     },
     asAdminText: {
 

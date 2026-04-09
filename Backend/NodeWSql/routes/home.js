@@ -20,6 +20,7 @@ router.post('/', async (req, res) => {
 
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+    let verificationMessage = '';
 
     try {
 
@@ -31,13 +32,20 @@ router.post('/', async (req, res) => {
             FROM recipents_waitinglist 
             JOIN users ON recipents_waitinglist.phone_number = users.phone_number
             JOIN organ ON recipents_waitinglist.organ_id =  organ.organ_id 
-            WHERE recipents_waitinglist.phone_number = ? ` , [actualVerifiedPhoneNumber]
+            WHERE recipents_waitinglist.phone_number = ? ` , [actualVerifiedPhoneNumber]);
 
-            )
+
+            if (getRecInfoQuery[0].fayda_no === 0 || getRecInfoQuery === null) {
+                verificationMessage = "Not Verified"
+            }
+            else {
+                verificationMessage = "Verified"
+            }
             res.status(200).json({
                 message: selectionFromUser[0],
                 joinMessage: getRecInfoQuery,
-                status: 'ok'
+                status: 'ok',
+                faydaVerfication: verificationMessage
             })
         }
         else if (selectionFromUser[0].role === 'donor') {

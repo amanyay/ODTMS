@@ -131,6 +131,7 @@ export default function donarForm() {
                 >
                     <Picker.Item label="1.Kidney" value="1" />
                     <Picker.Item label="2.Liver" value="2" />
+                    <Picker.Item label="3.Eye" value="3" />
                 </Picker>
             </View>
             <Text style={style.error}>{error}</Text>

@@ -66,6 +66,13 @@ export default function HomePageContentLayout() {
 
         }}
       />
+      <Stack.Screen
+        name="verifyFayda"
+        options={{
+          headerShown: true, title: 'Fayda Verification', headerTitleAlign: 'center', headerTintColor: 'black',
+
+        }}
+      />
     </Stack>
   );
 }

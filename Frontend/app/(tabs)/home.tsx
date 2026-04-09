@@ -15,9 +15,11 @@ export default function home() {
     const [userNameDisplay, setUserNameDisplay] = useState('');
     const [bloodType, setBloodType] = useState('')
     const [role, setRole] = useState('');
+    const [faydaNo, setFaydaNo] = useState();
     const [organs, setOrgans] = useState<any>([]);
-    const [hidden, setHidden] = useState(true);
+    const [hidden, setHidden] = useState(false);
     const [error, setError] = useState("")
+    const [faydaVerifaction, setFaydaVerifaction] = useState("")
 
     async function getData() {
 
@@ -29,10 +31,10 @@ export default function home() {
             } else {
                 const request = await axios.post(`${baseUrl}/home`, { token });
 
-
-
-                setUserNameDisplay(request.data.message.first_name)
-                setBloodType(request.data.message.blood_type)
+                setFaydaNo(request.data.message.fayda_no);
+                setFaydaVerifaction(request.data.faydaVerfication)
+                setUserNameDisplay(request.data.message.first_name);
+                setBloodType(request.data.message.blood_type);
                 setRole(request.data.message.role);
                 if (request.data.joinMessage.length > 0) {
                     setOrgans(request.data.joinMessage[0].organ_name);
@@ -117,6 +119,22 @@ export default function home() {
                 Alert.alert("You are donor not allowed")
 
             }
+            else if (faydaNo === null || faydaNo === 0) {
+                Alert.alert("Verify Account", "Use fayda number to verify your account",
+                    [
+                        {
+                            style: 'cancel',
+                            text: 'Cancel'
+                        },
+                        {
+                            style: 'default',
+                            text: 'Verify',
+                            onPress: () => { router.push('/homePageContents/verifyFayda') }
+
+                        }
+
+                    ])
+            }
             else {
 
                 if (userBloodType === null || length.length < 1) {
@@ -184,6 +202,7 @@ export default function home() {
                             <Text style={styless.statusText}>Name  :  {hidden ? ('*****') : (userNameDisplay)} </Text>
                             <Text style={styless.statusText}>Role    :  {hidden ? ('*****') : (role)} </Text>
                             <Text style={styless.statusText}>Organ :  {hidden ? ('*****') : (organs)}</Text>
+                            <Text style={styless.statusTextVerify}>{faydaVerifaction}</Text>
                         </View>
 
 
@@ -298,6 +317,7 @@ const styless = StyleSheet.create({
         color: '#F3742B',
         letterSpacing: 4,
         margin: '8%',
+        marginBottom: '3%',
         marginLeft: '7%',
         fontSize: 25,
         fontFamily: 'monospace',
@@ -311,10 +331,22 @@ const styless = StyleSheet.create({
         fontSize: 15,
         fontFamily: 'monospace',
     },
+    statusTextVerify: {
+        color: 'white',
+        margin: '0%',
+        marginLeft: '-4%',
+        marginBottom: '5%',
+        fontSize: 15,
+        fontFamily: 'monospace',
+        backgroundColor: 'red',
+        width: '29%',
+        textAlign: 'center',
+        borderRadius: 50
+    },
     text: {
         color: 'white',
         margin: '0%',
-        marginLeft: '7%',
+        marginLeft: '8%',
         marginBottom: '2%',
         fontSize: 15,
         fontFamily: 'monospace',

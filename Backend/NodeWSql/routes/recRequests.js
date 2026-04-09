@@ -19,11 +19,12 @@ router.post('/', async (req, res) => {
     const { token, donorPhoneNumber, organId } = req.body;
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
+
 
 
 
     try {
+        const connection = await createDBConnection();
         const [selectionFromRecReqTable] = await connection.query(`SELECT * FROM rec_request WHERE 
             rec_phone_number = ? AND don_phone_number = ? `, [actualVerifiedPhoneNumber, donorPhoneNumber]);
 
@@ -46,6 +47,7 @@ router.post('/', async (req, res) => {
 
     } catch (error) {
         if (error.message) {
+            console.log(error)
             res.status(409).json({ err: "Database error " })
         } else {
             res.status(500).json({ err: "Server error" })

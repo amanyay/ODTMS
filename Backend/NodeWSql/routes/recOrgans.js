@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
          FROM donations 
          JOIN users ON donations.phone_numbers = users.phone_number
          JOIN organ ON donations.organ_id = organ.organ_id 
-         WHERE users.blood_type = ? AND donations.organ_id = ? `, [recBloodType, userOrgan]);
+         WHERE users.blood_type = ? AND donations.organ_id = ? AND status != ?  `, [recBloodType, userOrgan, 'Completed']);
 
 
         const [requestSelection] = await connection.query(`SELECT * FROM rec_request WHERE rec_phone_number = ? `
@@ -47,6 +47,11 @@ router.post('/', async (req, res) => {
                 })
             }
             else if (ageDifference < 10) {
+
+                //Query to insert in to rec_request table for 
+                // INSERT INTO REC_REQUEST FOR rec_phone_number insert the actual verified number for 
+                //don_phone_number selectionFromDonoation[0].phone_number
+
                 res.status(200).json({
                     message: selectionFromdonation,
                     status: 'ok',

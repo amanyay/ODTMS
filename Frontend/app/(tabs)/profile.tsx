@@ -1,13 +1,13 @@
 
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-// import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function map() {
 
@@ -17,13 +17,17 @@ export default function map() {
     const [displayAge, setDisplayage] = useState('');
     const [displayBloodType, setDisplayBloodType] = useState('');
     const [displayLocation, setDisplayLocation] = useState('');
+    const [dispalyProfileImage, setDispalyProfileImage] = useState('');
     const [error, setError] = useState('');
-    // const [profileImage, setProfileImage] = useState<string | null>(null);
+
+
 
 
     async function displayUsersData() {
 
         try {
+
+
             const token = await AsyncStorage.getItem('token');
 
             const request = await axios.post(`${baseUrl}/profile`, { token });
@@ -33,7 +37,10 @@ export default function map() {
             setDisplayEmail(request.data.message.email);
             setDisplayage(request.data.message.age);
             setDisplayBloodType(request.data.message.blood_type);
-            setDisplayLocation(request.data.message.location)
+            setDisplayLocation(request.data.message.location);
+            setDispalyProfileImage(request.data.message.profile_image);
+
+
         } catch (error: any) {
 
             setError(error.response.data.err)
@@ -45,18 +52,7 @@ export default function map() {
     }
 
 
-    // async function changeProfile() {
 
-    //     const profileImage = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true, mediaTypes: 'images' })
-
-    //     if (profileImage.canceled === true) {
-    //         setError("")
-    //     } else {
-    //         console.log(profileImage.assets[0].uri)
-    //         setProfileImage(profileImage.assets[0].uri)
-    //     }
-
-    // }
 
 
 
@@ -116,21 +112,16 @@ export default function map() {
                 source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
                 style={{ flex: 1 }} >
                 <View style={style.box1}>
-                    <TouchableOpacity>
-                        <Text><MaterialIcons name="arrow-back-ios" size={30} color="white" /></Text>
+                    <TouchableOpacity style={style.headerIcons} onPressOut={displayUsersData}>
+                        <Text><AntDesign name="reload" size={30} color="black" /></Text>
                     </TouchableOpacity>
-                    <Text style={style.title}>Edit Profile</Text>
                 </View>
                 <Text style={style.error}>{error}</Text>
                 <View style={style.profileImageBox}>
                     <View style={style.profileImage}>
-                        {/* <Image source={{ uri: profileImage }} /> */}
+                        {dispalyProfileImage ? (<Image style={{ height: 150, width: 150 }} source={{ uri: `${baseUrl}/uploads/${dispalyProfileImage}` }} />) : (<EvilIcons name="user" size={120} color="black" />)}
                     </View>
-                    <TouchableOpacity style={style.changeProfile}><Text style={style.changeProfileText}>Profile Picture</Text></TouchableOpacity>
                 </View>
-                {/* <TouchableOpacity style={style.toAdminPanel} onPress={() => { router.push("/adminsPageDrawerNavigation/editOrgans") }}>
-                    <Text style={style.toAdminPanelText}>Admin Panel</Text>
-                </TouchableOpacity> */}
                 <ScrollView style={{ flex: 1, paddingBottom: 80 }}>
                     <View style={style.box3}>
                         <Text style={style.box3Text}>Name</Text>
@@ -190,38 +181,41 @@ const style = StyleSheet.create({
         // backgroundColor: 'red'
     },
     box1: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
         // backgroundColor:'red',
-        height: '15%',
+        height: '8%',
         alignItems: 'flex-end',
-        paddingLeft: '5%'
     },
     title: {
-        marginLeft: '24%',
+        // marginLeft: '24%',
         fontSize: 25,
         color: 'white',
         fontWeight: 'bold',
-
+        // backgroundColor:'blue',
+        width:'60%'
     },
     error: {
         marginTop: 10,
         textAlign: 'center',
         // backgroundColor:'red',
     },
+    headerIcons: {
+        marginRight: '10%',
+        marginTop:'2%'
+        // backgroundColor: 'yellow',
+    },
     profileImageBox: {
         // backgroundColor:'blue',
         width: '100%',
-        height: '30%',
+        height: '22%',
         marginTop: '1%',
         alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: '2%'
+        justifyContent: 'flex-start',
+        marginBottom: '5%'
     },
     profileImage: {
         width: 150,
         height: 150,
-        backgroundColor: 'yellow',
+        // backgroundColor: 'yellow',
         borderRadius: 90,
         overflow: 'hidden'
     },

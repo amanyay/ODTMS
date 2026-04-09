@@ -44,7 +44,15 @@ const login = () => {
         }
 
         catch (error: any) {
-            setError(error.response.data.err)
+            console.log(error)
+            if (error.response.data.err) {
+                setError(error.response.data.err)
+                setIsLoading(false)
+            } else if (error) {
+                setError("Unkown error")
+                setIsLoading(false)
+            }
+
         }
     }
 
@@ -70,8 +78,11 @@ const login = () => {
                     <View style={styles.box2}>
                         <TextInput inputMode="numeric" placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
                         <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
-                        <Text style={styles.errorMessage}>{error}</Text>
+                        <TouchableOpacity style={styles.forgetAccountBox} onPress={() => { router.push('/ForgetPassword/forget') }}>
+                            <Text style={styles.forgetAccountText}>Forget Password ?</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Login</Text></TouchableOpacity>
+                        <Text style={styles.errorMessage}>{error}</Text>
                         <Text style={styles.signUpBox}>Don{"'"}t have an account ? <TouchableOpacity onPress={toSignupPage}><Text style={styles.commonText}> sign up</Text></TouchableOpacity></Text>
                         {loading ? (<ActivityIndicator size="large" color="#0000ff" />) : (<Text></Text>)}
                     </View>
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
     box1: {
         // backgroundColor: 'red',
         width: '100%',
-        height: '45%',
+        height: '38%',
         marginBottom: "2%",
         justifyContent: 'flex-end'
     },
@@ -138,10 +149,11 @@ const styles = StyleSheet.create({
     },
     errorMessage: {
         color: 'red',
-        marginTop: '5%',
+        marginTop: '1%',
         alignSelf: 'center',
         fontSize: 15,
-        letterSpacing: 1
+        letterSpacing: 1,
+        marginBottom: '5%'
     },
     btn: {
         backgroundColor: "#231650",
@@ -151,14 +163,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'flex-end',
         borderRadius: 8,
-        marginTop: '5%',
-        marginBottom: '5%',
+        marginTop: '3%',
+        marginBottom: '4%',
         marginRight: '10%'
     },
     btnText: {
         color: 'white',
         fontWeight: 'bold',
         fontSize: 17
+    },
+    forgetAccountBox: {
+        // backgroundColor: 'blue',
+        marginTop: '5%',
+        alignItems: 'flex-end',
+        marginRight: '8%',
+        marginBottom: '2%'
+    },
+    forgetAccountText: {
+        fontSize: 16,
+        color: 'black'
     },
     signUpBox: {
         marginLeft: '6%',

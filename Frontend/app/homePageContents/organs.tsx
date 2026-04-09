@@ -35,7 +35,7 @@ export default function organs() {
         // if (request.data.rec_request > 0) {
         //   setCheckRequest(false)
         // }
-        // // console.log(request.data.message)
+        // console.log(request.data.message)
       }
     } catch (error: any) {
 
@@ -116,7 +116,7 @@ export default function organs() {
               </View>
 
             </View>
-            <ScrollView style={{flex:1}}>
+            <ScrollView style={{ flex: 1 }}>
               <View style={style.organBoxText}>
                 <Text style={style.organBoxText1}>Donor Name  </Text><Text style={style.datas}>{item.first_name}</Text>
                 <Text style={style.organBoxText1}>Donor age   </Text><Text style={style.datas}>{item.age}</Text>
@@ -210,7 +210,8 @@ const style = StyleSheet.create({
     marginTop: '2%',
     borderRadius: 8,
     alignContent: 'center',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    marginBottom:'10%'
   },
   boxHeaderIcon: {
     // backgroundColor: 'red',

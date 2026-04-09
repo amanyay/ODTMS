@@ -24,7 +24,9 @@ export default function Tablayout() {
                 tabBarLabel: 'History'
             }} />
             <Tabs.Screen name='profile' options={{
-                headerShown: false,
+                headerShown: true,
+                title: 'Edit Profile',
+                headerTitleAlign:'center',
                 tabBarIcon: ({ size, color }) => (<FontAwesome name="user-circle-o" size={28} color="black" />),
                 tabBarLabel: 'Profile'
             }} />

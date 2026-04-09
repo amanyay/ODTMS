@@ -14,32 +14,29 @@ const app = express();
 
 app.use(bodyParser.json());
 router.post('/', async (req, res) => {
-
-    const { token } = req.body;
+    const { token, requestId, status } = req.body;
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
 
+
     try {
-
-
         const connection = await createDBConnection();
-
-        const [selectionOrganQuery] = await connection.query(`SELECT * FROM organ `);
-
-        if (selectionOrganQuery.length > 0) {
-            res.json({
-                message: selectionOrganQuery
-            })
+        if (status === 'Pending') {
+            const [makeApproveQuery] = await connection.query(`UPDATE rec_request SET status = ? WHERE id = ? `, ['Approved', requestId]);
+            if (makeApproveQuery) {
+                res.status(200).json({
+                    message: "Successfull approved"
+                })
+            }
         }
+    }
 
-    } catch (error) {
+    catch (error) {
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {
             res.status(500).json({ err: "Server error" })
         }
     }
-
 })
-
 module.exports = router;

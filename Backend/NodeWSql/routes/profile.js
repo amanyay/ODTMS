@@ -18,16 +18,18 @@ router.post('/', async (req, res) => {
     const { token } = req.body;
     const connection = await createDBConnection();
 
-
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
 
-    try {
-        const [findByPhoneNumberQueryResult] = await connection.query(`SELECT * FROM users WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
 
+
+    try {
         //findByPhoneNumberQueryResult without [] would be return the whole array [rows, fields]. and we only care about
         //the rows (the actual data you care about), not the metadata.So [findByPhoneNumberQueryResult] is simply a neat way 
         // to ignore the metadata and directly get the query results.
+
+        const [findByPhoneNumberQueryResult] = await connection.query(`SELECT * FROM users WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
+
 
         if (!findByPhoneNumberQueryResult) {
             res.status(404).json({ message: 'Error' })
