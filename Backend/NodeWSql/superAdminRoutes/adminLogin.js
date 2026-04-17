@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 
     const { phoneNumber, password } = req.body;
 
-    console.log(phoneNumber)
+    // console.log(phoneNumber)
 
     // try {
     const connection = await createDBConnection();
@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
             [phoneNumber, password]
         );
 
-        console.log(rows)
+        // console.log(rows)
         if (rows.length === 0) {
             return res.status(201).json({ message: 'Admin not found' });
         }

@@ -30,6 +30,8 @@ const login = () => {
                 setIsLoading(false);
                 setError("");
 
+                console.log(request)
+
                 if (request.status === 200) {
                     AsyncStorage.setItem('token', request.data.token)
                     router.replace('/(tabs)/home')
@@ -45,11 +47,12 @@ const login = () => {
 
         catch (error: any) {
             console.log(error)
-            if (error.response.data.err) {
-                setError(error.response.data.err)
+            if (error) {
+                setError("Network error")
                 setIsLoading(false)
-            } else if (error) {
-                setError("Unkown error")
+            } else if (error.response.data.err) {
+
+                setError(error.response.data.err)
                 setIsLoading(false)
             }
 

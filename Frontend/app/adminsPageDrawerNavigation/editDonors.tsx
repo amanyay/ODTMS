@@ -63,7 +63,7 @@ export default function editDonors() {
 
       <FlatList
         data={donors}
-        keyExtractor={(item) => item.phone_numbers.toString()}
+        keyExtractor={(item) => item.donation_id.toString()}
         //organ is an object inside array
         //item represent one object at a time from the array tha recive from database 
         renderItem={({ item }) => (
@@ -77,7 +77,7 @@ export default function editDonors() {
             <Text style={style.organBoxText4}>Phone Number -  <Text style={style.datas}>{item.phone_number}</Text></Text>
             <Text style={style.organBoxText4}>Gender -  <Text style={style.datas}>{item.gender}</Text></Text>
             <Text style={style.organBoxText4}>Blood Type -  <Text style={style.datas}>{item.blood_type}</Text></Text>
-            <Text style={style.organBoxText4}>Date -  <Text style={style.datas}>{item.donation_date}</Text></Text>
+            <Text style={style.organBoxText4}>Date -  <Text style={style.datas}>{new Date(item.donation_date).toLocaleDateString()}</Text></Text>
             <Text style={style.organBoxText4}>Status -  <Text style={style.datas}>{item.status}</Text></Text>
             <View style={style.updateAndRemoveBtn}>
               <TouchableOpacity style={style.removeBtnBox} onPress={() => { removeOrgans(item) }}>

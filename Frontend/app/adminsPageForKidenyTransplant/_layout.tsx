@@ -16,8 +16,12 @@ export default function _layout() {
                 options={{ headerShown: true, drawerLabel: 'Kidney Edit', title: 'Kidney Edit' }}
             />
             <Drawer.Screen
+                name='kidneyMatch'
+                options={{ headerShown: true, drawerLabel: 'Kidney Match', title: 'Matched Organs ' }}
+            />
+            <Drawer.Screen
                 name='kidneyRequests'
-                options={{ headerShown: true, drawerLabel: 'Kidney Requests', title: 'Kidney Requests' }}
+                options={{ headerShown: true, drawerLabel: 'Kidney Waiting List', title: 'Kidney Waiting List' }}
             />
             <Drawer.Screen
                 name='kidneyTransplantComplete'
@@ -25,9 +29,8 @@ export default function _layout() {
             />
             <Drawer.Screen
                 name='adminProfile'
-                options={{ headerShown: true, drawerLabel: 'My Profile', title: 'My Profile' ,headerTitleAlign:'center'}}
+                options={{ headerShown: true, drawerLabel: 'My Profile', title: 'My Profile', headerTitleAlign: 'center' }}
             />
-
         </Drawer>
     )
 }

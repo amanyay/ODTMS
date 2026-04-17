@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -13,7 +12,7 @@ export default function organs() {
 
   const [organs, setOrgans] = useState<any>([]);
   const [notFound, setNotFound] = useState('');
-  const [eachReqError, setEachReqError] = useState('')
+  // const [eachReqError, setEachReqError] = useState('')
   // const [checkRequest, setCheckRequest] = useState(true)
 
   async function getOrganForRecs() {
@@ -47,28 +46,28 @@ export default function organs() {
     getOrganForRecs()
   }, [])
 
-  async function sendRequest(item: any) {
+  // async function sendRequest(item: any) {
 
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const request = await axios.post(`${baseUrl}/recRequests`, { token, donorPhoneNumber: item.phone_numbers, organId: item.organ_id });
+  //   try {
+  //     const token = await AsyncStorage.getItem('token');
+  //     const request = await axios.post(`${baseUrl}/recRequests`, { token, donorPhoneNumber: item.phone_numbers, organId: item.organ_id });
 
-      if (request.status === 201) {
-        router.replace('/homePageContents/successful');
-      }
-      else if (request.status === 200) {
-        setEachReqError("Request already sent try to send another request !!!")
-      } else {
-        setNotFound("Server Error please try again")
-      }
-    } catch (error: any) {
+  //     if (request.status === 201) {
+  //       router.replace('/homePageContents/successful');
+  //     }
+  //     else if (request.status === 200) {
+  //       setEachReqError("Request already sent try to send another request !!!")
+  //     } else {
+  //       setNotFound("Server Error please try again")
+  //     }
+  //   } catch (error: any) {
 
-      setNotFound(error.response.data.err)
+  //     setNotFound(error.response.data.err)
 
-    }
+  //   }
 
 
-  }
+  // }
 
 
 
@@ -95,7 +94,7 @@ export default function organs() {
 
       <View style={{ height: 50, marginBottom: 10 }}>
         <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}>{notFound}</Text>
-        <Text style={style.eachReqError}>{eachReqError}</Text>
+        {/* <Text style={style.eachReqError}>{eachReqError}</Text> */}
       </View>
 
 
@@ -128,9 +127,9 @@ export default function organs() {
               </View>
             </ScrollView>
             <View style={style.updateAndRemoveBtn}>
-              <TouchableOpacity style={style.requestBtnBox} onPress={() => sendRequest(item)}>
+              {/* <TouchableOpacity style={style.requestBtnBox} onPress={() => sendRequest(item)}>
                 <Text style={style.requestBtnText}>Send Request <FontAwesome name="send" size={20} color="black" /></Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
           </View>
@@ -290,7 +289,8 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#bebaae',
     borderWidth: 0,
-    marginTop: '0%'
+    marginTop: '0%',
+    height:20
   },
   // updateBtnBox: {
   //   backgroundColor: "rgba(42, 146, 201, 0.7)",

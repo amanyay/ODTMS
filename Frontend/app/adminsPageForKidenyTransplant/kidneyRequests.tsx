@@ -91,35 +91,26 @@ export default function eyeDonor() {
                   <FontAwesome5 name="briefcase-medical" size={24} color="black" />
                 </View>
                 <View style={style.boxHeaderText}>
-                  <Text style={style.boxHeaderText1}>Information about eye request</Text>
+                  <Text style={style.boxHeaderText1}>Verify the Matched Result</Text>
                   {/* {checkRequest ? (<Text style={style.boxHeaderText2}>Request not Sent</Text>) : (<Text style={style.boxHeaderText2}>Request sent</Text>)} */}
                 </View>
 
               </View>
-              <ScrollView style={{ flex: 1 }}>
+              <ScrollView style={{ flex: 1 }} nestedScrollEnabled={true}>
                 <View style={style.organBoxText}>
-                  <Text style={style.organBoxText1}>Request Id - </Text><Text style={style.datas}>{item.id}</Text>
-                  <Text style={style.organBoxText1}>Recipent Name - </Text><Text style={style.datas}>{item.rec_first_name}</Text>
-                  <Text style={style.organBoxText1}>Recipent age  -  </Text><Text style={style.datas}>{item.rec_age}</Text>
-                  <Text style={style.organBoxText1}>Location - </Text><Text style={style.datas}>{item.rec_location}</Text>
-                  <Text style={style.organBoxText1}>Phone Number -  </Text><Text style={style.datas}>{item.rec_phone_number}</Text>
-                  <Text style={style.organBoxText1}>Gender -  </Text><Text style={style.datas}>{item.rec_gender}</Text>
-                  <Text style={style.organBoxText1}>Recipent B.Type -  </Text><Text style={style.datas}>{item.rec_blood_type}</Text>
-                  <Text style={style.organBoxText1}>Requested Organ -  </Text><Text style={style.datas}>{item.organ_name}</Text>
-                  <Text style={style.organBoxText1}>Organ code -  </Text><Text style={style.datas}>{item.organ_id}</Text>
-                  <Text style={style.organBoxText1}>Date -  </Text><Text style={style.datas}>{new Date(item.date).toLocaleDateString()}</Text>
-                  <Text style={style.organBoxText1}>Donor Name - </Text><Text style={style.datas}>{item.don_first_name}</Text>
-                  <Text style={style.organBoxText1}>Donor age  -  </Text><Text style={style.datas}>{item.don_age}</Text>
-                  <Text style={style.organBoxText1}>Donor - </Text><Text style={style.datas}>{item.don_location}</Text>
-                  <Text style={style.organBoxText1}>Donor Number -  </Text><Text style={style.datas}>{item.don_phone_number}</Text>
-                  <Text style={style.organBoxText1}>Donor -  </Text><Text style={style.datas}>{item.don_gender}</Text>
-                  <Text style={style.organBoxText1}>Donor Blood Type -  </Text><Text style={style.datas}>{item.don_blood_type}</Text>
-                  <Text style={style.organBoxText1}>Donor -  </Text><Text style={style.datas}>{item.status}</Text>
+                  <Text style={style.organBoxText1}>Recipents</Text><Text style={style.datas}>Donor</Text>
+                  <Text style={style.organBoxText1}>{item.rec_first_name}</Text><Text style={style.datas}>{item.don_first_name}</Text>
+                  <Text style={style.organBoxText1}>{item.rec_age}  </Text><Text style={style.datas}>{item.don_age}</Text>
+                  <Text style={style.organBoxText1}>{item.rec_phone_number}</Text><Text style={style.datas}>{item.don_phone_number}</Text>
+                  <Text style={style.organBoxText1}>{item.rec_gender} </Text><Text style={style.datas}>{item.don_gender}</Text>
+                  <Text style={style.organBoxText1}>{item.rec_blood_type} </Text><Text style={style.datas}>{item.don_blood_type}</Text>
+                  <Text style={style.organBoxText1}>{new Date(item.date).toLocaleDateString()} </Text><Text style={style.datas}>{new Date(item.date).toLocaleDateString()} </Text>
+                  <Text style={style.organBoxText1}>{item.status}</Text><Text style={style.datas}>{item.status}</Text>
                 </View>
               </ScrollView>
               <View style={style.updateAndRemoveBtn}>
-                <TouchableOpacity style={style.removeBtnBox} onPress={() => approve(item)}>
-                  <Text style={style.removeBtnText}>Approve</Text>
+                <TouchableOpacity style={style.requestBtnBox} onPress={() => approve(item)}>
+                  <Text style={style.requestBtnText}>Verify</Text>
                 </TouchableOpacity>
               </View>
 
@@ -216,7 +207,8 @@ const style = StyleSheet.create({
   },
   boxHeaderText: {
     // backgroundColor: 'blue',
-    width: '100%'
+    justifyContent: 'center',
+    width: '100%',
   },
   boxHeaderText1: {
     // backgroundColor:'red',
@@ -224,7 +216,7 @@ const style = StyleSheet.create({
     padding: '1%',
     fontWeight: 'bold',
     marginTop: '4%',
-    marginLeft: '3%',
+    marginLeft: '10%',
   },
   boxHeaderText2: {
     // backgroundColor: 'blue',
@@ -315,16 +307,4 @@ const style = StyleSheet.create({
     fontSize: 17,
     letterSpacing: 1,
   },
-  removeBtnBox: {
-    backgroundColor: "red",
-    margin: '7%',
-    width: '30%',
-    alignItems: 'center',
-    padding: '2%'
-  },
-  removeBtnText: {
-    fontFamily: 'arial',
-    fontWeight: 'bold',
-    fontSize: 17
-  }
 })

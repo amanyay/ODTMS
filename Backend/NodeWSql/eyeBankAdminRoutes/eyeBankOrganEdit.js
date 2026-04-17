@@ -25,15 +25,31 @@ router.post('/', async (req, res) => {
 
         const connection = await createDBConnection();
 
-        const [selectionOrganQuery] = await connection.query(`SELECT * FROM organ WHERE organ_id = ? `, [3]);
+        // we use left join when we want all data in left table ( left table means FROM table name) 
+        // even if there is no matching data in second table 
+
+        const [selectionOrganQuery] = await connection.query(`SELECT 
+                organ.* , COALESCE(COUNT(donations.organ_id), 0) AS organ_amount
+                FROM organ
+                LEFT JOIN donations ON donations.organ_id = organ.organ_id AND donations.status = ?
+                WHERE organ.organ_id = ?`, ['Pending', 3]);
+
+        console.log(selectionOrganQuery)
+
 
         if (selectionOrganQuery.length > 0) {
-            res.json({
+            res.status(200).json({
                 message: selectionOrganQuery
             })
         }
 
+
+
+
+
+
     } catch (error) {
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

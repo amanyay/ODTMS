@@ -19,6 +19,7 @@ const signup = () => {
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
+    const [age, setAge] = useState('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState('');
@@ -37,7 +38,7 @@ const signup = () => {
         const phoneNumberRegex = /^[0-9]{10}$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const passwordRegex = /^[A-Za-z0-9?]{4,}$/;
-
+        const IntAge = parseInt(age)
         try {
 
             if (firstName === "" || lastName === "" || phoneNumber === "" || email === "" || password === "" || selectedValue === "") {
@@ -53,6 +54,9 @@ const signup = () => {
             }
             else if (!passwordRegex.test(password)) {
                 setError("Invalid password");
+            }
+            else if (IntAge < 18) {
+                setError("Age must be > 18");
             }
             else if (phoneNumberRegex.test(phoneNumber) || emailRegex.test(email) || passwordRegex.test(password)) {
 
@@ -78,7 +82,14 @@ const signup = () => {
             }
         } catch (error: any) {
 
-            setError(error.response.data.err)
+            if (error) {
+                setError("Network error")
+                setIsLoading(false)
+            } else if (error.response.data.err) {
+
+                setError(error.response.data.err)
+                setIsLoading(false)
+            }
 
         }
 
@@ -110,6 +121,7 @@ const signup = () => {
                         <TextInput placeholder='   Enter your first name' placeholderTextColor={'white'} style={styles.input} onChangeText={setFirstName} />
                         <TextInput placeholder='   Enter your last name' placeholderTextColor={'white'} style={styles.input} onChangeText={setLastName} />
                         <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
+                        <TextInput placeholder='   Enter your age' placeholderTextColor={'white'} style={styles.input} onChangeText={setAge} />
                         <TextInput placeholder='   Enter your email address' placeholderTextColor={'white'} style={styles.input} onChangeText={setEmail} />
                         <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
                         <Picker

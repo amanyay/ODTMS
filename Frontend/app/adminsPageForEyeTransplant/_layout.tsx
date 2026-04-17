@@ -18,8 +18,12 @@ export default function Layout() {
                 options={{ headerShown: true, drawerLabel: 'Eye Edit', title: 'Eye Edit' }}
             />
             <Drawer.Screen
+                name="eyeMatch"
+                options={{ headerShown: true, drawerLabel: 'Eye Match', title: 'Matched Organ' }}
+            />
+            <Drawer.Screen
                 name="eyeRequests"
-                options={{ headerShown: true, drawerLabel: 'Eye Requests', title: 'Eye Requests' }}
+                options={{ headerShown: true, drawerLabel: 'Eye Waiting List', title: 'Eye Waiting List' }}
             />
             <Drawer.Screen
                 name="eyeeTransplantComplete"

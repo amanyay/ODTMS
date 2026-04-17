@@ -15,6 +15,9 @@ export default function notification() {
 
 
     async function getNotificationdata() {
+
+        setNotFound("")
+
         try {
             const token = await AsyncStorage.getItem('token');
             const request = await axios.post(`${baseUrl}/userNotification`, { token })
@@ -53,7 +56,7 @@ export default function notification() {
                 style={{ flex: 1 }} >
 
                 <View style={styless.box1}>
-                    
+
                     <TouchableOpacity style={styless.box2BtnRefresh} onPress={getNotificationdata}>
                         <Text style={styless.box2BtnText}><AntDesign name="reload" size={35} color="black" /></Text>
                     </TouchableOpacity>
@@ -69,13 +72,16 @@ export default function notification() {
                     renderItem={({ item }) => (
                         <View style={styless.eachNotificationBox}>
                             <Text style={{ fontWeight: 'bold', fontFamily: 'fantasy' }}>   Date : {new Date(item.date).toLocaleDateString()}</Text>
-                            <Text style={styless.texts}>Dear, <Text style={styless.userName}>{item.rec_name}</Text> <Text>
-                                We are excited to inform you that a suitable organ match has been
-                                found for your request. The system found compatible organ for you
-                                with your blood type and organ.
-                            </Text></Text>
+                            <Text style={styless.texts}>Dear, <Text style={styless.userName}>{item.rec_name} </Text>
+                                <Text>
+                                    We are excited to inform you that a suitable organ match has been
+                                    found for you. The system found compatible organ for you
+                                    with your blood type and organ type.
+                                </Text>
+                            </Text>
                             <Text style={styless.texts1}>{item.rec_name} {arrow}  {item.don_name}  </Text>
-                            <Text style={styless.texts}>Please Call</Text>
+                            <Text style={styless.texts1}>{item.status} </Text>
+                            <Text style={styless.texts}>Please Visit Medical Center</Text>
                             <TouchableOpacity style={styless.freeCallCenterBox}>
                                 <Text>900</Text>
                             </TouchableOpacity>
@@ -121,8 +127,8 @@ const styless = StyleSheet.create({
         marginRight: '8%',
         // backgroundColor: "rgba(42, 146, 201, 0.7)",
         width: '10%',
-        marginTop:'1.5%',
-        alignSelf:'flex-end',
+        marginTop: '1.5%',
+        alignSelf: 'flex-end',
         justifyContent: 'center',
     },
     eachNotificationBox: {
@@ -142,8 +148,9 @@ const styless = StyleSheet.create({
     texts1: {
         fontWeight: 'bold',
         fontSize: 16,
-        padding: 10,
-        color: 'red'
+        margin:'1%',
+        color: 'red',
+        marginLeft: '2%' 
     },
     userName: {
         color: 'black',

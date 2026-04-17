@@ -53,7 +53,14 @@ const administrator = () => {
         }
 
         catch (error: any) {
-            setError(error.response.data.err)
+            if (error) {
+                setError("Network error")
+                setIsLoading(false)
+            } else if (error.response.data.err) {
+
+                setError(error.response.data.err)
+                setIsLoading(false)
+            }
         }
     }
 

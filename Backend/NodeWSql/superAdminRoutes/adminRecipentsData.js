@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     try {
         const connection = await createDBConnection();
         const [selectionFromUser] = await connection.query(`SELECT users.first_name , users.age , users.location  , users.gender ,
-        users.blood_type , organ.organ_id , organ.organ_name , recipents_waitinglist.phone_number , recipents_waitinglist.reg_date , recipents_waitinglist.status
+        users.blood_type , organ.organ_id , organ.organ_name , recipents_waitinglist.wait_id ,recipents_waitinglist.phone_number , recipents_waitinglist.reg_date , recipents_waitinglist.status
         FROM recipents_waitinglist
         JOIN users ON recipents_waitinglist.phone_number = users.phone_number 
         JOIN organ ON recipents_waitinglist.organ_id = organ.organ_id  `);

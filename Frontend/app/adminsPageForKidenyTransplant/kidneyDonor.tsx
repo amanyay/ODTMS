@@ -62,7 +62,7 @@ export default function kidneyDonor() {
                 <FontAwesome5 name="briefcase-medical" size={24} color="black" />
               </View>
               <View style={style.boxHeaderText}>
-                <Text style={style.boxHeaderText1}>Information about eye donors</Text>
+                <Text style={style.boxHeaderText1}>Information about kidney donors</Text>
                 {/* {checkRequest ? (<Text style={style.boxHeaderText2}>Request not Sent</Text>) : (<Text style={style.boxHeaderText2}>Request sent</Text>)} */}
               </View>
 
@@ -85,12 +85,10 @@ export default function kidneyDonor() {
             </View>
 
           </View>
-        )}
-
-      />) : (<View style={{ height: 50, marginBottom: 10 }}>
-        <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}></Text>
-        <Text style={style.eachReqError}>{notFound}</Text>
-      </View>)}
+        )} />) : (<View style={{ height: 50, marginBottom: 10 }}>
+          <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}></Text>
+          <Text style={style.eachReqError}>{notFound}</Text>
+        </View>)}
 
     </ImageBackground >
   )

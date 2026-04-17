@@ -11,7 +11,7 @@ const OpenAI = require('openai');
 const axios = require("axios");
 require('dotenv').config();
 
-//Admin Routes
+//Super Admin Routes
 
 const loginRoutes = require('./routes/login');
 const adminAddNewAdminRoutes = require('./superAdminRoutes/adminAddNewAdmin');
@@ -23,6 +23,9 @@ const adminLogin = require('./superAdminRoutes/adminLogin');
 const adminOrgansData = require('./superAdminRoutes/adminOrgansData');
 const adminRecipentsData = require('./superAdminRoutes/adminRecipentsData');
 const adminRequestData = require('./superAdminRoutes/adminRequestData');
+const getAdminsData = require('./superAdminRoutes/getAdminsData')
+const adminProfile = require('./superAdminRoutes/adminProfile');
+
 
 //Eye bank Admin Routes
 
@@ -37,7 +40,10 @@ const eyeBankRequest = require('./eyeBankAdminRoutes/eyeBankRequest');
 const eyeBankRequestApprove = require('./eyeBankAdminRoutes/eyeBankRequestApprove')
 
 const eyeTransplantComplete = require('./eyeBankAdminRoutes/eyeTransplantComplete');
-const eyeTransplantCompleteApprove = require('./eyeBankAdminRoutes/eyeTransplantCompleteApprove')
+const eyeTransplantCompleteApprove = require('./eyeBankAdminRoutes/eyeTransplantCompleteApprove');
+
+const eyeBankAddToWaitingList = require('./eyeBankAdminRoutes/eyeBankAddToWaitingList');
+const eyeBankMatchedOrgan = require('./eyeBankAdminRoutes/eyeBankMatchedOrgan');
 
 
 //Kidney Admin Routes
@@ -54,6 +60,9 @@ const kidneyRequestApprove = require('./kidneyAdminRoutes/kidneyRequestApprove')
 
 const kidneyTransplantComplete = require('./kidneyAdminRoutes/kidneyTransplantComplete');
 const kidneyTransplantCompleteApprove = require('./kidneyAdminRoutes/kidneyTransplantCompleteApprove');
+
+const kidneyAddToWaitingList = require('./kidneyAdminRoutes/kidneyAddToWaitingList')
+const kidneyMatchedOrgan = require('./kidneyAdminRoutes/kidneyMatchedOrgan')
 
 
 //Other Routes
@@ -131,6 +140,8 @@ app.use('/faydaVerification', faydaVerification)
 
 //          SUPER-ADMIN API
 
+app.use('/adminProfile', adminProfile)
+
 app.use('/adminOrgansData', adminOrgansData)
 
 app.use('/adminDonorsData', adminDonorsData)
@@ -144,6 +155,7 @@ app.use('/adminCompleteRequestData', adminCompleteRequestDataRoutes)
 app.use('/adminCompleteReq', adminCompleteReqRoutes)
 
 app.use('/adminAddNewAdmin', adminAddNewAdminRoutes)
+app.use('/getAdminsData', getAdminsData)
 
 app.use('/deleteDonors', deleteDonors)
 
@@ -167,6 +179,9 @@ app.use('/eyeBankOrganAdmin', eyeBankOrganEdit)
 app.use('/eyeBankRequest', eyeBankRequest);
 app.use('/eyeBankRequestApprove', eyeBankRequestApprove)
 
+app.use('/eyeBankAddToWaitingList', eyeBankAddToWaitingList)
+app.use('/eyeBankMatchedOrgan', eyeBankMatchedOrgan)
+
 
 //            KIDNEY ADMIN API
 
@@ -182,3 +197,6 @@ app.use('/kidneyOrganAdmin', kidneyOrganEdit)
 
 app.use('/kidneyRequest', kidneyRequest);
 app.use('/kidneyRequestApprove', kidneyRequestApprove)
+
+app.use('/kidneyMatchedOrgan', kidneyMatchedOrgan);
+app.use('/kidneyAddToWaitingList', kidneyAddToWaitingList)

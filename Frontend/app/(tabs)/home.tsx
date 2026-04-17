@@ -81,6 +81,22 @@ export default function home() {
                 Alert.alert("You are recipents not allowed")
 
             }
+            else if (faydaNo === null || faydaNo === 0) {
+                Alert.alert("Verify Account First", "Use fayda number to verify your account",
+                    [
+                        {
+                            style: 'cancel',
+                            text: 'Cancel'
+                        },
+                        {
+                            style: 'default',
+                            text: 'Verify',
+                            onPress: () => { router.push('/homePageContents/verifyFayda') }
+
+                        }
+
+                    ])
+            }
             else {
                 if (userBloodType === null || length.length < 1) {
                     router.push('/homePageContents/donarForm')
@@ -120,7 +136,7 @@ export default function home() {
 
             }
             else if (faydaNo === null || faydaNo === 0) {
-                Alert.alert("Verify Account", "Use fayda number to verify your account",
+                Alert.alert("Verify Account First", "Use fayda number to verify your account",
                     [
                         {
                             style: 'cancel',

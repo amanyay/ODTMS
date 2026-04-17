@@ -24,8 +24,10 @@ router.post('/', async (req, res) => {
     try {
         const connection = await createDBConnection();
         const [selectionFromRequest] = await connection.query(`SELECT 
-        users1.first_name AS rec_first_name , users1.age AS rec_age, users1.location AS rec_location , users1.phone_number AS rec_phone_number , users1.gender AS rec_gender , users1.blood_type AS rec_blood_type , 
-        users2.first_name AS don_first_name , users2.age AS don_age, users2.location AS don_location , users1.phone_number AS rec_phone_number,  users2.gender AS don_gender , users2.blood_type AS don_blood_type ,
+        users1.first_name AS rec_first_name , users1.age AS rec_age, users1.location AS rec_location , users1.phone_number AS rec_phone_number , users1.gender AS rec_gender ,
+        users1.blood_type AS rec_blood_type , 
+        users2.first_name AS don_first_name , users2.age AS don_age, users2.location AS don_location , users1.phone_number AS rec_phone_number,  users2.gender AS don_gender ,
+        users2.blood_type AS don_blood_type ,
         organ.organ_id , organ.organ_name ,
         rec_request.id, rec_request.rec_phone_number , rec_request.don_phone_number ,rec_request.organ_id ,rec_request.status ,rec_request.date
         FROM rec_request

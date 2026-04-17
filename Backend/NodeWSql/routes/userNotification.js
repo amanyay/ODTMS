@@ -26,47 +26,42 @@ router.post('/', async (req, res) => {
 
         if (selectionRole[0].role === 'recipents') {
             const [approvedRecipentSelectionQuery] = await connection.query(`SELECT  rec_request.id , u1.first_name AS rec_name, 
-        rec_request.rec_phone_number , rec_request.don_phone_number,rec_request.date,
-        organ.organ_name, organ.organ_id, u2.first_name AS don_name
-        FROM rec_request
-        JOIN organ ON rec_request.organ_id = organ.organ_id 
-        JOIN users AS u1 ON rec_request.rec_phone_number = u1.phone_number
-        JOIN users AS u2 ON rec_request.don_phone_number = u2.phone_number
-        WHERE rec_request.rec_phone_number = ? AND status != ? 
-        ORDER BY rec_request.date DESC`, [actualVerifiedPhoneNumber, 'Pending']);
+                rec_request.rec_phone_number , rec_request.don_phone_number,rec_request.date, rec_request.status,
+                organ.organ_name, organ.organ_id, u2.first_name AS don_name
+                FROM rec_request
+                JOIN organ ON rec_request.organ_id = organ.organ_id 
+                JOIN users AS u1 ON rec_request.rec_phone_number = u1.phone_number
+                JOIN users AS u2 ON rec_request.don_phone_number = u2.phone_number
+                WHERE rec_request.rec_phone_number = ?
+                ORDER BY rec_request.date DESC`, [actualVerifiedPhoneNumber]);
+
+            // console.log(approvedRecipentSelectionQuery)
 
 
-
-            if (approvedRecipentSelectionQuery < 1) {
-                res.status(201).json({
-                    status: '404'
-                })
-            } else if (approvedRecipentSelectionQuery.length > 0) {
+            if (approvedRecipentSelectionQuery.length > 0) {
                 res.status(200).json({
                     message: approvedRecipentSelectionQuery,
                     status: 'ok',
                     arrow: '←'
                 })
             }
+            else if (approvedRecipentSelectionQuery.length < 1) {
+                res.status(201)
+            }
 
         }
         else if (selectionRole[0].role === 'donor') {
             const [approvedDonorSelectionQuery] = await connection.query(`SELECT rec_request.id , u2.first_name AS rec_name, rec_request.rec_phone_number ,
-        rec_request.don_phone_number,
-        organ.organ_name, organ.organ_id, u1.first_name AS don_name
-        FROM rec_request
-        JOIN organ ON rec_request.organ_id = organ.organ_id 
-        JOIN users AS u1 ON rec_request.rec_phone_number = u1.phone_number
-        JOIN users AS u2 ON rec_request.don_phone_number = u2.phone_number
-        WHERE rec_request.don_phone_number = ? AND status = ? `, [actualVerifiedPhoneNumber, 'Approved']);
+                rec_request.don_phone_number,
+                organ.organ_name, organ.organ_id, u1.first_name AS don_name
+                FROM rec_request
+                JOIN organ ON rec_request.organ_id = organ.organ_id 
+                JOIN users AS u1 ON rec_request.rec_phone_number = u1.phone_number
+                JOIN users AS u2 ON rec_request.don_phone_number = u2.phone_number
+                WHERE rec_request.don_phone_number = ? `, [actualVerifiedPhoneNumber]);
 
             // console.log(approvedDonorSelectionQuery)
 
-            if (approvedDonorSelectionQuery.length < 1) {
-                res.status(201).json({
-                    status: '404'
-                })
-            }
             if (approvedDonorSelectionQuery.length > 0) {
                 res.status(200).json({
                     message: approvedDonorSelectionQuery,
@@ -74,10 +69,14 @@ router.post('/', async (req, res) => {
                     arrow: '→'
                 })
             }
+            else if (approvedRecipentSelectionQuery.length < 1) {
+                res.status(201)
+            }
         }
 
 
     } catch (error) {
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

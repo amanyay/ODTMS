@@ -15,11 +15,92 @@ export default function ExpandableBox() {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setHelp(!help);
     }
-
+    const verificationExpand = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setHelp(!help);
+    }
     return (
         <ImageBackground
             source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
             style={{ flex: 1 }}>
+
+
+
+
+            {/* <View style={styles.container}>
+                <TouchableOpacity style={styles.button} onPress={verificationExpand}>
+                    <Text style={styles.buttonText}>
+                        Verification help <Entypo name="chevron-down" size={17} color="black" />
+                    </Text>
+                </TouchableOpacity>
+
+                <View style={[styles.box, help ? styles.expanded : styles.collapsed]}>
+                    {help && (
+                        <ScrollView style={{ paddingBottom: 30, height: 260 }}>
+                            <View>
+                                <Text>Verification rule </Text>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>1.</Text><Text style={styles.texts}>
+                                        Donor / Recipents must  
+                                    </Text>
+                                </View>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>2.</Text><Text style={styles.texts}>
+                                        Provide all asked data
+                                    </Text>
+                                </View>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>3.</Text><Text style={styles.texts}>
+                                        Fill donation form to donate organ
+                                    </Text>
+                                </View>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>4.</Text><Text style={styles.texts}>
+                                        You can check your status and recored in history
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View>
+                                <Text>For recipents </Text>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>1.</Text><Text style={styles.texts}>
+                                        Register as recipents.
+                                    </Text>
+                                </View>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>2.</Text><Text style={styles.texts}>
+                                        Provide all asked data
+                                    </Text>
+                                </View>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>3.</Text><Text style={styles.texts}>
+                                        Fill recipents form to recive organ
+                                    </Text>
+                                </View>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>4.</Text><Text style={styles.texts}>
+                                        You can send request for your matched organ in organs tab
+                                    </Text>
+                                </View>
+                                <View style={styles.boxs}>
+                                    <Text style={styles.numbers}>5.</Text><Text style={styles.texts}>
+                                        You can check your status , request history and recored in history
+                                    </Text>
+                                </View>
+                            </View>
+
+                        </ScrollView>
+
+
+                    )}
+                </View>
+            </View>
+ */}
+
+
+
+
             <View style={styles.container}>
                 <TouchableOpacity style={styles.button} onPress={toggleExpand}>
                     <Text style={styles.buttonText}>
@@ -146,6 +227,10 @@ export default function ExpandableBox() {
                     )}
                 </View>
             </View>
+
+
+
+
         </ImageBackground>
     );
 }

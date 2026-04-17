@@ -120,7 +120,7 @@ export default function organs() {
       </View>
 
 
-     
+
       <FlatList
         data={organ}
         keyExtractor={(item) => item.organ_id.toString()}
@@ -133,7 +133,7 @@ export default function organs() {
                 <FontAwesome5 name="briefcase-medical" size={24} color="black" />
               </View>
               <View style={style.boxHeaderText}>
-                <Text style={style.boxHeaderText1}>Information about eye donors</Text>
+                <Text style={style.boxHeaderText1}>Information about kidney</Text>
                 {/* {checkRequest ? (<Text style={style.boxHeaderText2}>Request not Sent</Text>) : (<Text style={style.boxHeaderText2}>Request sent</Text>)} */}
               </View>
 
@@ -262,7 +262,7 @@ const style = StyleSheet.create({
     marginTop: '2%',
     borderRadius: 8,
     alignContent: 'center',
-    overflow:'hidden'
+    overflow: 'hidden'
   },
   organBoxText2: {
     color: 'red',
@@ -292,7 +292,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     padding: '2%'
   },
- 
+
   removeBtnBox: {
     backgroundColor: "red",
     margin: '7%',
@@ -364,7 +364,7 @@ const style = StyleSheet.create({
     marginRight: '10%'
   },
 
-organBox1: {
+  organBox1: {
     backgroundColor: '#b9ccec',
     height: 75,
     flexDirection: 'row'
@@ -374,7 +374,7 @@ organBox1: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     borderWidth: 0,
-    height:120
+    height: 120
   },
   organBoxText1: {
     // backgroundColor: 'red',

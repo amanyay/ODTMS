@@ -25,7 +25,11 @@ router.post('/', async (req, res) => {
 
         const connection = await createDBConnection();
 
-        const [selectionOrganQuery] = await connection.query(`SELECT * FROM organ WHERE organ_id = ? `, [1]);
+        const [selectionOrganQuery] = await connection.query(`SELECT 
+                organ.* , COALESCE(COUNT(donations.organ_id), 0) AS organ_amount
+                FROM organ
+                LEFT JOIN donations ON donations.organ_id = organ.organ_id AND donations.status = ?
+                WHERE organ.organ_id = ?`, ['Pending', 1]);
 
         if (selectionOrganQuery.length > 0) {
             res.json({

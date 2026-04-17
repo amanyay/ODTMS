@@ -24,7 +24,7 @@ export default function map() {
         try {
             const token = await AsyncStorage.getItem('token');
 
-            const request = await axios.post(`${baseUrl}/profile`, { token });
+            const request = await axios.post(`${baseUrl}/adminProfile`, { token });
 
             setDisplayName(request.data.message.first_name);
             setDisplayPhoneNumber(request.data.message.phone_number);
@@ -122,12 +122,14 @@ export default function map() {
                     <View style={style.profileImage}>
                         {/* {profileImage && <Image source={{ uri: profileImage }} style={{ width: 200, height: 200 }} />} */}
                     </View>
-                    <TouchableOpacity style={style.changeProfile}><Text style={style.changeProfileText}>Edit Profile Picture</Text></TouchableOpacity>
+                    <TouchableOpacity style={style.changeProfile}>
+                        <Text style={style.changeProfileText}>Edit Profile Picture</Text>
+                    </TouchableOpacity>
                 </View>
                 {/* <TouchableOpacity style={style.toAdminPanel} onPress={() => { router.push("/adminsPageDrawerNavigation/editOrgans") }}>
                     <Text style={style.toAdminPanelText}>Admin Panel</Text>
                 </TouchableOpacity> */}
-                <ScrollView style={{ flex: 1, paddingBottom: 80 }}>
+                <ScrollView style={{ flex: 1, paddingBottom: 80, marginBottom: '9%' }}>
                     <View style={style.box3}>
                         <Text style={style.box3Text}>Name</Text>
                         <TouchableOpacity style={style.input}>

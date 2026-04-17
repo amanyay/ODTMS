@@ -1,43 +1,72 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FlatList, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+export default function organs() {
 
-export default function eyeDonor() {
-
-    const [recipents, setRecipents] = useState<any>([]);
+    const [matchedOrgans, setMatchedOrgan] = useState<any>([]);
     const [notFound, setNotFound] = useState('');
+    const [eachReqError, setEachReqError] = useState('')
     const [diplayRequestBox, setDiplayRequestBox] = useState(false)
 
-    async function getKidneyRecipents() {
+    async function getOrganForRecs() {
 
         try {
 
-            const response = await axios.get(`${baseUrl}/kidneyRecipentAdmin`);
-            console.log(response.data.message)
-            if (response.status === 200) {
-                setDiplayRequestBox(true);
-                setRecipents(response.data.message)
+            const request = await axios.get(`${baseUrl}/kidneyMatchedOrgan`);
 
-            }
-            else if (response.status === 201) {
+            if (request.status === 201) {
                 setDiplayRequestBox(false)
-                setNotFound("No Donor found")
+                setNotFound('No match found');
             }
-
+            else if (request.status === 200) {
+                setDiplayRequestBox(true)
+                setMatchedOrgan(request.data.message);
+            }
         } catch (error: any) {
+            setDiplayRequestBox(false)
+            setNotFound(error.response.data.err)
 
+        }
+    }
+    useEffect(() => {
+        getOrganForRecs()
+    }, [])
+
+    async function notifyUsers(item: any) {
+
+        setEachReqError('')
+
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const request = await axios.post(`${baseUrl}/kidneyAddToWaitingList`, { token, donorPhoneNumber: item.don_phone_number, organId: item.organ_id, recipentsPhoneNumber: item.rec_phone_number });
+
+            if (request.status === 201) {
+
+            }
+            else if (request.status === 200) {
+                setEachReqError("Notification already sent try to send another !!!")
+            } else {
+                setDiplayRequestBox(false)
+                setNotFound("Server Error please try again")
+            }
+        } catch (error: any) {
+            setDiplayRequestBox(false)
             setNotFound(error.response.data.err)
 
         }
 
+
     }
 
-    useEffect(() => { getKidneyRecipents() }, [])
+
+
 
 
     return (
@@ -47,14 +76,19 @@ export default function eyeDonor() {
 
             <View style={style.box2}>
 
-                <TouchableOpacity style={style.box2Btn} onPress={getKidneyRecipents}>
+
+                <TouchableOpacity style={style.box2Btn} onPress={getOrganForRecs}>
                     <Text style={style.box2BtnText}><AntDesign name="reload" size={30} color="black" /></Text>
                 </TouchableOpacity>
             </View>
+            <View style={{ height: 50, marginBottom: 10 }}>
+                <Text style={style.eachReqError}>{eachReqError}</Text>
+            </View>
+
 
             {diplayRequestBox ? (<FlatList
-                data={recipents}
-                keyExtractor={(item) => item.phone_number.toString()}
+                data={matchedOrgans}
+                keyExtractor={(item, index) => item.user_id + "-" + index}
                 renderItem={({ item }) => (
                     <View style={style.organBox}>
 
@@ -64,25 +98,23 @@ export default function eyeDonor() {
                                 <FontAwesome5 name="briefcase-medical" size={24} color="black" />
                             </View>
                             <View style={style.boxHeaderText}>
-                                <Text style={style.boxHeaderText1}>Information about kidney recipents</Text>
-                                {/* {checkRequest ? (<Text style={style.boxHeaderText2}>Request not Sent</Text>) : (<Text style={style.boxHeaderText2}>Request sent</Text>)} */}
+                                <Text style={style.boxHeaderText1}>Donor to Recipents Matched Result </Text>
+                                <Text style={style.boxHeaderText2}>{item.urgency_level}</Text>
                             </View>
 
                         </View>
-                        <ScrollView style={{ flex: 1 }}>
+                        <ScrollView style={{ flex: 1 }} nestedScrollEnabled={true}>
                             <View style={style.organBoxText}>
-                                <Text style={style.organBoxText1}>Recipent Name  </Text><Text style={style.datas}>{item.first_name}</Text>
-                                <Text style={style.organBoxText1}>Recipent age   </Text><Text style={style.datas}>{item.age}</Text>
-                                <Text style={style.organBoxText1}>Receive Organ </Text><Text style={style.datas}>{item.organ_name}</Text>
-                                <Text style={style.organBoxText1}>Recipent Location  </Text><Text style={style.datas}>{item.location}</Text>
-                                <Text style={style.organBoxText1}>Phone Number  </Text><Text style={style.datas}>{item.phone_number}</Text>
-                                <Text style={style.organBoxText1}>Recipent Gender  </Text><Text style={style.datas}>{item.gender}</Text>
-                                <Text style={style.organBoxText1}>Blood Type  </Text><Text style={style.datas}>{item.blood_type}</Text>
+                                <Text style={style.organBoxText1}>Donor Info </Text><Text style={style.datas}>Recipents Info </Text>
+                                <Text style={style.organBoxText1}>{item.donor_name}</Text><Text style={style.datas}>{item.recipient_name}</Text>
+                                <Text style={style.organBoxText1}>{item.donor_blood_type}</Text><Text style={style.datas}>{item.recipient_blood_type}</Text>
+                                <Text style={style.organBoxText1}>{item.donor_age}</Text><Text style={style.datas}>{item.recipient_age}</Text>
+                                <Text style={style.organBoxText1}>{item.organ_name} </Text><Text style={style.datas}>{item.organ_name}</Text>
                             </View>
                         </ScrollView>
                         <View style={style.updateAndRemoveBtn}>
-                            <TouchableOpacity style={style.requestBtnBox}>
-                                {/* <Text style={style.requestBtnText}>Send Request <FontAwesome name="send" size={20} color="black" /></Text> */}
+                            <TouchableOpacity style={style.requestBtnBox} onPress={() => notifyUsers(item)}>
+                                <Text style={style.requestBtnText}>Notify User <FontAwesome name="send" size={20} color="black" /></Text>
                             </TouchableOpacity>
                         </View>
 
@@ -91,10 +123,8 @@ export default function eyeDonor() {
 
             />) : (
                 <View style={{ height: 50, marginBottom: 10 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}></Text>
-                    <Text style={style.eachReqError}>{notFound}</Text>
-                </View>
-            )}
+                    <Text style={{ textAlign: 'center', fontSize: 21, color: 'red' }}>{notFound}</Text>
+                </View>)}
 
         </ImageBackground >
     )
@@ -169,7 +199,8 @@ const style = StyleSheet.create({
         marginTop: '2%',
         borderRadius: 8,
         alignContent: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        marginBottom: '10%'
     },
     boxHeaderIcon: {
         // backgroundColor: 'red',
@@ -195,7 +226,7 @@ const style = StyleSheet.create({
         marginLeft: '5%',
         marginTop: '1%',
         backgroundColor: 'red',
-        width: '35%',
+        width: '25%',
         textAlign: 'center',
         borderRadius: 10
     },
@@ -208,16 +239,17 @@ const style = StyleSheet.create({
         backgroundColor: '#bebaae',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        borderWidth: 0
+        borderWidth: 0,
+        // height:300
     },
     organBoxText1: {
         // backgroundColor: 'red',
-        color: '#77746d',
+        color: 'red',
         fontWeight: 'bold',
         fontSize: 15,
         marginLeft: '7%',
         marginTop: '5%',
-        width: '38%',
+        width: '45%',
 
     },
     // organBoxText3: {
@@ -239,7 +271,7 @@ const style = StyleSheet.create({
         color: '#302e2c',
         fontSize: 15,
         fontWeight: 'bold',
-        width: '50%',
+        width: '43%',
         alignSelf: 'flex-end'
 
     },
