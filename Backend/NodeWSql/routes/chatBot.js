@@ -47,6 +47,7 @@ router.post('/', async (req, res) => {
 
 
     } catch (error) {
+        console.log(error)
         if (error.message) {
             console.log(error.message)
             res.status(409).json({ err: " Api error " })

@@ -45,7 +45,7 @@ router.post('/', upload.single('DocumentImage'), async (req, res) => {
 
     try {
 
-        const [selectionFromRecTable] = await connection.query(`SELECT * FROM recipents_waitinglist WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
+        const [selectionFromRecTable] = await connection.query(`SELECT * FROM recipents WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
 
         if (selectionFromRecTable.length >= 1) {
 
@@ -54,7 +54,7 @@ router.post('/', upload.single('DocumentImage'), async (req, res) => {
                 , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
 
 
-            const [updateRecTable] = await connection.query(`UPDATE recipents_waitinglist SET organ_id = ?
+            const [updateRecTable] = await connection.query(`UPDATE recipents SET organ_id = ?
                  WHERE phone_number = ? ` , [organs, actualVerifiedPhoneNumber])
 
 
@@ -71,7 +71,7 @@ router.post('/', upload.single('DocumentImage'), async (req, res) => {
             const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
                 , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
 
-            const [insertionToRecTable] = await connection.query(`INSERT INTO recipents_waitinglist 
+            const [insertionToRecTable] = await connection.query(`INSERT INTO recipents 
                 (phone_number , organ_id ) VALUES (? , ? ) `, [actualVerifiedPhoneNumber, organs]);
 
             if (updateQueryResult || insertionToRecTable) {
@@ -84,6 +84,7 @@ router.post('/', upload.single('DocumentImage'), async (req, res) => {
         }
 
     } catch (error) {
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

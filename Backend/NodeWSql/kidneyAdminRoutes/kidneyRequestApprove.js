@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     try {
         const connection = await createDBConnection();
         if (status === 'Pending') {
-            const [makeApproveQuery] = await connection.query(`UPDATE rec_request SET status = ? WHERE id = ? `, ['Approved', requestId]);
+            const [makeApproveQuery] = await connection.query(`UPDATE waiting_list SET status = ? WHERE id = ? `, ['Approved', requestId]);
             if (makeApproveQuery) {
                 res.status(200).json({
                     message: "Successfull approved"
@@ -32,6 +32,7 @@ router.post('/', async (req, res) => {
     }
 
     catch (error) {
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

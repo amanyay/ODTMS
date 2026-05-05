@@ -30,12 +30,13 @@ router.post("/", async (req, res) => {
 
             if (insertionQuery) {
                 res.status(200).json({ message: 'Successfully Registerd' })
-            } 
+            }
         }
 
     } catch (error) {
 
         if (error.message) {
+            console.log(error)
             res.status(409).json({ err: "Database error " })
             console.log(error.message)
         } else {

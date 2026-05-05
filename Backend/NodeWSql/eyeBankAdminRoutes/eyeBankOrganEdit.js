@@ -13,12 +13,12 @@ const app = express();
 
 
 app.use(bodyParser.json());
-router.post('/', async (req, res) => {
+router.get('/', async (req, res) => {
 
-    const { token } = req.body;
-    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+    // const { token } = req.body;
+    // const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
 
-    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+    // const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
 
     try {
 
@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
                 LEFT JOIN donations ON donations.organ_id = organ.organ_id AND donations.status = ?
                 WHERE organ.organ_id = ?`, ['Pending', 3]);
 
-        console.log(selectionOrganQuery)
+        // console.log(selectionOrganQuery)
 
 
         if (selectionOrganQuery.length > 0) {

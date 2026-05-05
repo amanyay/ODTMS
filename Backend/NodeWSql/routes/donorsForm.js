@@ -62,6 +62,7 @@ router.post('/', async (req, res) => {
             res.status(201).json({ message: 'Error in updating' })
         }
     } catch (error) {
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

@@ -18,7 +18,6 @@ const login = () => {
     }
 
 
-
     const submit = async () => {
         try {
             if (phoneNumber === "" || password === "") {
@@ -30,7 +29,7 @@ const login = () => {
                 setIsLoading(false);
                 setError("");
 
-                console.log(request)
+                // console.log(request)
 
                 if (request.status === 200) {
                     AsyncStorage.setItem('token', request.data.token)
@@ -43,7 +42,7 @@ const login = () => {
             }
 
 
-        }
+        }   
 
         catch (error: any) {
             console.log(error)

@@ -1,0 +1,288 @@
+.DashBoardMainBox {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(180deg, #7ab3e9 0%, #000B18 100%);
+    overflow: scroll;
+
+}
+
+.DashBoardInfoBox {
+    /* background-color: red; */
+    height: 100%;
+    width: 100%;
+}
+
+.sectionStart {
+    background: linear-gradient(180deg, #7ab3e9 0%, #0558bd 100%);
+    width: 100%;
+    height: 10%;
+    align-items: center;
+}
+
+.sectionStart h4 {
+    /* background-color: yellow; */
+    margin: 0%;
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    align-content: center;
+    width: 100%;
+    color: white;
+    height: 100%;
+}
+
+
+
+.section1 {
+    /* background-color: blue; */
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.section1 .section1Box {
+    background: linear-gradient(135deg, #02386E 0%, #00172D 50%, #000B18 100%);
+    height: 60%;
+    width: 18.6%;
+    margin: 0% 0% 1% 0%;
+    border-radius: 10px;
+    padding-bottom: 1%;
+    box-shadow: 0px 0px 15px 0px black;
+}
+
+.section1Boxs {
+    /* background-color: red; */
+    display: flex;
+    height: 80%;
+    margin: 0% 2% 1% 15%;
+    color: white;
+}
+
+.section1Boxs h1 {
+    /* background-color: blue; */
+    height: 30px;
+    font-size: 20px;
+    margin: 3% 2% 20% 1%;
+    border: 2px solid gray;
+    border-radius: 30px;
+    padding: 5px;
+    color: white;
+
+}
+
+.section1Boxs p {
+    /* background-color: blue; */
+    height: 100%;
+    font-size: 28px;
+    margin: 0% 2% 1% 7%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    letter-spacing: 1;
+    align-content: center;
+}
+
+
+.section1Box h2 {
+    /* background-color: yellow; */
+    margin: 0% 0% 15% 0%;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+
+
+.section2 {
+    /* background-color: green; */
+    height: 35%;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: start;
+}
+
+.section2Box {
+    background: linear-gradient(135deg, #02386E 0%, #00172D 50%, #000B18 100%);
+    height: 99%;
+    width: 32%;
+    align-content: start;
+    margin: 0% 0% 0% 0%;
+    border-radius: 10px;
+    /* overflow: hidden; */
+    box-shadow: 0px 0px 10px 0px black;
+    box-shadow: 0px 0px 10px 0px black;
+}
+
+.section2Box1 {
+    /* background-color: black; */
+    height: 40%;
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+}
+
+.section2Box1 h1 {
+    margin: 2% 0% 5% 0%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-weight: bold;
+    font-size: 25px;
+    text-align: center;
+}
+
+.section2Box1 p {
+    /* background-color: red; */
+    margin: 0;
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.section2Box h2 {
+    /* background-color: red; */
+    margin: 1% 0% 0% 0%;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 27px;
+    background-color: blue;
+    box-shadow: 0px 0px 10px 0px black;
+    color: white;
+}
+
+
+.section2Box2 {
+    /* background-color: red; */
+    height: max-content;
+    width: 32%;
+    margin: 2% 0% 0% 0%;
+    border-radius: 10px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    /* overflow: hidden; */
+}
+
+.section2Box2 span {
+    /* background-color: blue; */
+    margin: 2% 0% 0% 30%;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 25px;
+    width: 10%;
+    color: white;
+}
+
+
+.section2Box2 p {
+    /* background-color: wheat; */
+    margin: 2% 0% 0% 0%;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+.section3 {
+    /* background-color: blueviolet; */
+    height: 210px;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.section3Box {
+    background: linear-gradient(135deg, #02386E 0%, #00172D 50%, #000B18 100%);
+    height: 99%;
+    width: 45%;
+    margin: 1% 0% 0% 0%;
+    border-radius: 10px;
+    font-size: 22px;
+    box-shadow: 0px 0px 10px 0px black;
+}
+
+.section3Box h6 {
+    background-color: blue;
+    color: white;
+    width: 100%;
+
+}
+
+.section3Box h3 {
+    /* background-color: red; */
+    text-align: center;
+    margin: 0% 2% 3% 0%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-size: 20px;
+}
+
+
+.section3Box h2 {
+    background-color: blue;
+    text-align: center;
+    margin: 0% 0% 2% 0%;
+    box-shadow: 0px 0px 10px 0px black;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 27px;
+
+}
+
+.section3Box1 {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.section3Box1 p {
+    /* background-color: blue; */
+    margin: 0% 2% 1% 0%;
+    color: white;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+.section3Box1 span {
+    /* background-color: red; */
+    margin: 0% 2% 1% 0%;
+    color: white;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.section3Box2 {
+    background-color: transparent;
+    height: 100px;
+    width: 100px;
+    margin: 2px auto 0px auto;
+    border: 17px solid gray;
+    border-radius: 100px;
+    align-content: center;
+    overflow: hidden;
+}
+
+.section3Box2 p {
+    /* background-color: blue; */
+    margin: 0% 2% 1% 0%;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: white;
+}

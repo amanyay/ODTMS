@@ -13,6 +13,7 @@ const app = express();
 
 
 app.use(bodyParser.json());
+
 router.post('/', async (req, res) => {
 
     const { token } = req.body;
@@ -27,10 +28,10 @@ router.post('/', async (req, res) => {
 
         if (selectionFromUsersTable[0].role === 'recipents') {
             const [selectionFromRecReqTable] = await connection.query(`SELECT organ.organ_name, users.first_name ,
-            users.role, organ.organ_id , rec_request.*
-            FROM rec_request
-            JOIN organ ON rec_request.organ_id = organ.organ_id 
-            JOIN users ON rec_request.rec_phone_number = users.phone_number
+            users.role, organ.organ_id , waiting_list.*
+            FROM waiting_list
+            JOIN organ ON waiting_list.organ_id = organ.organ_id 
+            JOIN users ON waiting_list.rec_phone_number = users.phone_number
             WHERE rec_phone_number = ?` , [actualVerifiedPhoneNumber])
             // console.log(selectionFromRecReqTable)
 
@@ -55,6 +56,7 @@ router.post('/', async (req, res) => {
         }
     }
     catch (error) {
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

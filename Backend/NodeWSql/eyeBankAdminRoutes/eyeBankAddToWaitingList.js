@@ -17,19 +17,20 @@ app.use(bodyParser.json());
 router.post('/', async (req, res) => {
 
     const { token, donorPhoneNumber, organId, recipentsPhoneNumber } = req.body;
-    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET).tokenPhoneNumber;
+    // const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET).tokenPhoneNumber;
+
 
 
     try {
         const connection = await createDBConnection();
-        const [selectionFromRecReqTable] = await connection.query(`SELECT * FROM rec_request WHERE 
+        const [selectionFromRecReqTable] = await connection.query(`SELECT * FROM waiting_list WHERE 
             rec_phone_number = ? AND don_phone_number = ? AND status = ?  `, [recipentsPhoneNumber, donorPhoneNumber, 'Pending']);
 
-        console.log(selectionFromRecReqTable)
+        // console.log(selectionFromRecReqTable)
 
 
         if (selectionFromRecReqTable.length === 0) {
-            const insertionQuery = await connection.query(`INSERT INTO rec_request (rec_phone_number , don_phone_number , organ_id)
+            const insertionQuery = await connection.query(`INSERT INTO waiting_list (rec_phone_number , don_phone_number , organ_id)
          VALUES (?,?,?)`, [recipentsPhoneNumber, donorPhoneNumber, organId]);
 
             if (insertionQuery) {

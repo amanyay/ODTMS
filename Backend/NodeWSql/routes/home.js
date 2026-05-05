@@ -28,12 +28,12 @@ router.post('/', async (req, res) => {
 
 
         if (selectionFromUser[0].role === 'recipents') {
-            const [getRecInfoQuery] = await connection.query(`SELECT users.* , recipents_waitinglist.phone_number , recipents_waitinglist.organ_id ,
+            const [getRecInfoQuery] = await connection.query(`SELECT users.* , recipents.phone_number , recipents.organ_id ,
             organ.organ_id ,organ.organ_name
-            FROM recipents_waitinglist 
-            JOIN users ON recipents_waitinglist.phone_number = users.phone_number
-            JOIN organ ON recipents_waitinglist.organ_id =  organ.organ_id 
-            WHERE recipents_waitinglist.phone_number = ? ` , [actualVerifiedPhoneNumber]);
+            FROM recipents 
+            JOIN users ON recipents.phone_number = users.phone_number
+            JOIN organ ON recipents.organ_id =  organ.organ_id 
+            WHERE recipents.phone_number = ? ` , [actualVerifiedPhoneNumber]);
 
             // console.log(getRecInfoQuery);
             if (selectionFromUser[0].fayda_no === 0 || selectionFromUser[0].fayda_no === null) {

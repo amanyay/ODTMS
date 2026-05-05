@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "AsyncStorage": "^0.1.5",
+    "axios": "^1.15.2"
+  }
+}

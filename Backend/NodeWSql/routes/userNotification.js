@@ -19,46 +19,46 @@ router.post('/', async (req, res) => {
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
     const connection = await createDBConnection();
+    console.log(actualVerifiedPhoneNumber)
     try {
 
         const [selectionRole] = await connection.query(`SELECT role from users WHERE phone_number = ? `, [actualVerifiedPhoneNumber]);
 
 
         if (selectionRole[0].role === 'recipents') {
-            const [approvedRecipentSelectionQuery] = await connection.query(`SELECT  rec_request.id , u1.first_name AS rec_name, 
-                rec_request.rec_phone_number , rec_request.don_phone_number,rec_request.date, rec_request.status,
+            const [approvedRecipentSelectionQuery] = await connection.query(`SELECT  waiting_list.id , u1.first_name AS rec_name, 
+                waiting_list.rec_phone_number , waiting_list.don_phone_number,waiting_list.date, waiting_list.status,
                 organ.organ_name, organ.organ_id, u2.first_name AS don_name
-                FROM rec_request
-                JOIN organ ON rec_request.organ_id = organ.organ_id 
-                JOIN users AS u1 ON rec_request.rec_phone_number = u1.phone_number
-                JOIN users AS u2 ON rec_request.don_phone_number = u2.phone_number
-                WHERE rec_request.rec_phone_number = ?
-                ORDER BY rec_request.date DESC`, [actualVerifiedPhoneNumber]);
+                FROM waiting_list
+                JOIN organ ON waiting_list.organ_id = organ.organ_id 
+                JOIN users AS u1 ON waiting_list.rec_phone_number = u1.phone_number
+                JOIN users AS u2 ON waiting_list.don_phone_number = u2.phone_number
+                WHERE waiting_list.rec_phone_number = ?
+                ORDER BY waiting_list.date DESC`, [actualVerifiedPhoneNumber]);
 
-            // console.log(approvedRecipentSelectionQuery)
+            console.log(approvedRecipentSelectionQuery)
 
 
             if (approvedRecipentSelectionQuery.length > 0) {
                 res.status(200).json({
                     message: approvedRecipentSelectionQuery,
-                    status: 'ok',
                     arrow: '←'
                 })
             }
             else if (approvedRecipentSelectionQuery.length < 1) {
-                res.status(201)
+                res.status(201).json({message:'Empty Notification'})
             }
 
         }
         else if (selectionRole[0].role === 'donor') {
-            const [approvedDonorSelectionQuery] = await connection.query(`SELECT rec_request.id , u2.first_name AS rec_name, rec_request.rec_phone_number ,
-                rec_request.don_phone_number,
+            const [approvedDonorSelectionQuery] = await connection.query(`SELECT waiting_list.id , u2.first_name AS rec_name, waiting_list.rec_phone_number ,
+                waiting_list.don_phone_number,
                 organ.organ_name, organ.organ_id, u1.first_name AS don_name
-                FROM rec_request
-                JOIN organ ON rec_request.organ_id = organ.organ_id 
-                JOIN users AS u1 ON rec_request.rec_phone_number = u1.phone_number
-                JOIN users AS u2 ON rec_request.don_phone_number = u2.phone_number
-                WHERE rec_request.don_phone_number = ? `, [actualVerifiedPhoneNumber]);
+                FROM waiting_list
+                JOIN organ ON waiting_list.organ_id = organ.organ_id 
+                JOIN users AS u1 ON waiting_list.rec_phone_number = u1.phone_number
+                JOIN users AS u2 ON waiting_list.don_phone_number = u2.phone_number
+                WHERE waiting_list.don_phone_number = ? `, [actualVerifiedPhoneNumber]);
 
             // console.log(approvedDonorSelectionQuery)
 

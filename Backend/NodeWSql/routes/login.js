@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
 
     const { phoneNumber, password } = req.body;
     const connection = await createDBConnection();
-    // console.log(phoneNumber)
+    console.log(phoneNumber)
 
 
     try {
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
         }
 
     } catch (error) {
-
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

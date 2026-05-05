@@ -14,15 +14,15 @@ const app = express();
 
 app.use(bodyParser.json());
 router.post('/', async (req, res) => {
-    const { token, requestId, status } = req.body;
-    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
-    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-
+    const { requestId, status } = req.body;
+    // const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+    // const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+    console.log(requestId)
 
     try {
         const connection = await createDBConnection();
         if (status === 'Pending') {
-            const [makeApproveQuery] = await connection.query(`UPDATE rec_request SET status = ? WHERE id = ? `, ['Approved', requestId]);
+            const [makeApproveQuery] = await connection.query(`UPDATE waiting_list SET status = ? WHERE id = ? `, ['Approved', requestId]);
             if (makeApproveQuery) {
                 res.status(200).json({
                     message: "Successfull approved"
@@ -32,6 +32,7 @@ router.post('/', async (req, res) => {
     }
 
     catch (error) {
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

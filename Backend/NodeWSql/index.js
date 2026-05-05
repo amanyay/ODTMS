@@ -9,6 +9,7 @@ const JWT = require('jsonwebtoken');
 const OpenAiAPI = require('openai-api-node');
 const OpenAI = require('openai');
 const axios = require("axios");
+const cors = require('cors')
 require('dotenv').config();
 
 //Super Admin Routes
@@ -44,6 +45,9 @@ const eyeTransplantCompleteApprove = require('./eyeBankAdminRoutes/eyeTransplant
 
 const eyeBankAddToWaitingList = require('./eyeBankAdminRoutes/eyeBankAddToWaitingList');
 const eyeBankMatchedOrgan = require('./eyeBankAdminRoutes/eyeBankMatchedOrgan');
+
+const eyeBankHistory = require('./eyeBankAdminRoutes/eyeBankHistory')
+const eyeBankReportDashboard = require('./eyeBankAdminRoutes/eyeBankReportDashboard')
 
 
 //Kidney Admin Routes
@@ -105,14 +109,18 @@ const port = process.env.PORT;
 const app = express();
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+app.use(cors())
 
 
 app.listen(port, () => {
     console.log("server running in port", port);
 })
+
 app.get('/', (req, res) => {
     res.send("ODTMS APP is running")
 })
+
+//        Normal Routes
 
 app.use('/login', loginRoutes)
 app.use('/adminLogin', adminLogin)
@@ -181,6 +189,9 @@ app.use('/eyeBankRequestApprove', eyeBankRequestApprove)
 
 app.use('/eyeBankAddToWaitingList', eyeBankAddToWaitingList)
 app.use('/eyeBankMatchedOrgan', eyeBankMatchedOrgan)
+
+app.use('/eyeBankHistory', eyeBankHistory)
+app.use('/eyeBankReport', eyeBankReportDashboard)
 
 
 //            KIDNEY ADMIN API

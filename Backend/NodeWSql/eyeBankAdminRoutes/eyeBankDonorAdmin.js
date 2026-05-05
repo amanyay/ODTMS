@@ -17,6 +17,8 @@ router.get('/', async (req, res) => {
             JOIN organ ON donations.organ_id = organ.organ_id
             WHERE donations.organ_id = ? ` , [3]);
 
+            // console.log(getEyeDonorInfo)
+
         if (getEyeDonorInfo.length > 0) {
             res.status(200).json({
                 message: getEyeDonorInfo

@@ -26,18 +26,18 @@ router.post('/', async (req, res) => {
         if (token) {
 
             const [totalRequestPending] = await connection.query(`SELECT COUNT(*) AS
-            total_request_pending FROM rec_request WHERE status != ? `, ["Complete"]);
+            total_request_pending FROM waiting_list WHERE status != ? `, ["Complete"]);
 
             const [totalDonors] = await connection.query(`SELECT COUNT(*) AS
             total_donors FROM donations `);
             const [totalRecipents] = await connection.query(`SELECT COUNT(*) AS
-            total_recipents FROM recipents_waitinglist `);
+            total_recipents FROM recipents `);
 
             const [totalRequestComplete] = await connection.query(`SELECT COUNT(*) AS
-            total_request_complete FROM rec_request WHERE status = ? `, ["Complete"]);
+            total_request_complete FROM waiting_list WHERE status = ? `, ["Complete"]);
 
             const [totalRequests] = await connection.query(`SELECT COUNT(*) AS
-            total_request FROM rec_request`);
+            total_request FROM waiting_list`);
 
             const completeAmount = totalRequestComplete[0].total_request_complete;
             const totalRequestAmount = totalRequests[0].total_request;
@@ -67,6 +67,7 @@ router.post('/', async (req, res) => {
 
 
     } catch (error) {
+        console.log(error)
         if (error.message) {
             res.status(409).json({ err: "Database error " })
         } else {

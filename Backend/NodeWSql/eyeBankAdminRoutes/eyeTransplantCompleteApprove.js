@@ -17,17 +17,17 @@ app.use(bodyParser.json());
 router.post('/', async (req, res) => {
 
     const { token, rec_phone_number, don_phone_number, requestId, status } = req.body;
-    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
-    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const connection = await createDBConnection();
+    // const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+    // const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+
 
     try {
-
+        const connection = await createDBConnection();
         if (status === 'Approved') {
-            const [makeApproveQuery] = await connection.query(`UPDATE rec_request SET status = ? WHERE id = ?  `, ['Completed', requestId]);
+            const [makeApproveQuery] = await connection.query(`UPDATE waiting_list SET status = ? WHERE id = ?  `, ['Completed', requestId]);
             if (makeApproveQuery) {
                 const [updateQueryDonations] = await connection.query(`UPDATE donations SET status = ? WHERE phone_numbers = ?  AND organ_id  = ? `, ['Completed', don_phone_number, 3]);
-                const [updateQueryRecipents] = await connection.query(`UPDATE recipents_waitinglist SET status = ? WHERE phone_number = ?  AND organ_id  = ?  `, ['Completed', rec_phone_number, 3]);
+                const [updateQueryRecipents] = await connection.query(`UPDATE recipents SET status = ? WHERE phone_number = ?  AND organ_id  = ?  `, ['Completed', rec_phone_number, 3]);
                 if (updateQueryRecipents || updateQueryDonations) {
                     res.status(200).json({
                         message: 'Transplant Success'

@@ -21,7 +21,7 @@ export default function notification() {
         try {
             const token = await AsyncStorage.getItem('token');
             const request = await axios.post(`${baseUrl}/userNotification`, { token })
-
+            console.log(request.data.message)
             if (request.status === 200) {
 
                 setApprovedData(request.data.message)
@@ -76,12 +76,12 @@ export default function notification() {
                                 <Text>
                                     We are excited to inform you that a suitable organ match has been
                                     found for you. The system found compatible organ for you
-                                    with your blood type and organ type.
+                                    with your blood type and organ type.{item.status === 'Pending' && 'Please wait until admin approved. '}
+                                    <Text style={styless.texts1}>{item.status} </Text>
                                 </Text>
                             </Text>
                             <Text style={styless.texts1}>{item.rec_name} {arrow}  {item.don_name}  </Text>
-                            <Text style={styless.texts1}>{item.status} </Text>
-                            <Text style={styless.texts}>Please Visit Medical Center</Text>
+                            <Text style={styless.texts}>Call 900 for more information</Text>
                             <TouchableOpacity style={styless.freeCallCenterBox}>
                                 <Text>900</Text>
                             </TouchableOpacity>
@@ -132,7 +132,7 @@ const styless = StyleSheet.create({
         justifyContent: 'center',
     },
     eachNotificationBox: {
-        height: 275,
+        height: 285,
         width: '95%',
         backgroundColor: '#8f9396',
         opacity: 0.6,
@@ -148,9 +148,9 @@ const styless = StyleSheet.create({
     texts1: {
         fontWeight: 'bold',
         fontSize: 16,
-        margin:'1%',
+        margin: '1%',
         color: 'red',
-        marginLeft: '2%' 
+        marginLeft: '2%'
     },
     userName: {
         color: 'black',

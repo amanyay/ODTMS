@@ -25,12 +25,12 @@ router.post('/', async (req, res) => {
 
     try {
         const connection = await createDBConnection();
-        const [selectionFromRecReqTable] = await connection.query(`SELECT * FROM rec_request WHERE 
+        const [selectionFromRecReqTable] = await connection.query(`SELECT * FROM waiting_list WHERE 
             rec_phone_number = ? AND don_phone_number = ? `, [actualVerifiedPhoneNumber, donorPhoneNumber]);
 
 
         if (selectionFromRecReqTable.length === 0) {
-            const insertionQuery = await connection.query(`INSERT INTO rec_request (rec_phone_number , don_phone_number , organ_id)
+            const insertionQuery = await connection.query(`INSERT INTO waiting_list (rec_phone_number , don_phone_number , organ_id)
          VALUES (?,?,?)`, [actualVerifiedPhoneNumber, donorPhoneNumber, organId]);
 
             if (insertionQuery) {
@@ -46,6 +46,7 @@ router.post('/', async (req, res) => {
 
 
     } catch (error) {
+        console.log(error)
         if (error.message) {
             console.log(error)
             res.status(409).json({ err: "Database error " })

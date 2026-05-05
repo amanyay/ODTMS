@@ -45,24 +45,24 @@ router.get('/', async (req, res) => {
             u_recipient.blood_type AS recipient_blood_type,
             u_recipient.age AS recipient_age,
             
-            recipents_waitinglist.wait_id,
-            recipents_waitinglist.organ_id AS rec_organ_id,
-            recipents_waitinglist.phone_number AS rec_phone_number,
-            recipents_waitinglist.status AS rec_status,
-            recipents_waitinglist.urgency_level AS urgency_level
+            recipents.wait_id,
+            recipents.organ_id AS rec_organ_id,
+            recipents.phone_number AS rec_phone_number,
+            recipents.status AS rec_status,
+            recipents.urgency_level AS urgency_level
 
             FROM donations 
             JOIN 
-                recipents_waitinglist ON donations.organ_id = recipents_waitinglist.organ_id
+                recipents ON donations.organ_id = recipents.organ_id
             JOIN 
                 organ ON donations.organ_id = organ.organ_id
             JOIN 
                 users u_donor ON donations.phone_numbers = u_donor.phone_number
             JOIN 
-                users u_recipient ON recipents_waitinglist.phone_number = u_recipient.phone_number
+                users u_recipient ON recipents.phone_number = u_recipient.phone_number
             WHERE u_donor.blood_type = u_recipient.blood_type
             AND donations.organ_id = ? 
-            AND recipents_waitinglist.status = ? 
+            AND recipents.status = ? 
             AND donations.status = ? ` , [1, 'Pending', 'Pending']);
 
         console.log(selectionFromdonation)
@@ -73,7 +73,7 @@ router.get('/', async (req, res) => {
 
             selectionFromdonation.sort((a, b) => urgencyOrder[b.urgency_level] - urgencyOrder[a.urgency_level])
 
-            
+
 
             res.status(200).json({
                 message: selectionFromdonation,
