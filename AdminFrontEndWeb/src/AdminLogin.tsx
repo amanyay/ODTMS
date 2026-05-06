@@ -69,7 +69,6 @@ export default function AdminLogin() {
                     ''You are a piece of the puzzle of someone else’s life.
                     You may never know where you fit, but others will
                     fill the holes in their lives with pieces of you ''.
-                    Dagm habtamu
                 </p>
             </div>
             <div className='box2'>
