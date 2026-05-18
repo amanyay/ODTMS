@@ -11,21 +11,34 @@ export default function notification() {
     const [approvedData, setApprovedData] = useState<any>([])
     const [notFound, setNotFound] = useState('');
     const [arrow, setArrow] = useState('')
-
+    const [notificationContent, setNotificationContent] = useState('')
 
 
     async function getNotificationdata() {
 
-        setNotFound("")
+        // setNotFound("")
 
         try {
             const token = await AsyncStorage.getItem('token');
             const request = await axios.post(`${baseUrl}/userNotification`, { token })
-            console.log(request.data.message)
-            if (request.status === 200) {
 
-                setApprovedData(request.data.message)
-                setArrow(request.data.arrow)
+            if (request.status === 200) {
+                if (request.data.message[0].status === 'Pending') {
+                    setApprovedData(request.data.message)
+                    setArrow(request.data.arrow)
+                    setNotificationContent(`We are excited to inform you that a suitable organ match has been found for you and you're added to waitinglist. The system found compatible organ for you with your blood type and organ type. `)
+                }
+                else if (request.data.message[0].status === 'Approved') {
+                    setApprovedData(request.data.message)
+                    setArrow(request.data.arrow)
+                    setNotificationContent(`We are excited to inform you that you're ready for transplant please visit medical center within two weeks.  `)
+                }
+                else if (request.data.message[0].status === 'Completed') {
+                    setApprovedData(request.data.message)
+                    setArrow(request.data.arrow)
+                    setNotificationContent(`The transplant has been finalized successfully. The process is complete. Please proceed with post‑care monitoring. `)
+                }
+
             }
             else if (request.status === 201) {
                 setNotFound('Empty Notification');
@@ -56,7 +69,6 @@ export default function notification() {
                 style={{ flex: 1 }} >
 
                 <View style={styless.box1}>
-
                     <TouchableOpacity style={styless.box2BtnRefresh} onPress={getNotificationdata}>
                         <Text style={styless.box2BtnText}><AntDesign name="reload" size={35} color="black" /></Text>
                     </TouchableOpacity>
@@ -74,9 +86,7 @@ export default function notification() {
                             <Text style={{ fontWeight: 'bold', fontFamily: 'fantasy' }}>   Date : {new Date(item.date).toLocaleDateString()}</Text>
                             <Text style={styless.texts}>Dear, <Text style={styless.userName}>{item.rec_name} </Text>
                                 <Text>
-                                    We are excited to inform you that a suitable organ match has been
-                                    found for you. The system found compatible organ for you
-                                    with your blood type and organ type.{item.status === 'Pending' && 'Please wait until admin approved. '}
+                                    {notificationContent}{item.status === 'Pending' && 'Please wait until admin approved. '}
                                     <Text style={styless.texts1}>{item.status} </Text>
                                 </Text>
                             </Text>

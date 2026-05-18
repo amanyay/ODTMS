@@ -89,9 +89,9 @@ const login = () => {
                         {loading ? (<ActivityIndicator size="large" color="#0000ff" />) : (<Text></Text>)}
                     </View>
                     <View style={styles.asAdminBox}>
-                        <TouchableOpacity style={styles.asAdmin} onPress={() => { router.replace("/AdminstratorLogin") }}>
+                        {/* <TouchableOpacity style={styles.asAdmin} onPress={() => { router.replace("/AdminstratorLogin") }}>
                             <Text>Login as Administrator</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

@@ -8,7 +8,7 @@ import DrawerNavigation from '../Components/DrawerNavigation'
 
 //Icons
 import { FaUsers } from "react-icons/fa";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import baseUrl from '../../network/api';
 
@@ -21,22 +21,50 @@ export default function dahsboard() {
 
     type reportDatas = {
 
-        id: number
+        total_user: string;
+        verified_user: string;
+        not_verified_user: string;
+        total_donor: string;
+        active_organ: string;
+        active_donor: string;
+        total_recipents: string;
+        active_recipents: string;
+        urgent_level_recipents: string;
+        waitinglist_user: string;
+        active_waitinglist_user: string;
+        successfull_transplant: string;
+
+    }
+    type bloodGroupData = {
+
+        blood_type: string;
+        blood_group_amount: string;
 
     }
 
+
     const [notFound, setNotFound] = useState('')
-    const [reports, setReports] = useState<reportDatas[]>([])
-
-
+    const [reports, setReports] = useState<reportDatas | null>(null)
+    const [bloodTypeAmount, setBloodTypeAmount] = useState<bloodGroupData[]>([])
+    const [successRate, setSuccessRate] = useState(Number)
 
     async function fetchReport() {
 
         try {
 
+            const token = localStorage.getItem('token');
 
-            const request = await axios.get(`${baseUrl}/eyeBankReport`);
-            setReports(request.data.message)
+
+            const request = await axios.get(`${baseUrl}/eyeBankReport`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (request.status === 200) {
+                setReports(request.data.report)
+                setBloodTypeAmount(request.data.userBloodTypeAmount)
+                setSuccessRate(request.data.successFullRate)
+            }
 
         } catch (error) {
             console.log(error)
@@ -48,7 +76,9 @@ export default function dahsboard() {
 
     }
 
-
+    useEffect(() => {
+        fetchReport();
+    }, [])
 
 
     return (
@@ -57,14 +87,14 @@ export default function dahsboard() {
             <div className={style.DashBoardInfoBox}>
 
                 <div className={style.sectionStart}>
-                    <h4> {notFound} <button onClick={fetchReport}>Eye Bank Organ Reports</button></h4>
+                    <h4>{notFound}<button onClick={fetchReport}>Reload</button></h4>
                 </div>
 
                 <div className={style.section1}>
                     <div className={style.section1Box}>
                         <div className={style.section1Boxs}>
                             <h1><FaUsers /></h1>
-                            <p>200</p>
+                            <p>{reports?.total_user}</p>
                         </div>
 
                         <h2>Total Users</h2>
@@ -72,34 +102,34 @@ export default function dahsboard() {
                     <div className={style.section1Box}>
                         <div className={style.section1Boxs}>
                             <h1><FaUsers /></h1>
-                            <p>200</p>
+                            <p>{reports?.total_donor}</p>
                         </div>
 
-                        <h2>Total Users</h2>
+                        <h2>Total Donor</h2>
                     </div>
                     <div className={style.section1Box}>
                         <div className={style.section1Boxs}>
                             <h1><FaUsers /></h1>
-                            <p>200</p>
+                            <p>{reports?.total_recipents}</p>
                         </div>
 
-                        <h2>Total Users</h2>
+                        <h2>Total Recipents</h2>
                     </div>
                     <div className={style.section1Box}>
                         <div className={style.section1Boxs}>
                             <h1><FaUsers /></h1>
-                            <p>200</p>
+                            <p>{reports?.active_organ}</p>
                         </div>
 
-                        <h2>Total Users</h2>
+                        <h2>Active Organs</h2>
                     </div>
                     <div className={style.section1Box}>
                         <div className={style.section1Boxs}>
                             <h1><FaUsers /></h1>
-                            <p>200</p>
+                            <p>{successRate} %</p>
                         </div>
 
-                        <h2>Total Users</h2>
+                        <h2>Successfull Transplant</h2>
                     </div>
                 </div>
 
@@ -107,51 +137,39 @@ export default function dahsboard() {
                 <div className={style.section2}>
                     <div className={style.section2Box}>
                         <div className={style.section2Box1}>
-                            <h1>50 Users</h1>
+                            <h1>{reports?.verified_user} Users</h1>
                             <p>Verified National Id</p>
                         </div>
                         <hr />
                         <div className={style.section2Box1}>
-                            <h1>40 Users</h1>
-                            <p>Total Not verified users</p>
+                            <h1>{reports?.not_verified_user} Users</h1>
+                            <p>Not verified users</p>
                         </div>
                     </div>
 
                     <div className={style.section2Box}>
                         <h2>Donor Analytics</h2>
                         <div className={style.section2Box2}>
-                            <span>20 </span>
-                            <p>Total recipents</p>
+                            <span>{reports?.total_donor}</span>
+                            <p>Total Donor</p>
                         </div>
                         <div className={style.section2Box2}>
-                            <span>40 </span>
-                            <p>Active recipents</p>
-                        </div>
-                        <div className={style.section2Box2}>
-                            <span>40</span>
-                            <p> Transpant recipents</p>
-                        </div>
-                        <div className={style.section2Box2}>
-                            <span>20</span>
-                            <p> Urgent recipents</p>
+                            <span>{reports?.active_donor} </span>
+                            <p>Active Donor</p>
                         </div>
                     </div>
                     <div className={style.section2Box}>
                         <h2>Recipent Analytics</h2>
                         <div className={style.section2Box2}>
-                            <span>20 </span>
-                            <p>Total recipents</p>
+                            <span>{reports?.total_donor}</span>
+                            <p>Total Recipents</p>
                         </div>
                         <div className={style.section2Box2}>
-                            <span>40 </span>
-                            <p>Active recipents</p>
+                            <span>{reports?.active_recipents} </span>
+                            <p>Active Recipents</p>
                         </div>
                         <div className={style.section2Box2}>
-                            <span>40</span>
-                            <p> Transpant recipents</p>
-                        </div>
-                        <div className={style.section2Box2}>
-                            <span>20</span>
+                            <span>{reports?.urgent_level_recipents}</span>
                             <p> Urgent recipents</p>
                         </div>
 
@@ -160,38 +178,23 @@ export default function dahsboard() {
                 </div>
                 <div className={style.section3}>
                     <div className={style.section3Box}>
-                        <h3>By Blood group</h3>
+                        <h2>By Blood Group</h2>
 
                         <div className={style.section3Box1}>
-                            <p>A</p>
-                            <span>aasd</span>
-                            <p>AB </p>
-                            <span>aasd</span>
-                            <p>B</p>
-                            <span>aasd</span>
-                            <p>B+ </p>
-                            <span>aasd</span>
-                            <p>O </p>
-                            <span>aasd</span>
+                            {bloodTypeAmount.map((index) => {
+                                return <div>
+                                    <p>{index.blood_type}</p>
+                                    <span> {index.blood_group_amount}</span>
+                                </div>
+                            })}
                         </div>
 
-                        <hr />
-
-                        <h3>By Age group</h3>
-                        <div className={style.section3Box1}>
-                            <p>{'>'}20 </p>
-                            <span>aasd</span>
-                            <p>{'>'} 20 </p>
-                            <span>aasd</span>
-                            <p>{'>'} 20 </p>
-                            <span>aasd</span>
-                        </div>
                     </div>
 
                     <div className={style.section3Box}>
                         <h2>Active Waiting list user</h2>
                         <div className={style.section3Box2}>
-                            <p>230000</p>
+                            <p>{reports?.active_waitinglist_user}</p>
                         </div>
                     </div>
 

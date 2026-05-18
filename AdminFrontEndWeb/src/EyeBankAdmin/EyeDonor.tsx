@@ -13,6 +13,8 @@ import baseUrl from "../../network/api"
 
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { NavLink } from 'react-router-dom'
+
 export default function eyeDonor() {
 
   type Donor = {
@@ -60,8 +62,7 @@ export default function eyeDonor() {
         <div className={style.section1}>
           <h3>Eye Donor</h3>
           <div>
-            <button onClick={eyeDonorInfo}>Filter</button>
-            <button>Add New Donor</button>
+            <button><NavLink to='/Search'>Search</NavLink></button>
           </div>
         </div>
         <div className={style.section2}>

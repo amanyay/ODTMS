@@ -1,0 +1,176 @@
+.KidneydrawerNavBox {
+    background-color: #1c2e4a;
+    width: 5%;
+    height: 100vh;
+    overflow: hidden;
+    align-items: center;
+    border-right: 5px solid;
+
+    .links span {
+        display: none;
+
+    }
+
+    .logo h1 {
+        display: none;
+    }
+
+    .links li {
+        margin: 8% auto 0% auto;
+        text-decoration: none;
+        list-style: none;
+    }
+
+    .linksFooter span {
+        display: none;
+    }
+
+    .linksFooter li {
+        margin: 8% auto 0% auto;
+        list-style: none;
+    }
+}
+
+.KidneydrawerNavBox:hover {
+    width: 20%;
+    transition: 100ms;
+
+    .logo h1 {
+        /* background-color: red; */
+        text-align: center;
+        color: wheat;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        display: block;
+        width: 100%;
+    }
+
+    .links li {
+        margin: 8% 0% 0% 0%;
+        /* background-color: blue; */
+        color: white;
+        display: block;
+        width: 41%;
+        text-align: end;
+    }
+
+    .links span {
+        margin: 8% 0% 0% 7%;
+        /* background-color: red; */
+        color: white;
+        display: block;
+        width: 100%;
+        text-align: start;
+        font-size: 18px;
+        text-decoration: none;
+    }
+
+    .links .a {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+
+    }
+
+    .KidneydrawerNavBoxFooter {
+        /* background-color: blue; */
+        height: 100vh;
+        width: 100%;
+        margin: 5% 0% 0% 0%;
+    }
+
+    .linksFooter li {
+        margin: 8% 0% 0% 0%;
+        /* background-color: red; */
+        color: white;
+        display: block;
+        width: 41%;
+        text-align: end;
+    }
+
+    .linksFooter span {
+        margin: 8% 0% 0% 7%;
+        /* background-color: red; */
+        color: white;
+        display: block;
+        width: 100%;
+        text-align: start;
+        font-size: 15px;
+        text-decoration: none;
+    }
+
+}
+
+.logo {
+    /* background-color: aliceblue; */
+    height: 10%;
+    align-content: center;
+}
+
+
+.KidneydrawerNavBoxLinks {
+    /* background-color: wheat; */
+    height: max-content;
+}
+
+.links {
+    width: 100%;
+    display: flex;
+}
+
+.links:hover {
+    background-color: gray;
+    width: 100%;
+    transition: 1s;
+    opacity: 0.8;
+}
+
+.links .a.active {
+    background-color: gray;
+    padding: 10px;
+}
+
+.links .aLogo {
+    font-size: 25px;
+}
+
+
+.KidneydrawerNavBoxFooter {
+    /* background-color: blue; */
+    height: 100vh;
+    width: 100%;
+    margin: 105% 0% 0% 0%;
+}
+
+.linksFooter {
+    width: 100%;
+    display: flex;
+    margin-left: 10%;
+}
+
+.linksFooter:hover {
+    background-color: gray;
+    width: 100%;
+    transition: 1s;
+    opacity: 0.8;
+}
+
+
+.linksFooter .a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+
+.linksFooter .aLogo {
+    font-size: 30px;
+}
+
+.linksFooter .a.active {
+    background-color: gray;
+    padding: 10px;
+}

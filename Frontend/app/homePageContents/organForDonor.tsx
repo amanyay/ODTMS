@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function organs() {
 
@@ -15,18 +15,19 @@ export default function organs() {
 
     async function getOrganForDon() {
 
-
+        setNotFound('')
         try {
             const token = await AsyncStorage.getItem('token');
             const donAge = await AsyncStorage.getItem('donAge');
+            const userOrgan = await AsyncStorage.getItem('userOrgan');
             const donBloodType = await AsyncStorage.getItem('donBloodType');
-            const request = await axios.post(`${baseUrl}/donOrgans`, { token, donAge, donBloodType });
+            const request = await axios.post(`${baseUrl}/donOrgans`, { token, donAge, donBloodType, userOrgan });
 
-            if (request.data.message === '404') {
-                setNotFound('No match found');
-            }
-            else if (request.data.message !== '404') {
+            if (request.status === 200) {
                 setOrgans(request.data.message);
+            }
+            else if (request.status === 201) {
+                setNotFound('No match found');
             }
         } catch (error: any) {
             setNotFound(error.response.data.err)
@@ -52,7 +53,6 @@ export default function organs() {
     useEffect(() => {
         getOrganForDon();
     }, [])
-
     return (
         <ImageBackground style={style.box}
             source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
@@ -75,33 +75,43 @@ export default function organs() {
                 <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}>{notFound}</Text>
             </View>
 
-            <View style={style.organBox}>
-                <View style={style.organBox1}>
 
-                    <View style={style.boxHeaderIcon}>
-                        <FontAwesome5 name="briefcase-medical" size={24} color="black" />
-                    </View>
-                    <View style={style.boxHeaderText}>
-                        <Text style={style.boxHeaderText1}>Information about donate organ</Text>
-                        {/* {checkRequest ? (<Text style={style.boxHeaderText2}>Request not Sent</Text>) : (<Text style={style.boxHeaderText2}>Request sent</Text>)} */}
-                    </View>
+            <FlatList
+                data={organs}
+                keyExtractor={(item) => item.wait_id.toString()}
+                renderItem={({ item }) => (
+                    <View style={style.organBox}>
 
-                </View>
+                        <View style={style.organBox1}>
 
-                <ScrollView style={{ flex: 1, marginBottom:'5%' }}>
-                    <View style={style.organBoxText}>
-                        <Text style={style.organBoxText1}>First Name </Text><Text style={style.datas}>{organs.first_name}</Text>
-                        <Text style={style.organBoxText1}>Age  </Text><Text style={style.datas}>{organs.age}</Text>
-                        <Text style={style.organBoxText1}>Donate Organ </Text><Text style={style.datas}>{organs.organ_name}</Text>
-                        <Text style={style.organBoxText1}>Location </Text><Text style={style.datas}>{organs.location}</Text>
-                        <Text style={style.organBoxText1}>Phone Number  </Text><Text style={style.datas}>{organs.phone_numbers}</Text>
-                        <Text style={style.organBoxText1}>Gender </Text><Text style={style.datas}>{organs.gender}</Text>
-                        <Text style={style.organBoxText1}>Blood Type </Text><Text style={style.datas}>{organs.blood_type}</Text>
-                        <View style={style.updateAndRemoveBtn}>
+                            <View style={style.boxHeaderIcon}>
+                                <FontAwesome5 name="briefcase-medical" size={24} color="black" />
+                            </View>
+                            <View style={style.boxHeaderText}>
+                                <Text style={style.boxHeaderText1}>Information about matched organ</Text>
+                                {/* {checkRequest ? (<Text style={style.boxHeaderText2}>Request not Sent</Text>) : (<Text style={style.boxHeaderText2}>Request sent</Text>)} */}
+                            </View>
+
                         </View>
+                        <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}>
+                            <View style={style.organBoxText}>
+                                <Text style={style.organBoxText1}>Recipent Name  </Text><Text style={style.datas}>{item.recipient_name}</Text>
+                                <Text style={style.organBoxText1}>Recipent age   </Text><Text style={style.datas}>{item.recipient_age}</Text>
+                                <Text style={style.organBoxText1}>Recive Organ </Text><Text style={style.datas}>{item.organ_name}</Text>
+                                <Text style={style.organBoxText1}>Gender  </Text><Text style={style.datas}>{item.gender}</Text>
+                                <Text style={style.organBoxText1}>Blood Type  </Text><Text style={style.datas}>{item.recipient_blood_type}</Text>
+                                <Text style={style.organBoxText1}>Status </Text><Text style={style.datas}>{item.rec_status}</Text>
+                                <Text style={style.organBoxText1}>Match Score </Text><Text style={style.datas}>{item.score} %</Text>
+                            </View>
+                        </ScrollView>
+                        <View style={style.updateAndRemoveBtn}>
+                            {/* <TouchableOpacity style={style.requestBtnBox} onPress={() => sendRequest(item)}>
+                <Text style={style.requestBtnText}>Send Request <FontAwesome name="send" size={20} color="black" /></Text>
+              </TouchableOpacity> */}
+                        </View>
+
                     </View>
-                </ScrollView>
-            </View>
+                )} />
         </ImageBackground >
     )
 }
@@ -170,7 +180,7 @@ const style = StyleSheet.create({
 
     organBox: {
         backgroundColor: '#bebaae',
-        height: 300,
+        height: 370,
         margin: '3%',
         marginTop: '2%',
         borderRadius: 8,

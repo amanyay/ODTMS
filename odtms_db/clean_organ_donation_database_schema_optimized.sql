@@ -100,7 +100,7 @@ CREATE TABLE recipents (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
-CREATE TABLE waiting_list (
+CREATE TABLE waiting_lists (
     id INT(11) NOT NULL AUTO_INCREMENT,
     rec_phone_number VARCHAR(20) NOT NULL,
     don_phone_number VARCHAR(20) NOT NULL,

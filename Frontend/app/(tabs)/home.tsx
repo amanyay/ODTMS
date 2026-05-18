@@ -23,7 +23,8 @@ export default function home() {
 
     async function getData() {
 
-
+        setError('');
+        
         try {
             const token = await AsyncStorage.getItem("token");
             if (!token) {

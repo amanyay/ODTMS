@@ -14,7 +14,7 @@ import baseUrl from "../../network/api"
 
 import axios from "axios"
 import { useEffect, useState } from "react"
-
+import { NavLink } from 'react-router-dom'
 
 
 
@@ -82,6 +82,18 @@ export default function EyeTransplant() {
 
   }
 
+  async function rejectTransplant(item: EyeTransplant) {
+    try {
+
+      const request = await axios.post(`${baseUrl}/eyeBankTransplantReject`, { rec_phone_number: item.rec_phone_number, don_phone_number: item.don_phone_number, requestId: item.id, status: item.status })
+      if (request.status === 200) {
+        setApprovedMessage('Rejected');
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
 
 
   return (
@@ -92,7 +104,7 @@ export default function EyeTransplant() {
           <h3>Manage Transplants</h3>
           <h2>{approvedMessage}</h2>
           <div>
-            <button onClick={EyeTransplantInfo}>Filter</button>
+            <button><NavLink to='/Search'>Search</NavLink></button>
           </div>
         </div >
         <div className={style.section2} >
@@ -101,12 +113,12 @@ export default function EyeTransplant() {
             <span>Donor Name</span>
             <span>D Blood type</span>
             <span>Donor Age</span>
-            <span>Donor Status</span>
             <span>Recipent Id</span>
             <span>Recipent Name</span>
             <span>R Blood type</span>
             <span>Recipent Age</span>
-            <span>Recipent status</span>
+            <span>Matching status</span>
+            <span></span>
             <span></span>
 
           </div >
@@ -126,11 +138,6 @@ export default function EyeTransplant() {
                 <span>
                   {EyeTransplant.map((item) => {
                     return <li key={item.id}>{item.don_blood_type}</li>
-                  })}
-                </span>
-                <span>
-                  {EyeTransplant.map((item) => {
-                    return <li key={item.id}>{item.don_age}</li>
                   })}
                 </span>
                 <span>
@@ -166,6 +173,11 @@ export default function EyeTransplant() {
                 <span>
                   {EyeTransplant.map((item) => {
                     return <button onClick={() => { completeTransplant(item) }}>Transplant Complete</button>
+                  })}
+                </span>
+                <span>
+                  {EyeTransplant.map((item) => {
+                    return <button onClick={() => { rejectTransplant(item) }}>Reject Transplant</button>
                   })}
                 </span>
 

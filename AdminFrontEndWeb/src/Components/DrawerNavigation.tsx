@@ -1,5 +1,5 @@
 // Modules
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 
 
@@ -19,6 +19,9 @@ import { CiEdit } from "react-icons/ci";
 import '../styles/DrawerNavigation.css'
 
 export default function DrawerNavigation() {
+
+    const navigate = useNavigate();
+
     return (
         <div className="drawerNavBox">
             <div className='logo'>
@@ -35,8 +38,12 @@ export default function DrawerNavigation() {
                 <div className='links' ><li><NavLink className='aLogo' to={'/EyeHistory'}><FaHistory color='white' /></NavLink></li><span><NavLink className='a' to={'/EyeHistory'}>History</NavLink></span> </div >
             </div >
             <div className="drawerNavBoxFooter">
-                <div className='linksFooter' ><li><NavLink className='aLogo' to={'/AdminProfile'}><CgProfile color='white' /></NavLink></li> <span><NavLink className='a' to={'/EyeDonor'}>My Profile</NavLink></span> </div>
-                <div className='linksFooter' ><li><NavLink className='aLogo' to={'/Eyerecipents'}><CgProfile color='white' /></NavLink></li><span><NavLink className='a' to={'/Eyerecipents'}>Logout</NavLink> </span></div>
+                <div className='linksFooter' ><li><NavLink className='aLogo' to={'/eyeAdminprofile'}><CgProfile color='white' /></NavLink></li> <span><NavLink className='a' to={'/eyeAdminprofile'}>My Profile</NavLink></span> </div>
+                <div className='linksFooter' ><li><NavLink className='aLogo' to={''}><CgProfile color='white' /></NavLink></li>
+                    <button onClick={() => {
+                        localStorage.removeItem('token')
+                        navigate("/")
+                    }}><NavLink className='a' to={''}>Logout</NavLink> </button></div>
             </div>
 
         </div >

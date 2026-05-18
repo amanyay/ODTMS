@@ -15,6 +15,7 @@ export default function successful() {
 
     async function qr() {
 
+        setError('')
         try {
 
             const token = await AsyncStorage.getItem('token');

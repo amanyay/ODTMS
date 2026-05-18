@@ -14,7 +14,7 @@ import baseUrl from "../../network/api"
 
 import axios from "axios"
 import { useEffect, useState } from "react"
-
+import { NavLink } from 'react-router-dom'
 
 
 
@@ -56,7 +56,7 @@ export default function EyeRequest() {
       if (request.status === 200) {
         setEyeRequest(request.data.message)
       } else if (request.status === 201) {
-        setNotFound("No Match found")
+        setNotFound("There is no approved organ added to waiting list")
       }
 
     } catch (error) {
@@ -72,7 +72,7 @@ export default function EyeRequest() {
 
     try {
 
-      const request = await axios.post(`${baseUrl}/eyeBankRequestApprove`, { requestId: item.id, status: item.status })
+      const request = await axios.post(`${baseUrl}/eyeBankRequestApprove`, { requestId: item.id, status: item.status, don_phone_number: item.don_phone_number, rec_phone_number: item.rec_phone_number })
       if (request.status === 200) {
         setApprovedMessage('Successfull');
       }
@@ -92,7 +92,7 @@ export default function EyeRequest() {
           <h3>Waiting List</h3>
           <h2>{approvedMessage}</h2>
           <div>
-            <button onClick={EyeRequestInfo}>Filter</button>
+            <button><NavLink to='/Search'>Search</NavLink></button>
           </div>
         </div >
         <div className={style.section2} >
@@ -160,12 +160,12 @@ export default function EyeRequest() {
                 </span>
                 <span>
                   {EyeRequest.map((item) => {
-                    return <li key={item.id}>{item.rec_age}</li>
+                    return <li key={item.id}>{item.status}</li>
                   })}
                 </span>
                 <span>
                   {EyeRequest.map((item) => {
-                    return <button onClick={() => { readyForTransplant(item) }}>Transplant</button>
+                    return <button onClick={() => { readyForTransplant(item) }}>Send To Transplant</button>
                   })}
                 </span>
 

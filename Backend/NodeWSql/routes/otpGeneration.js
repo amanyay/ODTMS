@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const createDBConnection = require('../db');
-const { generateOtp , getOtp } = require('../otpService');
+
+const { generateOtp , getOtp } = require('../services/otpService');
 
 
 router.post('/', async (req, res) => {

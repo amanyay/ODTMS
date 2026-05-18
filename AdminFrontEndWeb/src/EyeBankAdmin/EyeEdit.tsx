@@ -56,8 +56,7 @@ export default function eyeOrgan() {
         <div className={style.section1}>
           <h3>Eye Organ</h3>
           <div>
-            <button onClick={eyeOrganInfo}>Filter</button>
-            <button>Add New Organ</button>
+
           </div>
         </div>
         <div className={style.section2}>

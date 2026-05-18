@@ -1,0 +1,119 @@
+.KidneyDonorMainBox {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(180deg, #7ab3e9 0%, #000B18 100%);
+    overflow: hidden;
+}
+
+.KidneyDonorInfoBox {
+    /* background-color: wheat; */
+    height: 600px;
+    width: 78%;
+    margin: 2% auto 0% auto;
+}
+
+.KidneyDonorInfoBox .section1 {
+    /* background-color: blue; */
+    height: 10%;
+}
+
+.section1 h3 {
+    text-align: center;
+    /* background-color: wheat; */
+    width: 20%;
+    font-size: 22px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 0% 0% 2% 2%;
+}
+
+.section1 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.section1 div {
+    /* background-color: yellow; */
+    width: 90%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.section1 button {
+    width: 14%;
+    margin: 0% 2% 0% 0%;
+    height: 35px;
+    background-color: #1d54ac;
+    border-radius: 3px;
+    border: none;
+    font-weight: bold;
+    color: aqua;
+}
+
+.section2 {
+    background-color: antiquewhite;
+    height: 95%;
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+.title {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.title span {
+    /* background-color: #1d54ac; */
+    margin: 0% 0% 0% 1%;
+    width: 8%;
+    text-align: center;
+    align-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.donorData {
+    /* background-color: burlywood; */
+    display: flex;
+    height: max-content;
+}
+
+.donorData span {
+    /* background-color: #1d54ac; */
+    margin: 1% 0% 0% 1%;
+    width: 8%;
+    text-align: center;
+    align-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    height: max-content;
+}
+
+.donorData li {
+    /* background-color: teal; */
+    list-style: none;
+    margin: 15% 0% 7% 0%;
+    height: 30px;
+    align-content: center;
+    color: cadetblue;
+}
+
+.errorMessage {
+    background-color: transparent;
+    height: 30px;
+    align-content: center;
+    width: 100%;
+    text-align: center;
+    margin: 2% 0% 0% 0%;
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}

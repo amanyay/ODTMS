@@ -27,18 +27,21 @@ export default function AdminLogin() {
             else {
 
                 const request = await axios.post(`${baseUrl}/adminLogin`, { phoneNumber, password })
-                console.log(request.status)
+
 
                 if (request.status === 200) {
                     if (request.data.message.ID === 0) {
-                        navigate("/EyeDonor")
+                        localStorage.setItem('token', request.data.token)
+                        navigate("/SuperAdminDashboard")
                     }
                     else if (request.data.message.ID === 1) {
-
-                        navigate("/EyeDonor")
+                        localStorage.setItem('token', request.data.token)
+                        console.log(request.data.token)
+                        navigate("/kidneyDashboard")
                     }
                     else if (request.data.message.ID === 2) {
-                        navigate("/EyeDonor")
+                        localStorage.setItem('token', request.data.token)
+                        navigate("/Eyebankdashboard")
 
                     }
 
@@ -51,7 +54,7 @@ export default function AdminLogin() {
 
         } catch (error) {
             console.log(error)
-            if(error){
+            if (error) {
                 setError('Network Error')
             }
         }

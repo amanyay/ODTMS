@@ -1,0 +1,111 @@
+.profilePageMainBox {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(180deg, #7ab3e9 0%, #000B18 100%);
+    overflow: hidden;
+    align-items: center;
+}
+
+.profilePageMainBox1 {
+    height: 550px;
+    width: 78%;
+    margin: 2% auto 0% auto;
+    /* background-color: red; */
+    overflow: hidden;
+}
+
+.header {
+    background-color: #303234;
+    width: 100%;
+    height: 20%;
+    border-radius: 10px;
+}
+
+.header h3 {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    align-content: center;
+    font-size: 34px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.informationsBox {
+    background: linear-gradient(180deg, #7ab3e9 0%, #000B18 100%);
+    height: 100%;
+    width: 100%;
+    margin: 2% 0% 0% 0%;
+    display: flex;
+    border-radius: 8px;
+}
+
+.editBtnsBox {
+    /* background-color: gray; */
+    width: 18%;
+    height: max-content;
+    display: block;
+    margin: 3% auto 0% auto;
+}
+
+.editBtnsBox button {
+    background-color: #474787;
+    width: 100%;
+    margin: 2% auto 2% auto;
+    padding: 6%;
+    border-radius: 8px;
+    color: white;
+}
+
+.userInformations {
+    background-color: #303234;
+    width: 80%;
+    border-radius: 8px;
+}
+
+.dataTitleBox {
+    /* background-color: red; */
+    width: 100%;
+    height: 40px;
+    margin: 7px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.dataTitleBox h2 {
+    margin: 0.5% 0% 0% 5%;
+    font-style: normal;
+    font-size: 27px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: wheat;
+}
+
+.dataTitleBox h6 {
+    margin: 0% 0% 0% 6%;
+}
+
+.dataTitleBox p {
+    width: 70%;
+    /* background-color: blue; */
+    margin: 0% 2% 0% 6%;
+    text-align: start;
+    align-content: end;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.dataTitleBox span {
+    width: 50%;
+    background-color: gray;
+    margin: 0% 2% 0% 6%;
+    text-align: start;
+    align-content: center;
+    padding-left: 2%;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 7px;
+}

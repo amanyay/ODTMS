@@ -14,6 +14,7 @@ export default function history() {
 
   async function allhistory() {
 
+    setError('')
     try {
       const token = await AsyncStorage.getItem('token');
       const request = await axios.post(`${baseUrl}/history`, { token });
@@ -34,13 +35,14 @@ export default function history() {
     }
 
 
-
-
   }
+
+  
 
   useEffect(() => {
     allhistory()
   }, [])
+
 
 
 
@@ -57,16 +59,16 @@ export default function history() {
         <Text style={{ fontSize: 20, marginRight: '25%' }}>History</Text>
         <Text style={{ marginRight: '8%' }}><AntDesign name="reload" size={30} color="black" onPress={allhistory} /></Text>
       </TouchableOpacity>
-      <Text style={style.box1}>{error}</Text>
 
+      <Text style={style.box1}>{error}</Text>
       <FlatList
         data={requests}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={style.eachRequests}>
             <View style={style.eachRequestsBox1}>
-              <Text style={[style.eachRequestsData3,{fontWeight:'bold'}]}>{new Date(item.date).toLocaleTimeString()}</Text>
-              <Text style={[style.eachRequestsData3,{}]}>{new Date(item.date).toLocaleDateString()}</Text>
+              <Text style={[style.eachRequestsData3, { fontWeight: 'bold' }]}>{new Date(item.date).toLocaleTimeString()}</Text>
+              <Text style={[style.eachRequestsData3, {}]}>{new Date(item.date).toLocaleDateString()}</Text>
             </View>
             <View style={style.eachRequestsBox2}>
               <Text style={style.eachRequestsData1}>{item.first_name}</Text>
@@ -176,7 +178,7 @@ const style = StyleSheet.create({
   },
   pendingMessage1: {
     backgroundColor: 'green',
-    height:'90%',
+    height: '90%',
     width: "80%",
     textAlign: 'center',
     borderRadius: 50,

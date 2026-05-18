@@ -14,6 +14,7 @@ import baseUrl from "../../network/api"
 
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { NavLink } from 'react-router-dom'
 
 
 
@@ -38,7 +39,7 @@ export default function EyeHistory() {
 
     const [EyeHistory, setEyeHistory] = useState<EyeHistory[]>([])
     const [notFound, setNotFound] = useState('')
-    const [status, setStatus] = useState('')
+
 
 
     async function EyeHistoryInfo() {
@@ -49,7 +50,7 @@ export default function EyeHistory() {
             const request = await axios.post(`${baseUrl}/eyeBankHistory`)
             if (request.status === 200) {
                 setEyeHistory(request.data.message)
-                setStatus(request.data.message[0].status);
+
 
             } else if (request.status === 201) {
                 setNotFound("No Match found")
@@ -69,10 +70,13 @@ export default function EyeHistory() {
         <div className={style.EyeHistoryMainBox} >
             <DrawerNavigation />
             <div className={style.EyeHistoryInfoBox} >
+                {/* <div className={style.sectionStart}>
+
+                </div> */}
                 <div className={style.section1} >
                     <h3>All Medical History</h3>
                     <div>
-                        <button onClick={EyeHistoryInfo}>Filter</button>
+                        <button><NavLink to='/Search'>Search</NavLink></button>
                     </div>
                 </div >
                 <div className={style.section2} >
@@ -139,7 +143,7 @@ export default function EyeHistory() {
                                 </span>
                                 <span>
                                     {EyeHistory.map((item) => {
-                                        return <li className={status === 'Pending' ? (style.statusPending) : (style.status)} key={item.id}>{item.status}</li>
+                                        return <li className={item.status === 'Rejected' ? (style.statusPending) : (style.status)} key={item.id}>{item.status}</li>
                                     })}
                                 </span>
 

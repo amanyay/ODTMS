@@ -13,7 +13,7 @@ import baseUrl from "../../network/api"
 
 import axios from "axios"
 import { useEffect, useState } from "react"
-
+import { NavLink } from 'react-router-dom'
 
 
 
@@ -38,6 +38,7 @@ export default function eyeMatch() {
     rec_phone_number: string;
     rec_status: string;
     urgency_level: string;
+    score: number
   };
 
   const [EyeMatch, setEyeMatch] = useState<EyeMatch[]>([])
@@ -66,15 +67,21 @@ export default function eyeMatch() {
 
 
   async function approveMatchedOrgan(item: EyeMatch) {
-
+    setNotFound('')
     try {
 
       const request = await axios.post(`${baseUrl}/eyeBankAddToWaitingList`, { donorPhoneNumber: item.don_phone_number, recipentsPhoneNumber: item.rec_phone_number, organId: item.organ_id })
-      if (request.status === 201) {
-        setApprovedMessage('');
+      if (request.status === 200) {
+        setApprovedMessage('Successfully notify');
       }
-      else if (request.status === 200) {
-        setApprovedMessage(item.don_phone_number + " " + 'and' + " " + item.rec_phone_number + ' Already Notify');
+      else if (request.status === 203) {
+        setApprovedMessage(item.don_phone_number + " " + ' AND ' + " " + item.rec_phone_number + ' Request already sent');
+      }
+      else if (request.status === 201) {
+        setApprovedMessage(request.data.message);
+      }
+      else if (request.status === 202) {
+        setApprovedMessage(request.data.message);
       }
     } catch (error) {
       console.log(error)
@@ -91,7 +98,7 @@ export default function eyeMatch() {
           <h3>Matched Organ</h3>
           <h2>{approvedMessage}</h2>
           <div>
-            <button onClick={EyeMatchInfo}>Filter</button>
+            <button><NavLink to='/Search'>Search</NavLink></button>
           </div>
         </div >
         <div className={style.section2} >
@@ -100,12 +107,12 @@ export default function eyeMatch() {
             <span>Donor Name</span>
             <span>D Blood type</span>
             <span>Donor Age</span>
-            <span>Donor Status</span>
-            <span>Recipent Id</span>
+            <span>Recipent Phone</span>
             <span>Recipent Name</span>
             <span>R Blood type</span>
             <span>Recipent Age</span>
             <span>Recipent status</span>
+            <span>Match Score</span>
             <span></span>
 
           </div >
@@ -130,11 +137,6 @@ export default function eyeMatch() {
                 <span>
                   {EyeMatch.map((item) => {
                     return <li key={item.donation_id}>{item.donor_age}</li>
-                  })}
-                </span>
-                <span>
-                  {EyeMatch.map((item) => {
-                    return <li key={item.donation_id}>{item.don_status}</li>
                   })}
                 </span>
                 <span>
@@ -164,7 +166,12 @@ export default function eyeMatch() {
                 </span>
                 <span>
                   {EyeMatch.map((item) => {
-                    return <button onClick={() => { approveMatchedOrgan(item) }}>Notify User</button>
+                    return <li key={item.donation_id}>{item.score}%</li>
+                  })}
+                </span>
+                <span>
+                  {EyeMatch.map((item) => {
+                    return <li><button onClick={() => { approveMatchedOrgan(item) }}>Notify User</button></li>
                   })}
                 </span>
 

@@ -52,7 +52,7 @@ export default function donarForm() {
 
 
         try {
-            if (age === "" || location === "" || gender === "" || lastName === "") {
+            if (age === "" || location === "" || gender === "" || lastName === "" || setFile === null) {
                 setError('Please fill all field');
             }
 
@@ -95,6 +95,7 @@ export default function donarForm() {
 
             }
         } catch (error: any) {
+            console.log(error)
             setError(error.response.data.err)
 
         }

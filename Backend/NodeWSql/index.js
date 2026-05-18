@@ -1,10 +1,11 @@
 
 //Packages
+
 const path = require('path')
 const express = require('express');
 const bodyParser = require('body-parser')
 const mysql = require('mysql2/promise');
-const createDBConnection = require('./db');
+const createDBConnection = require('./config/db');
 const JWT = require('jsonwebtoken');
 const OpenAiAPI = require('openai-api-node');
 const OpenAI = require('openai');
@@ -15,58 +16,70 @@ require('dotenv').config();
 //Super Admin Routes
 
 const loginRoutes = require('./routes/login');
-const adminAddNewAdminRoutes = require('./superAdminRoutes/adminAddNewAdmin');
-const adminAddOrganRoutes = require('./superAdminRoutes/adminAddOrgan');
-const adminCompleteReqRoutes = require('./superAdminRoutes/adminCompleteReq');
-const adminCompleteRequestDataRoutes = require('./superAdminRoutes/adminCompleteRequestData');
-const adminDonorsData = require('./superAdminRoutes/adminDonorsData');
-const adminLogin = require('./superAdminRoutes/adminLogin');
-const adminOrgansData = require('./superAdminRoutes/adminOrgansData');
-const adminRecipentsData = require('./superAdminRoutes/adminRecipentsData');
-const adminRequestData = require('./superAdminRoutes/adminRequestData');
-const getAdminsData = require('./superAdminRoutes/getAdminsData')
-const adminProfile = require('./superAdminRoutes/adminProfile');
+const adminAddNewAdminRoutes = require('./routes/superAdminRoutes/adminAddNewAdmin');
+const adminAddOrganRoutes = require('./routes/superAdminRoutes/adminAddOrgan');
+const superAdminHistory = require('./routes/superAdminRoutes/superAdminHistory');
+const superAdminSearch = require('./routes/superAdminRoutes/superAdminSearch');
+const adminDonorsData = require('./routes/superAdminRoutes/adminDonorsData');
+const adminLogin = require('./routes/adminLogin');
+const adminOrgansData = require('./routes/superAdminRoutes/adminOrgansData');
+const adminRecipentsData = require('./routes/superAdminRoutes/adminRecipentsData');
+const adminRequestData = require('./routes/superAdminRoutes/superAdminSearch');
+const superAdminReport = require('./routes/superAdminRoutes/superAdminDashboard')
+const superAdminProfile = require('./routes/superAdminRoutes/superAdminProfile');
+const adminRequestApp = require('./routes/superAdminRoutes/adminRequestApp')
+const superAdminFetchAdmins = require('./routes/superAdminRoutes/superAdminFetchAdmins')
+const superAdminDeleteAdmins = require('./routes/superAdminRoutes/superAdminDeleteAdmins')
+
 
 
 //Eye bank Admin Routes
 
-const eyeBankAdminProfile = require('./eyeBankAdminRoutes/eyeBankAdminProfile');
+const eyeBankAdminProfile = require('./routes/eyeBankAdminRoutes/eyeBankAdminProfile');
 
-const eyeBankDonorAdmin = require('./eyeBankAdminRoutes/eyeBankDonorAdmin');
-const eyeBankRecipentAdmin = require('./eyeBankAdminRoutes/eyeBankRecipentAdmin');
+const eyeBankDonorAdmin = require('./routes/eyeBankAdminRoutes/eyeBankDonorAdmin');
+const eyeBankRecipentAdmin = require('./routes/eyeBankAdminRoutes/eyeBankRecipentAdmin');
 
-const eyeBankOrganEdit = require('./eyeBankAdminRoutes/eyeBankOrganEdit');
+const eyeBankOrganEdit = require('./routes/eyeBankAdminRoutes/eyeBankOrganEdit');
 
-const eyeBankRequest = require('./eyeBankAdminRoutes/eyeBankRequest');
-const eyeBankRequestApprove = require('./eyeBankAdminRoutes/eyeBankRequestApprove')
+const eyeBankRequest = require('./routes/eyeBankAdminRoutes/eyeBankRequest');
+const eyeBankRequestApprove = require('./routes/eyeBankAdminRoutes/eyeBankRequestApprove')
 
-const eyeTransplantComplete = require('./eyeBankAdminRoutes/eyeTransplantComplete');
-const eyeTransplantCompleteApprove = require('./eyeBankAdminRoutes/eyeTransplantCompleteApprove');
+const eyeTransplantComplete = require('./routes/eyeBankAdminRoutes/eyeTransplantComplete');
+const eyeTransplantCompleteApprove = require('./routes/eyeBankAdminRoutes/eyeTransplantCompleteApprove');
+const eyeBankTransplantReject = require('./routes/eyeBankAdminRoutes/eyeBankTransplantReject')
 
-const eyeBankAddToWaitingList = require('./eyeBankAdminRoutes/eyeBankAddToWaitingList');
-const eyeBankMatchedOrgan = require('./eyeBankAdminRoutes/eyeBankMatchedOrgan');
+const eyeBankAddToWaitingList = require('./routes/eyeBankAdminRoutes/eyeBankAddToWaitingList');
+const eyeBankMatchedOrgan = require('./routes/eyeBankAdminRoutes/eyeBankMatchedOrgan');
 
-const eyeBankHistory = require('./eyeBankAdminRoutes/eyeBankHistory')
-const eyeBankReportDashboard = require('./eyeBankAdminRoutes/eyeBankReportDashboard')
+const eyeBankHistory = require('./routes/eyeBankAdminRoutes/eyeBankHistory')
+const eyeBankReportDashboard = require('./routes/eyeBankAdminRoutes/eyeBankReportDashboard')
 
+const eyeBankSearch = require('./routes/eyeBankAdminRoutes/eyeBankSearch')
 
 //Kidney Admin Routes
 
-const kidneyAdminProfile = require('./kidneyAdminRoutes/kidenyAdminProfile');
+const kidneyAdminProfile = require('./routes/kidneyAdminRoutes/kidenyAdminProfile');
 
-const kidneyDonorAdmin = require('./kidneyAdminRoutes/kidneyDonor');
-const kidneyRecipentAdmin = require('./kidneyAdminRoutes/kidneyRecipents');
+const kidneyDonorAdmin = require('./routes/kidneyAdminRoutes/kidneyDonor');
+const kidneyRecipentAdmin = require('./routes/kidneyAdminRoutes/kidneyRecipents');
 
-const kidneyOrganEdit = require('./kidneyAdminRoutes/kidneyEdit');
+const kidneyOrganEdit = require('./routes/kidneyAdminRoutes/kidneyEdit');
 
-const kidneyRequest = require('./kidneyAdminRoutes/kidneyRequest');
-const kidneyRequestApprove = require('./kidneyAdminRoutes/kidneyRequestApprove');
+const kidneyRequest = require('./routes/kidneyAdminRoutes/kidneyRequest');
+const kidneyRequestApprove = require('./routes/kidneyAdminRoutes/kidneyRequestApprove');
 
-const kidneyTransplantComplete = require('./kidneyAdminRoutes/kidneyTransplantComplete');
-const kidneyTransplantCompleteApprove = require('./kidneyAdminRoutes/kidneyTransplantCompleteApprove');
+const kidneyTransplantComplete = require('./routes/kidneyAdminRoutes/kidneyTransplantComplete');
+const kidneyTransplantCompleteApprove = require('./routes/kidneyAdminRoutes/kidneyTransplantCompleteApprove');
 
-const kidneyAddToWaitingList = require('./kidneyAdminRoutes/kidneyAddToWaitingList')
-const kidneyMatchedOrgan = require('./kidneyAdminRoutes/kidneyMatchedOrgan')
+const kidneyAddToWaitingList = require('./routes/kidneyAdminRoutes/kidneyAddToWaitingList')
+const kidneyMatchedOrgan = require('./routes/kidneyAdminRoutes/kidneyMatchedOrgan')
+
+const kidneyHistory = require('./routes/kidneyAdminRoutes/kidneyHistory')
+const kidneyReportDashboard = require('./routes/kidneyAdminRoutes/kidneyReportDashboard')
+
+const kidneySearch = require('./routes/kidneyAdminRoutes/kidneySearch')
+
 
 
 //Other Routes
@@ -74,7 +87,7 @@ const kidneyMatchedOrgan = require('./kidneyAdminRoutes/kidneyMatchedOrgan')
 
 const chatBot = require('./routes/chatBot')
 const deleteAccount = require('./routes/deleteAccount')
-const deleteDonors = require('./routes/deleteDonors')
+const deleteDonors = require('./routes/eyeBankAdminRoutes/deleteDonors')
 const donOrgans = require('./routes/donOrgans')
 const donorsForm = require('./routes/donorsForm')
 const history = require('./routes/history')
@@ -87,14 +100,13 @@ const signUp = require('./routes/signup')
 const statstics = require('./routes/statstics')
 const updateProfile = require('./routes/updateProfile')
 const userNotification = require('./routes/userNotification')
-const adminRequestApp = require('./superAdminRoutes/adminRequestApp')
-const adminAddOrgan = require('./superAdminRoutes/adminAddOrgan');
 const qr = require('./routes/qr')
 const forgetPassword = require('./routes/forgetPassword')
 const verification = require('./routes/verification');
 const otpGeneration = require('./routes/otpGeneration')
 const changeNewPassword = require('./routes/changeNewPassword')
-const faydaVerification = require('./routes/faydaVerification')
+const faydaVerification = require('./routes/faydaVerification');
+
 
 
 
@@ -120,10 +132,13 @@ app.get('/', (req, res) => {
     res.send("ODTMS APP is running")
 })
 
-//        Normal Routes
+//        Login Routes
 
 app.use('/login', loginRoutes)
 app.use('/adminLogin', adminLogin)
+
+//        Normal Routes
+
 app.use('/signUp', signUp)
 app.use('/home', home)
 app.use('/profile', profile)
@@ -143,12 +158,12 @@ app.use('/verification', verification)
 app.use('/otpGeneration', otpGeneration)
 app.use('/changeNewPassword', changeNewPassword)
 app.use('/faydaVerification', faydaVerification)
-
+app.use('/qr', qr)
 
 
 //          SUPER-ADMIN API
 
-app.use('/adminProfile', adminProfile)
+app.use('/superAdminProfile', superAdminProfile)
 
 app.use('/adminOrgansData', adminOrgansData)
 
@@ -159,16 +174,19 @@ app.use('/adminRecipentsData', adminRecipentsData)
 app.use('/adminRequestData', adminRequestData)
 app.use('/adminRequestApp', adminRequestApp)
 
-app.use('/adminCompleteRequestData', adminCompleteRequestDataRoutes)
-app.use('/adminCompleteReq', adminCompleteReqRoutes)
+app.use('/superAdminSearchAll', superAdminSearch)
+app.use('/superAdminHistory', superAdminHistory)
 
-app.use('/adminAddNewAdmin', adminAddNewAdminRoutes)
-app.use('/getAdminsData', getAdminsData)
+app.use('/superAdminAddNewAdmin', adminAddNewAdminRoutes)
+app.use('/superAdminFetchAdmins', superAdminFetchAdmins)
 
-app.use('/deleteDonors', deleteDonors)
+app.use('/superAdminReport', superAdminReport)
 
-app.use('/adminAddOrgan', adminAddOrgan)
-app.use('/qr', qr)
+app.use('/adminAddOrgan', adminAddOrganRoutes)
+app.use('/superAdminDeleteAdmin', superAdminDeleteAdmins)
+
+
+
 
 
 //           EYE BANK ADMIN API 
@@ -186,6 +204,7 @@ app.use('/eyeBankOrganAdmin', eyeBankOrganEdit)
 
 app.use('/eyeBankRequest', eyeBankRequest);
 app.use('/eyeBankRequestApprove', eyeBankRequestApprove)
+app.use('/eyeBankTransplantReject' ,eyeBankTransplantReject )
 
 app.use('/eyeBankAddToWaitingList', eyeBankAddToWaitingList)
 app.use('/eyeBankMatchedOrgan', eyeBankMatchedOrgan)
@@ -193,21 +212,30 @@ app.use('/eyeBankMatchedOrgan', eyeBankMatchedOrgan)
 app.use('/eyeBankHistory', eyeBankHistory)
 app.use('/eyeBankReport', eyeBankReportDashboard)
 
+app.use('/search', eyeBankSearch)
+app.use('/eyeBankProfile', eyeBankAdminProfile)
+
 
 //            KIDNEY ADMIN API
 
 app.use('/kidneyAdminProfile', kidneyAdminProfile)
-app.use('/kidneyDonorAdmin', kidneyDonorAdmin)
-app.use('/kidneyRecipentAdmin', kidneyRecipentAdmin)
+app.use('/KidneyDonorAdmin', kidneyDonorAdmin)
+app.use('/KidneyRecipentAdmin', kidneyRecipentAdmin)
 
 
-app.use('/kidneyTransplantComplete', kidneyTransplantComplete)
+app.use('/KidneyTransplantComplete', kidneyTransplantComplete)
 app.use('/kidneyTransplantCompleteApprove', kidneyTransplantCompleteApprove)
 
-app.use('/kidneyOrganAdmin', kidneyOrganEdit)
+app.use('/KidneyOrganAdmin', kidneyOrganEdit)
 
-app.use('/kidneyRequest', kidneyRequest);
+app.use('/KidneyRequest', kidneyRequest);
 app.use('/kidneyRequestApprove', kidneyRequestApprove)
 
 app.use('/kidneyMatchedOrgan', kidneyMatchedOrgan);
 app.use('/kidneyAddToWaitingList', kidneyAddToWaitingList)
+
+app.use('/KidneyHistory', kidneyHistory)
+app.use('/kidneyReport', kidneyReportDashboard)
+
+app.use('/kidneysearch', kidneySearch)
+app.use('/kidneyProfile', kidneyAdminProfile)

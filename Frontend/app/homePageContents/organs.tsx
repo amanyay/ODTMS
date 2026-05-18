@@ -12,11 +12,10 @@ export default function organs() {
 
   const [organs, setOrgans] = useState<any>([]);
   const [notFound, setNotFound] = useState('');
-  // const [eachReqError, setEachReqError] = useState('')
-  // const [checkRequest, setCheckRequest] = useState(true)
 
   async function getOrganForRecs() {
 
+    setNotFound('')
     try {
 
       const token = await AsyncStorage.getItem('token');
@@ -31,11 +30,9 @@ export default function organs() {
       else if (request.status === 200) {
         setOrgans(request.data.message);
 
-        // if (request.data.rec_request > 0) {
-        //   setCheckRequest(false)
-        // }
-        // console.log(request.data.message)
       }
+
+
     } catch (error: any) {
 
       setNotFound(error.response.data.err)
@@ -46,28 +43,7 @@ export default function organs() {
     getOrganForRecs()
   }, [])
 
-  // async function sendRequest(item: any) {
 
-  //   try {
-  //     const token = await AsyncStorage.getItem('token');
-  //     const request = await axios.post(`${baseUrl}/recRequests`, { token, donorPhoneNumber: item.phone_numbers, organId: item.organ_id });
-
-  //     if (request.status === 201) {
-  //       router.replace('/homePageContents/successful');
-  //     }
-  //     else if (request.status === 200) {
-  //       setEachReqError("Request already sent try to send another request !!!")
-  //     } else {
-  //       setNotFound("Server Error please try again")
-  //     }
-  //   } catch (error: any) {
-
-  //     setNotFound(error.response.data.err)
-
-  //   }
-
-
-  // }
 
 
 
@@ -100,7 +76,7 @@ export default function organs() {
 
       <FlatList
         data={organs}
-        keyExtractor={(item) => item.phone_numbers.toString()}
+        keyExtractor={(item) => item.donation_id.toString()}
         renderItem={({ item }) => (
           <View style={style.organBox}>
 
@@ -115,21 +91,19 @@ export default function organs() {
               </View>
 
             </View>
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}>
               <View style={style.organBoxText}>
-                <Text style={style.organBoxText1}>Donor Name  </Text><Text style={style.datas}>{item.first_name}</Text>
-                <Text style={style.organBoxText1}>Donor age   </Text><Text style={style.datas}>{item.age}</Text>
+                <Text style={style.organBoxText1}>Donor Name  </Text><Text style={style.datas}>{item.donor_name}</Text>
+                <Text style={style.organBoxText1}>Donor age   </Text><Text style={style.datas}>{item.donor_age}</Text>
                 <Text style={style.organBoxText1}>Donate Organ </Text><Text style={style.datas}>{item.organ_name}</Text>
-                <Text style={style.organBoxText1}>Location </Text><Text style={style.datas}>{item.location}</Text>
-                <Text style={style.organBoxText1}>Phone Number  </Text><Text style={style.datas}>{item.phone_numbers}</Text>
                 <Text style={style.organBoxText1}>Gender  </Text><Text style={style.datas}>{item.gender}</Text>
-                <Text style={style.organBoxText1}>Blood Type  </Text><Text style={style.datas}>{item.blood_type}</Text>
+                <Text style={style.organBoxText1}>Blood Type  </Text><Text style={style.datas}>{item.donor_blood_type}</Text>
+                <Text style={style.organBoxText1}>Status </Text><Text style={style.datas}>{item.rec_status}</Text>
+                <Text style={style.organBoxText1}>Match Score </Text><Text style={style.datas}>{item.score} %</Text>
               </View>
             </ScrollView>
             <View style={style.updateAndRemoveBtn}>
-              {/* <TouchableOpacity style={style.requestBtnBox} onPress={() => sendRequest(item)}>
-                <Text style={style.requestBtnText}>Send Request <FontAwesome name="send" size={20} color="black" /></Text>
-              </TouchableOpacity> */}
+
             </View>
 
           </View>
@@ -204,13 +178,13 @@ const style = StyleSheet.create({
 
   organBox: {
     backgroundColor: '#bebaae',
-    height: 350,
+    height: 370,
     margin: '3%',
     marginTop: '2%',
     borderRadius: 8,
     alignContent: 'center',
     overflow: 'hidden',
-    marginBottom:'10%'
+    marginBottom: '10%'
   },
   boxHeaderIcon: {
     // backgroundColor: 'red',
@@ -290,7 +264,7 @@ const style = StyleSheet.create({
     backgroundColor: '#bebaae',
     borderWidth: 0,
     marginTop: '0%',
-    height:20
+    height: 20
   },
   // updateBtnBox: {
   //   backgroundColor: "rgba(42, 146, 201, 0.7)",

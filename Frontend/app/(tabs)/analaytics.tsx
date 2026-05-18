@@ -8,9 +8,9 @@ import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react
 
 export default function statstics() {
 
-    const [totalRequest, setTotalRequest] = useState("")
-    const [totalDonors, setTotalDonor] = useState('');
-    const [totalRecipents, setTotalRecipents] = useState('');
+    // const [totalRequest, setTotalRequest] = useState("")
+    // const [totalDonors, setTotalDonor] = useState('');
+    const [activeRecipents, setactiveRecipents] = useState('');
     const [completedTransplant, setCompletedTransplant] = useState('');
     const [error, setError] = useState("")
 
@@ -20,9 +20,9 @@ export default function statstics() {
             const token = await AsyncStorage.getItem("token");
             const request = await axios.post(`${baseUrl}/statstics`, { token });
 
-            setTotalRequest(request.data.message.totalRequestPending[0].total_request_pending)
-            setTotalDonor(request.data.message.totalDonors[0].total_donors)
-            setTotalRecipents(request.data.message.totalRecipents[0].total_recipents)
+            // setTotalRequest(request.data.message.totalRequestPending[0].total_request_pending)
+            // setTotalDonor(request.data.message.total[0].total)
+            setactiveRecipents(request.data.message.totalActiveWaitingList[0].total_request_complete)
             setCompletedTransplant(request.data.message.percentage)
 
         } catch (error: any) {
@@ -54,21 +54,13 @@ export default function statstics() {
                     </TouchableOpacity>
                 </View>
                 <View style={style.box2}>
-                    <View style={style.dataBox}>
-                        <Text style={style.dataBoxText1}>Total Requests</Text>
-                        <Text style={style.dataBoxText2}>{totalRequest}</Text>
+                    <View style={style.dataBox1}>
+                        <Text style={style.dataBoxText1}>Active User Wait For Organ</Text>
+                        <Text style={style.dataBoxText3}>{activeRecipents}</Text>
                     </View>
-                    <View style={style.dataBox}>
-                        <Text style={style.dataBoxText1}>Total Donors</Text>
-                        <Text style={style.dataBoxText2}>{totalDonors}</Text>
-                    </View>
-                    <View style={style.dataBox}>
-                        <Text style={style.dataBoxText1}>Total Recipents</Text>
-                        <Text style={style.dataBoxText2}>{totalRecipents}</Text>
-                    </View>
-                    <View style={style.dataBox}>
-                        <Text style={style.dataBoxText1}>Completed Transplant</Text>
-                        <Text style={style.dataBoxText2}>{completedTransplant} % </Text>
+                    <View style={style.dataBox1}>
+                        <Text style={style.dataBoxText1}>Successfull Transplant Win Rate</Text>
+                        <Text style={style.dataBoxText3}>{completedTransplant} % </Text>
                     </View>
                 </View>
                 <Text style={style.error}>{error}</Text>
@@ -116,19 +108,39 @@ const style = StyleSheet.create({
         height: '30%',
         alignItems: 'center',
         borderRadius: 8,
-        borderColor:'black',
-        borderWidth:1
+        borderColor: 'black',
+        borderWidth: 1
+    },
+    dataBox1: {
+        backgroundColor: 'rgba(255, 244, 244, 0.86)',
+        width: '90%',
+        margin: '4%',
+        marginLeft: '5%',
+        marginTop: '15%',
+        height: '30%',
+        alignItems: 'center',
+        // justifyContent: 'center',
+        borderRadius: 8,
+        borderColor: 'black',
+        borderWidth: 1
     },
     dataBoxText1: {
-        marginTop: '5%',
+        // backgroundColor: 'red',
+        marginTop: '0%',
         fontSize: 14,
-        borderBottomWidth:2,
-        width:'100%',
-        textAlign:'center',
+        borderBottomWidth: 2,
+        width: '100%',
+        textAlign: 'center',
     },
     dataBoxText2: {
-        marginTop: '30%',
-        fontSize: 20,
+        backgroundColor: 'red',
+        marginTop: '25%',
+        fontSize: 32,
+    },
+    dataBoxText3: {
+        // backgroundColor: 'red',
+        marginTop: '10%',
+        fontSize: 35,
     },
     error: {
         width: '100%',

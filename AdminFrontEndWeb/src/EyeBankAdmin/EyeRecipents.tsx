@@ -13,11 +13,13 @@ import baseUrl from "../../network/api"
 
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { NavLink } from 'react-router-dom'
 export default function eyeRecipents() {
 
   type Recipents = {
     wait_id: number;
     phone_number: string;
+    reg_date: string
     status: string;
     urgency_level: string;
     first_name: string;
@@ -30,7 +32,6 @@ export default function eyeRecipents() {
   };
   const [Recipents, setRecipents] = useState<Recipents[]>([])
   const [notFound, setNotFound] = useState('')
-
   async function eyeRecipentsInfo() {
 
     try {
@@ -60,8 +61,7 @@ export default function eyeRecipents() {
         <div className={style.section1}>
           <h3>Eye Recipents</h3>
           <div>
-            <button onClick={eyeRecipentsInfo}>Filter</button>
-            <button>Add New Recipents</button>
+            <button><NavLink to='/Search'>Search</NavLink></button>
           </div>
         </div>
         <div className={style.section2}>
@@ -123,6 +123,11 @@ export default function eyeRecipents() {
             <span>
               {Recipents.map((item) => {
                 return <li key={item.wait_id}>{item.location}</li>
+              })}
+            </span>
+            <span>
+              {Recipents.map((item) => {
+                return <li key={item.wait_id}>{new Date(item.reg_date).toLocaleDateString()}</li>
               })}
             </span>
             <span>

@@ -29,6 +29,10 @@
         margin: 8% auto 0% auto;
         list-style: none;
     }
+
+    .linksFooter button {
+        display: none;
+    }
 }
 
 .drawerNavBox:hover {
@@ -101,6 +105,18 @@
         text-decoration: none;
     }
 
+    .linksFooter button {
+        margin: 8% 0% 0% 7%;
+        background-color: red;
+        color: white;
+        display: block;
+        /* width: max-content; */
+        text-align: start;
+        font-size: 15px;
+        text-decoration: none;
+        padding: 10px;
+    }
+
 }
 
 .logo {
@@ -168,4 +184,9 @@
 
 .linksFooter .aLogo {
     font-size: 30px;
+}
+
+.linksFooter .a.active {
+    background-color: gray;
+    padding: 10px;
 }
