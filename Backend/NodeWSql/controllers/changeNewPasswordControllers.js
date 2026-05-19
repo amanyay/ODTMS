@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jsonWebToken = require('jsonwebtoken')
 const userModel = require('../models/userModel')
+const bcrypt = require('bcrypt')
 
 router.post('/', async (req, res) => {
 
@@ -10,14 +11,15 @@ router.post('/', async (req, res) => {
 
     try {
 
+        const hashedPassword = await bcrypt.hash(password2, 10);
         const verifiedForgetPasswordPhoneNumber = jsonWebToken.verify(forgetPasswordPhoneNumberToken, process.env.JWT_SECRET_FORGET_PASSWORD)
         const actualVerifiedForgetPasswordPhoneNumber = verifiedForgetPasswordPhoneNumber.forgetPasswordTokenPhoneNumber
 
 
 
-        const updatePassword = await userModel.updatePassword(password2, actualVerifiedForgetPasswordPhoneNumber)
+        const updatePassword = await userModel.updatePassword(hashedPassword, actualVerifiedForgetPasswordPhoneNumber)
 
-    
+
 
         if (updatePassword) {
             res.status(200).json({

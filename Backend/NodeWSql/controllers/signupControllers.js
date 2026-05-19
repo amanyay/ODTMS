@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const mysql = require('mysql2/promise');
 const userModel = require('../models/userModel')
 const JWT = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 require('dotenv').config();
 
@@ -19,6 +20,8 @@ router.post("/", async (req, res) => {
 
     try {
 
+        const hashedPassword = await bcrypt.hash(password, 10)
+
         const userSignUp = await userModel.userSignUp(phoneNumber)
 
 
@@ -27,7 +30,7 @@ router.post("/", async (req, res) => {
         }
         else if (userSignUp.length === 0) {
 
-            const signupInsertionQuery = await userModel.signupInsertionQuery(phoneNumber, firstName, lastName, email, password, selectedValue)
+            const signupInsertionQuery = await userModel.signupInsertionQuery(phoneNumber, firstName, lastName, email, hashedPassword, selectedValue)
 
             if (signupInsertionQuery) {
                 res.status(200).json({ message: 'Successfully Registerd' })

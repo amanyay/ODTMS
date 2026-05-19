@@ -44,7 +44,7 @@ async function adminLoginController(req, res) {
             statusCode = 203;
         }
 
-        const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET, { expiresIn: '30s' });
+        const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET, { expiresIn: '1d' });
 
 
         return res.status(statusCode).json({

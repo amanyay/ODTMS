@@ -270,7 +270,6 @@ async function RejectDonationsAndRecipentTable(rec_phone_number, don_phone_numbe
 }
 
 
-
 async function selectEyeBankAdminFromAdminTable(actualVerifiedPhoneNumber) {
     const connection = await createDBConnection();
     const [selectEyeBankAdminFromAdminTable] = await connection.query(`SELECT * FROM admin WHERE phone_number = ? AND ID = ? `, [actualVerifiedPhoneNumber, 2])
@@ -328,6 +327,22 @@ async function getEyeRecipentForMatching() {
     return getEyeRecipent;
 }
 
+async function adminAddEyeDonor(firstName, lastName, age, phoneNumber, gender, bloodType, organ, location) {
+
+    const connection = await createDBConnection();
+
+    const [insertToUserTable] = await connection.query(`INSERT INTO users (first_name , last_name , age , role , location , phone_number ,gender,blood_type)
+        VALUES (?,?,?,?,?,?,?,?)` , [firstName, lastName, age, 'donor', location, phoneNumber, gender, bloodType])
+
+
+
+    return insertToUserTable
+
+
+
+
+
+}
 
 
 // Kidney Model
@@ -653,6 +668,7 @@ module.exports =
     selectEyeBankAdminFromAdminTable,
     makeTransplantReject,
     RejectDonationsAndRecipentTable,
+    adminAddEyeDonor,
 
     //Kidney
 

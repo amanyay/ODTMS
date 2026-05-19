@@ -38,6 +38,7 @@ const superAdminDeleteAdmins = require('./routes/superAdminRoutes/superAdminDele
 const eyeBankAdminProfile = require('./routes/eyeBankAdminRoutes/eyeBankAdminProfile');
 
 const eyeBankDonorAdmin = require('./routes/eyeBankAdminRoutes/eyeBankDonorAdmin');
+const eyeBankAdminAddDonor = require('./routes/eyeBankAdminRoutes/eyeBankAdminAddDonor')
 const eyeBankRecipentAdmin = require('./routes/eyeBankAdminRoutes/eyeBankRecipentAdmin');
 
 const eyeBankOrganEdit = require('./routes/eyeBankAdminRoutes/eyeBankOrganEdit');
@@ -132,14 +133,16 @@ app.get('/', (req, res) => {
     res.send("ODTMS APP is running")
 })
 
-//        Login Routes
+//        Login Routes and SignUp
 
 app.use('/login', loginRoutes)
 app.use('/adminLogin', adminLogin)
+app.use('/signUp', signUp)
+
+
 
 //        Normal Routes
 
-app.use('/signUp', signUp)
 app.use('/home', home)
 app.use('/profile', profile)
 app.use('/donorsForm', donorsForm)
@@ -194,6 +197,7 @@ app.use('/superAdminDeleteAdmin', superAdminDeleteAdmins)
 
 app.use('/eyeBankAdminProfile', eyeBankAdminProfile)
 app.use('/eyeBankDonorAdmin', eyeBankDonorAdmin)
+app.use('/eyeBankAdminAddDonor', eyeBankAdminAddDonor)
 app.use('/eyeBankRecipentAdmin', eyeBankRecipentAdmin)
 
 
@@ -204,7 +208,7 @@ app.use('/eyeBankOrganAdmin', eyeBankOrganEdit)
 
 app.use('/eyeBankRequest', eyeBankRequest);
 app.use('/eyeBankRequestApprove', eyeBankRequestApprove)
-app.use('/eyeBankTransplantReject' ,eyeBankTransplantReject )
+app.use('/eyeBankTransplantReject', eyeBankTransplantReject)
 
 app.use('/eyeBankAddToWaitingList', eyeBankAddToWaitingList)
 app.use('/eyeBankMatchedOrgan', eyeBankMatchedOrgan)
