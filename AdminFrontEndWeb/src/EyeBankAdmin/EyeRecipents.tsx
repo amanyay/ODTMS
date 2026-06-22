@@ -32,6 +32,10 @@ export default function eyeRecipents() {
   };
   const [Recipents, setRecipents] = useState<Recipents[]>([])
   const [notFound, setNotFound] = useState('')
+  const [error, setError] = useState('')
+
+
+
   async function eyeRecipentsInfo() {
 
     try {
@@ -50,6 +54,24 @@ export default function eyeRecipents() {
 
   }
 
+
+  async function deleteRecipents(item: Recipents) {
+
+
+    try {
+
+      const request = await axios.post(`${baseUrl}/eyeBankDeleteRecipents`, { recipentPhoneNumber: item.phone_number })
+      if (request.status === 200) {
+        setError(request.data.message)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+
+
+  }
+
   useEffect(() => {
     eyeRecipentsInfo();
   }, [])
@@ -60,6 +82,7 @@ export default function eyeRecipents() {
       <div className={style.eyeRecipentsInfoBox}>
         <div className={style.section1}>
           <h3>Eye Recipents</h3>
+          <h2>{error}</h2>
           <div>
             <button><NavLink to='/Search'>Search</NavLink></button>
           </div>
@@ -77,6 +100,7 @@ export default function eyeRecipents() {
             <span>Location</span>
             <span>Donation Date</span>
             <span>Status</span>
+            <span></span>
           </div>
           {Recipents.length > 0 ? (<div className={style.RecipentsData}>
             <span>
@@ -133,6 +157,11 @@ export default function eyeRecipents() {
             <span>
               {Recipents.map((item) => {
                 return <li key={item.wait_id}>{item.status}</li>
+              })}
+            </span>
+            <span>
+              {Recipents.map((item) => {
+                return <li key={item.wait_id}><button onClick={() => { deleteRecipents(item) }}>Delete</button></li>
               })}
             </span>
 

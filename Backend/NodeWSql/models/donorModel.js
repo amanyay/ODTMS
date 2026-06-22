@@ -15,8 +15,8 @@ async function selectionFromrecTable(actualVerifiedPhoneNumber) {
 
 async function donorFormUpdate(firstName, lastName, email, age, location, bloodType, gender, tokenToBackEnd, organs, actualVerifiedPhoneNumber) {
     const connection = await createDBConnection();
-    const [updateQueryResult] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
-        , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
+    const [updateQueryResult] = await connection.query(`UPDATE users SET first_name = ?, last_name = ? , age = ? , location = ? 
+        , gender = ? , blood_type = ? WHERE phone_number = ? ` , [firstName, lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
 
     return updateQueryResult
 
@@ -24,10 +24,10 @@ async function donorFormUpdate(firstName, lastName, email, age, location, bloodT
 }
 
 
-async function updateDonation(organs, actualVerifiedPhoneNumber) {
+async function updateDonation(organs, actualVerifiedPhoneNumber, donorsDocument) {
     const connection = await createDBConnection();
-    const [updateDonation] = await connection.query(`UPDATE donations SET organ_id = ?
-                 WHERE phone_numbers = ? ` , [organs, actualVerifiedPhoneNumber])
+    const [updateDonation] = await connection.query(`UPDATE donations SET organ_id = ?,donor_doc = ?
+                 WHERE phone_numbers = ? ` , [organs, donorsDocument, actualVerifiedPhoneNumber])
     return updateDonation
 }
 
@@ -41,10 +41,10 @@ async function selectionFromDonationByPhoneNumber(actualVerifiedPhoneNumber) {
 }
 
 
-async function insertToDonationTable(actualVerifiedPhoneNumber, organs) {
+async function insertToDonationTable(actualVerifiedPhoneNumber, organs, donorsDocument) {
     const connection = await createDBConnection();
-    const [insertToDonationTable] = await connection.query(`INSERT INTO donations (phone_numbers , organ_id) 
-            VALUES(?,?)`, [actualVerifiedPhoneNumber, organs])
+    const [insertToDonationTable] = await connection.query(`INSERT INTO donations (phone_numbers , organ_id ,donor_doc) 
+            VALUES(?,?,?)`, [actualVerifiedPhoneNumber, organs, donorsDocument])
 
     return insertToDonationTable
 }
@@ -105,6 +105,8 @@ async function getEyeDonorInfoForMatching(userOrgan) {
 
 
 
+
+
 module.exports = ({
     selectionFromrecTable,
     getDonInfoQuery,
@@ -114,5 +116,5 @@ module.exports = ({
     updateDonation,
     selectionFromDonationByPhoneNumber,
     insertToDonationTable,
-    getEyeDonorInfoForMatching
+    getEyeDonorInfoForMatching,
 })

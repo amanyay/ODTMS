@@ -61,9 +61,6 @@ router.post('/', async (req, res) => {
             if (Math.abs(donorsInfo[0].age - eachRecipents.age) >= 10) {
                 score = score * 0
             }
-            if (eachRecipents.status === "Pending") {
-                score = score + urgencyOrder[eachRecipents.urgency_level] || 0
-            }
 
             return score
 
@@ -77,7 +74,7 @@ router.post('/', async (req, res) => {
 
             const score = getMatchScore(recipents)
 
-            if (score > 0) {
+            if (score >= 75) {
                 matchesResult.push(
                     {
                         wait_id: recipents.wait_id,
@@ -96,12 +93,20 @@ router.post('/', async (req, res) => {
         }
 
 
-        if (matchesResult.sort((a, b) => b.score - a.score)) {
-            res.status(200).json({
-                message: matchesResult
-            })
+        if (matchesResult.length > 0) {
+            if (matchesResult.sort((a, b) => b.score - a.score)) {
+                res.status(200).json({
+                    message: matchesResult
+                })
 
+            }
         }
+        else if (matchesResult.length === 0) {
+            res.status(201).json({
+                message: 'not Found'
+            })
+        }
+
 
 
 

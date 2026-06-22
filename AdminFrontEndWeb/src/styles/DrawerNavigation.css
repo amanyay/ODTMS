@@ -1,123 +1,12 @@
 .drawerNavBox {
     background-color: #1c2e4a;
-    width: 5%;
+    width: 13%;
     height: 100vh;
     overflow: hidden;
     align-items: center;
     border-right: 5px solid;
-
-    .links span {
-        display: none;
-
-    }
-
-    .logo h1 {
-        display: none;
-    }
-
-    .links li {
-        margin: 8% auto 0% auto;
-        text-decoration: none;
-        list-style: none;
-    }
-
-    .linksFooter span {
-        display: none;
-    }
-
-    .linksFooter li {
-        margin: 8% auto 0% auto;
-        list-style: none;
-    }
-
-    .linksFooter button {
-        display: none;
-    }
 }
 
-.drawerNavBox:hover {
-    width: 20%;
-    transition: 100ms;
-
-    .logo h1 {
-        /* background-color: red; */
-        text-align: center;
-        color: wheat;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: bold;
-        display: block;
-        width: 100%;
-    }
-
-    .links li {
-        margin: 8% 0% 0% 0%;
-        /* background-color: blue; */
-        color: white;
-        display: block;
-        width: 41%;
-        text-align: end;
-    }
-
-    .links span {
-        margin: 8% 0% 0% 7%;
-        /* background-color: red; */
-        color: white;
-        display: block;
-        width: 100%;
-        text-align: start;
-        font-size: 18px;
-        text-decoration: none;
-    }
-
-    .links .a {
-        text-decoration: none;
-        color: white;
-        font-weight: bold;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 15px;
-
-    }
-
-    .drawerNavBoxFooter {
-        /* background-color: blue; */
-        height: 100vh;
-        width: 100%;
-        margin: 5% 0% 0% 0%;
-    }
-
-    .linksFooter li {
-        margin: 8% 0% 0% 0%;
-        /* background-color: red; */
-        color: white;
-        display: block;
-        width: 41%;
-        text-align: end;
-    }
-
-    .linksFooter span {
-        margin: 8% 0% 0% 7%;
-        /* background-color: red; */
-        color: white;
-        display: block;
-        width: 100%;
-        text-align: start;
-        font-size: 15px;
-        text-decoration: none;
-    }
-
-    .linksFooter button {
-        margin: 8% 0% 0% 7%;
-        background-color: red;
-        color: white;
-        display: block;
-        /* width: max-content; */
-        text-align: start;
-        font-size: 15px;
-        text-decoration: none;
-        padding: 10px;
-    }
-
-}
 
 .logo {
     /* background-color: aliceblue; */
@@ -126,14 +15,28 @@
 }
 
 
+.logo h1 {
+    /* background-color: red; */
+    text-align: center;
+    color: wheat;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+}
+
 .drawerNavBoxLinks {
     /* background-color: wheat; */
     height: max-content;
+    margin: 3% 0% 0% 0%;
 }
 
 .links {
     width: 100%;
     display: flex;
+    margin: 2% 0% 4% 0%;
+    height: max-content;
+    /* background-color: wheat; */
 }
 
 .links:hover {
@@ -143,36 +46,84 @@
     opacity: 0.8;
 }
 
-.links .a.active {
+.links:has(.a.active) {
     background-color: gray;
-    padding: 10px;
+    align-items: center;
+    border-radius: 8px;
+    width: 90%;
+    margin: 0% auto 0% auto;
 }
 
 .links .aLogo {
+    margin: 0px;
     font-size: 25px;
+    /* background-color: rebeccapurple; */
 }
 
+.links li {
+    margin: 0% 0% 0% 10%;
+    /* background-color: blue; */
+    color: white;
+    display: block;
+    width: max-content;
+    height: 50px;
+    align-content: center;
+}
+
+.links p {
+    margin: 0% 0% 0% 7%;
+    /* background-color: red; */
+    color: white;
+    display: block;
+    width: max-content;
+    height: 50px;
+    align-content: center;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.links .a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    /* background-color: red; */
+    height: 100%;
+}
 
 .drawerNavBoxFooter {
     /* background-color: blue; */
-    height: 100vh;
+    height: max-content;
     width: 100%;
-    margin: 105% 0% 0% 0%;
+    margin: 0% 0% 0% 10%;
 }
 
 .linksFooter {
     width: 100%;
     display: flex;
-    margin-left: 10%;
+    margin: 10% 1% 0% 0%;
+    align-content: center;
+    height: max-content;
 }
 
 .linksFooter:hover {
     background-color: gray;
     width: 100%;
     transition: 1s;
+    height: max-content;
     opacity: 0.8;
 }
 
+.linksFooter li {
+    margin: 0% 0% 0% 10%;
+    /* background-color: blue; */
+    color: white;
+    display: block;
+    width: max-content;
+    height: 50px;
+    align-content: center;
+}
 
 .linksFooter .a {
     text-decoration: none;
@@ -186,7 +137,36 @@
     font-size: 30px;
 }
 
-.linksFooter .a.active {
+
+.linksFooter:has(.a.active) {
     background-color: gray;
+    align-items: center;
+    border-radius: 3px;
+    width: 70%;
+    margin: 3% auto 0% auto;
+}
+
+.linksFooter p {
+    margin: 0% 0% 0% 7%;
+    /* background-color: red; */
+    color: white;
+    display: block;
+    width: max-content;
+    height: 50px;
+    align-content: center;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.drawerNavBoxFooter button {
+    margin: 12% 0% 0% 7%;
+    background-color: transparent;
+    box-shadow: white 0px 0px 5px 0px;
+    color: white;
+    display: block;
+    width: 70%;
+    text-align: center;
+    font-size: 15px;
+    text-decoration: none;
     padding: 10px;
 }

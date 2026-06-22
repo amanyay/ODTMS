@@ -9,7 +9,7 @@
 .EyeMatchInfoBox {
     /* background-color: wheat; */
     height: 600px;
-    width: 78%;
+    width: 85%;
     margin: 2% auto 0% auto;
 }
 
@@ -38,7 +38,7 @@
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     padding: 0% 1% 0% 1%;
-    align-content: end;
+    align-content: center;
     color: red;
 }
 
@@ -124,7 +124,8 @@
     align-content: center;
     color: white;
     padding: 1% 5% 1% 1%;
-    width: 80%;
+    width: 83%;
+    font-size: 12px;
     border-radius: 5px;
 }
 
@@ -140,4 +141,43 @@
     font-size: 18px;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.notPreview {
+    display: none;
+}
+
+.preview {
+    position: fixed;
+    top: -3%;
+    left: 0%;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    min-height: 100vh;
+    z-index: 1000;
+    overflow: hidden;
+    align-content: center;
+
+}
+
+.preview div {
+    width: max-content;
+    /* background-color: red; */
+    margin: 0px auto 0px auto;
+    display: block;
+}
+
+.preview button {
+    width: 70%;
+    height: max-content;
+    padding: 10px;
+    margin: 10px 0px 0px 0px;
+    /* background-color: blue; */
+}
+
+.preview img {
+    max-width: 70vw;
+    max-height: 80vh;
+    margin: 10px auto 0px auto;
+    /* background-color: gold; */
 }

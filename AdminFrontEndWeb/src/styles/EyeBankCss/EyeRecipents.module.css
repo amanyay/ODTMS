@@ -8,13 +8,25 @@
 .eyeRecipentsInfoBox {
     /* background-color: wheat; */
     height: 600px;
-    width: 78%;
+    width: 82%;
     margin: 2% auto 0% auto;
 }
 
 .eyeRecipentsInfoBox .section1 {
     /* background-color: blue; */
     height: 10%;
+}
+
+.section1 h2 {
+    text-align: center;
+    /* background-color: blue; */
+    width: max-content;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 0% 1% 0% 1%;
+    align-content: end;
+    color: red;
 }
 
 .section1 h3 {
@@ -34,14 +46,14 @@
 
 .section1 div {
     /* background-color: yellow; */
-    width: 90%;
+    width: 30%;
     display: flex;
     justify-content: end;
     align-items: center;
 }
 
 .section1 button {
-    width: 14%;
+    width: 40%;
     margin: 0% 2% 0% 0%;
     height: 35px;
     background-color: #1d54ac;

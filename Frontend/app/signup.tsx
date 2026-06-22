@@ -12,6 +12,7 @@ import {
     StyleSheet, Text, TextInput,
     TouchableOpacity, View
 } from "react-native";
+import Feather from '@expo/vector-icons/Feather';
 
 
 
@@ -25,6 +26,7 @@ const signup = () => {
     const [error, setError] = useState('');
     const [selectedValue, setSelectedValue] = useState('');
     const [loading, setIsLoading] = useState(false);
+    const [secureText, setSecureText] = useState(true);
     const options = ['donor', 'recipents'];
 
 
@@ -67,7 +69,7 @@ const signup = () => {
                 if (response.status === 200) {
                     setIsLoading(false);
                     setError(response.data.message);
-                    // router.push('/login')
+                    router.push('/login')
                 }
                 else if (response.status === 201) {
                     setError(response.data.message)
@@ -102,28 +104,25 @@ const signup = () => {
 
     return (
         <ImageBackground
-            source={require('../Desgin Templete and Docmentation/background 3.jpg')}
+            source={require('../Desgin Templete and Docmentation/background 2.jpg')}
             style={styles.box}
             resizeMode="cover"
         >
 
 
-            <KeyboardAvoidingView
-                style={{ flex: 1, width: '100%', alignItems: 'center' }}
-                behavior="padding"
-            >
+            <View style={styles.box2}>
 
-                <ScrollView style={{ flex: 1, width: '90%' }}>
-                    <View style={styles.box1}>
-                        <Text style={styles.title}>Sign Up</Text>
-                    </View>
-                    <View style={styles.box2}>
-                        <TextInput placeholder='   Enter your first name' placeholderTextColor={'white'} style={styles.input} onChangeText={setFirstName} />
-                        <TextInput placeholder='   Enter your last name' placeholderTextColor={'white'} style={styles.input} onChangeText={setLastName} />
-                        <TextInput placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
-                        <TextInput placeholder='   Enter your age' placeholderTextColor={'white'} style={styles.input} onChangeText={setAge} />
-                        <TextInput placeholder='   Enter your email address' placeholderTextColor={'white'} style={styles.input} onChangeText={setEmail} />
-                        <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
+                <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+                    <ScrollView >
+                        <View style={styles.box1}>
+                            <Text style={styles.title}>Create New Account</Text>
+                        </View>
+                        <View style={styles.inputBox}><View style={styles.inputIcons}><Feather name="user" size={24} color="black" /></View><TextInput placeholder='Enter your first name' placeholderTextColor={'black'} style={styles.input} onChangeText={setFirstName} /></View>
+                        <View style={styles.inputBox}><View style={styles.inputIcons}><Feather name="user" size={24} color="black" /></View><TextInput placeholder='Enter your last name' placeholderTextColor={'black'} style={styles.input} onChangeText={setLastName} /></View>
+                        <View style={styles.inputBox}><View style={styles.inputIcons}><Feather name="phone" size={24} color="black" /></View><TextInput placeholder='Enter your phone number' placeholderTextColor={'black'} style={styles.input} onChangeText={setPhoneNumber} /></View>
+                        <View style={styles.inputBox}><View style={styles.inputIcons}><Feather name="calendar" size={24} color="black" /></View><TextInput placeholder='Enter your age' placeholderTextColor={'black'} style={styles.input} onChangeText={setAge} /></View>
+                        <View style={styles.inputBox}><View style={styles.inputIcons}><Feather name="mail" size={24} color="black" /></View><TextInput placeholder='Enter your email address' placeholderTextColor={'black'} style={styles.input} onChangeText={setEmail} /></View>
+                        <View style={styles.inputBox}><View style={styles.inputIcons}><Feather name="key" size={24} color="black" /></View><TextInput placeholder='Enter your password' secureTextEntry={secureText} placeholderTextColor={'black'} style={styles.input} onChangeText={setPassword} /><TouchableOpacity style={styles.hiddenPassBox} onPress={() => { setSecureText(!secureText) }}>{secureText ? (<Text><Feather name="eye" size={24} color="black" /></Text>) : (<Text><Feather name="eye-off" size={24} color="black" /></Text>)}</TouchableOpacity></View>
                         <Picker
                             selectedValue={selectedValue}
                             onValueChange={(itemValue) => setSelectedValue(itemValue)}
@@ -138,9 +137,13 @@ const signup = () => {
                         <Text style={styles.errorMessage}>{error}</Text>
                         <TouchableOpacity style={styles.btn} onPress={submit}><Text style={styles.btnText}>Sign Up</Text></TouchableOpacity>
                         <Text style={styles.signUpBox}>Already have an account ? <TouchableOpacity onPress={toSignInPage}><Text style={styles.commonText}>sign in</Text></TouchableOpacity></Text>
-                    </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
+
+                    </ScrollView>
+                </KeyboardAvoidingView>
+
+
+            </View>
+
 
         </ImageBackground>
 
@@ -155,50 +158,83 @@ const styles = StyleSheet.create({
     box: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
 
     },
     box1: {
         width: '100%',
         height: 70,
+        alignItems: 'center',
         marginBottom: "2%",
-        marginTop: '25%',
-        justifyContent: 'flex-start',
+        marginTop: '0%',
+        justifyContent: 'center',
         // backgroundColor: 'red'
     },
     box2: {
+        backgroundColor: '#cdd5de',
         width: '100%',
-        // backgroundColor:'blue',
-        marginBottom: '10%'
+        margin: '0%',
+        height: '85%',
+        borderTopRightRadius: '8%',
+        borderTopLeftRadius: '8%',
+        // alignItems: 'center'
+
     },
     title: {
-        fontSize: 35,
-        fontWeight: '500',
+        fontSize: 32,
+        fontWeight: '600',
         marginBottom: '3%',
         color: 'black',
         letterSpacing: 1,
-        marginLeft: "10%",
+        marginLeft: "0%",
+        fontFamily: 'sans-serif-light'
 
     },
     commonText: {
         color: 'blue',
         fontSize: 18
     },
+    inputBox: {
+        // backgroundColor: 'red',
+        textAlign: 'center',
+        margin: 9,
+        borderBottomWidth: 1,
+        borderTopColor: 'black',
+        width: '90%',
+        alignSelf: 'center',
+        height: 50,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        overflow: 'hidden'
+    },
+    inputIcons: {
+        // backgroundColor: 'yellow',
+        height: '100%',
+        width: 30,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     input: {
-        borderWidth: 1,
-        borderColor: 'white',
         borderRadius: 3,
-        marginTop: '10%',
-        marginLeft: '5%',
-        width: "90%",
+        marginTop: '0%',
+        marginLeft: '2%',
+        width: "70%",
         textAlign: 'left',
-        height: 55,
-        color: 'white',
+        height: '100%',
+        color: 'black',
         fontSize: 13,
-        letterSpacing: 0.5
+        letterSpacing: 0.5,
+        // backgroundColor: 'blue'
+    },
+    hiddenPassBox: {
+        flex: 1,
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     picker: {
-        height: 80,
+        // backgroundColor: 'red',
+        height: 60,
         width: '70%',
         marginLeft: '18%',
         marginRight: '5%'
@@ -208,7 +244,8 @@ const styles = StyleSheet.create({
         marginTop: '2%',
         alignSelf: 'center',
         fontSize: 15,
-        letterSpacing: 1
+        letterSpacing: 1,
+        // backgroundColor: 'red'
     },
     btn: {
         backgroundColor: "#231650",
@@ -230,6 +267,7 @@ const styles = StyleSheet.create({
     signUpBox: {
         marginLeft: '11%',
         color: 'black',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginBottom: '10%'
     }
 })

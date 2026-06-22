@@ -3,6 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser')
 const mysql = require('mysql2/promise');
 const JWT = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
 const userModel = require('../models/userModel')
 require('dotenv').config();
 
@@ -19,17 +20,33 @@ router.post('/', async (req, res) => {
 
 
 
+
     try {
 
-        const selectedResult = await userModel.userLoginSelection(phoneNumber, password)
+        const selectedResult = await userModel.userLoginSelection(phoneNumber)
+
 
         if (selectedResult.length > 0) {
-            const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET);
-            res.status(200).json({ message: "User found", token: token, })
+            const hashedPassword = selectedResult[0].password
+            const realPassword = await bcrypt.compare(password, hashedPassword)
+
+            if (realPassword === true) {
+                const token = JWT.sign({ tokenPhoneNumber: phoneNumber }, JWT_SECRET, { expiresIn: '24hr' });
+                res.status(200).json({ message: "User found", token: token, })
+            }
+            else if (realPassword !== true) {
+                res.status(201).json({ message: 'Incorrect Password' });
+            }
         }
-        else if (selectedResult.length < 1) {
-            res.status(201).json({ message: 'User not found' });
+        else if (selectedResult.length === 0) {
+            res.status(202).json({ message: 'User Not Found' });
         }
+
+
+
+
+
+
 
     } catch (error) {
         console.log(error)

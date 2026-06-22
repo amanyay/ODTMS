@@ -19,14 +19,16 @@ export default function Tablayout() {
                 tabBarLabel: 'Statstics'
             }} />
             <Tabs.Screen name='history' options={{
-                headerShown: false,
+                headerShown: true,
+                headerTitle: 'Transplant History',
+                headerTitleAlign: 'center',
                 tabBarIcon: ({ color, size }) => (<MaterialIcons name="history" size={28} color="black" />),
                 tabBarLabel: 'History'
             }} />
             <Tabs.Screen name='profile' options={{
                 headerShown: true,
                 title: 'Edit Profile',
-                headerTitleAlign:'center',
+                headerTitleAlign: 'center',
                 tabBarIcon: ({ size, color }) => (<FontAwesome name="user-circle-o" size={28} color="black" />),
                 tabBarLabel: 'Profile'
             }} />

@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import EvilIcons from '@expo/vector-icons/EvilIcons';
+// import EvilIcons from '@expo/vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function changeProfile() {
 
@@ -22,53 +21,12 @@ export default function changeProfile() {
   const [bloodType, setBloodType] = useState('');
   const [gender, setGender] = useState('');
   const [error, setError] = useState('')
-  const [picture, setPicture] = useState<any>(null);
-  const [displayImage, setDisplayPicture] = useState<any>(null);
-
-  async function chooseImage() {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      // mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-      aspect: [1, 1]
-    });
-
-    if (!result.canceled) {
-      const asset = result.assets[0];
-      setPicture(asset);
-      setDisplayPicture(asset.uri);
-    }
-  }
-
 
   async function sendImage() {
-    if (!picture) {
-      console.log("No image selected");
-      return;
-    }
 
     const token = await AsyncStorage.getItem("token")
 
-    const formData = new FormData();
-    // append text field
 
-    formData.append('firstname', firstName);
-    formData.append('lastName', lastName);
-    formData.append('age', age);
-    formData.append('location', location);
-    formData.append('gender', gender);
-    formData.append('email', email);
-    formData.append('bloodType', bloodType);
-    if (token) {
-      formData.append('token', token)
-    }
-
-    // append the actual image
-    formData.append('PPImage', {
-      uri: picture.uri,
-      type: picture.mimeType,
-      name: picture.fileName
-    } as any);
 
     try {
       if (firstName === "" || lastName === "" || age === "" || location === "" || gender === "" || email === "" || bloodType === "") {
@@ -78,9 +36,7 @@ export default function changeProfile() {
       else {
         if (firstName !== "" || lastName !== "" || age !== "" || location !== "" || gender !== "" || email !== "" || bloodType !== "") {
 
-          const request = await axios.post(`${baseUrl}/updateProfile`, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
+          const request = await axios.post(`${baseUrl}/updateProfile`, { firstName, lastName, age, location, gender, email, bloodType, token });
           console.log("Server response:", request.data);
           if (request.status === 200) {
             router.replace('/homePageContents/successful')
@@ -105,11 +61,6 @@ export default function changeProfile() {
       style={{ flex: 1 }} >
       <View style={style.header}><Text>CHANGE PROFILE</Text></View>
       <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>
-      <TouchableOpacity style={style.profileImageBox} onPress={chooseImage}>
-        <View style={style.profileImage}>
-          {displayImage ? (<Image style={{ height: 150, width: 150 }} source={{ uri: displayImage }} />) : (<EvilIcons name="user" size={120} color="black" />)}
-        </View>
-      </TouchableOpacity>
       <ScrollView style={{ flex: 1, paddingBottom: 80 }}>
         <View style={style.box3}>
           <Text style={style.box3Text}>First Name</Text>

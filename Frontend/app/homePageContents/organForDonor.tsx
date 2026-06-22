@@ -6,16 +6,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function organs() {
 
     const [organs, setOrgans] = useState<any>([]);
     const [notFound, setNotFound] = useState('');
+    const [refreshing, setRefreshing] = useState(false);
 
     async function getOrganForDon() {
 
         setNotFound('')
+        setRefreshing(false)
         try {
             const token = await AsyncStorage.getItem('token');
             const donAge = await AsyncStorage.getItem('donAge');
@@ -29,6 +31,7 @@ export default function organs() {
             else if (request.status === 201) {
                 setNotFound('No match found');
             }
+            console.log(request.status)
         } catch (error: any) {
             setNotFound(error.response.data.err)
 
@@ -53,6 +56,8 @@ export default function organs() {
     useEffect(() => {
         getOrganForDon();
     }, [])
+
+
     return (
         <ImageBackground style={style.box}
             source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
@@ -79,6 +84,7 @@ export default function organs() {
             <FlatList
                 data={organs}
                 keyExtractor={(item) => item.wait_id.toString()}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getOrganForDon} />}
                 renderItem={({ item }) => (
                     <View style={style.organBox}>
 
@@ -111,7 +117,8 @@ export default function organs() {
                         </View>
 
                     </View>
-                )} />
+                )}
+            />
         </ImageBackground >
     )
 }

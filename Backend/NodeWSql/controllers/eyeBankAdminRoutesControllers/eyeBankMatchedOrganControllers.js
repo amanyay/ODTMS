@@ -28,6 +28,8 @@ router.get('/', async (req, res) => {
         const recipentsInfo = await adminModel.getEyeRecipentForMatching()
 
 
+
+
         function getMatchScore(eachDonor, eachRecipents) {
 
             let score = 0;
@@ -61,13 +63,16 @@ router.get('/', async (req, res) => {
 
         const matchesResult = [];
 
+
         for (const donor of donorsInfo) {
 
             for (const recipents of recipentsInfo) {
 
                 const score = getMatchScore(donor, recipents)
 
+
                 if (score > 79) {
+
                     matchesResult.push(
                         {
                             don_phone_number: donor.phone_numbers,
@@ -75,25 +80,37 @@ router.get('/', async (req, res) => {
                             donor_blood_type: donor.blood_type,
                             donor_age: donor.age,
                             don_status: donor.status,
+                            donor_doc: donor.donor_doc,
                             organ_id: donor.organ_id,
                             rec_phone_number: recipents.phone_number,
                             recipient_name: recipents.first_name,
                             recipient_blood_type: recipents.blood_type,
                             recipient_age: recipents.age,
                             rec_status: recipents.status,
+                            recipents_doc: recipents.recipents_doc,
                             score: score
+
                         }
                     )
 
 
                 }
             }
-        }
 
-        if (matchesResult.sort((a, b) => b.score - a.score)) {
-            res.status(200).json({
-                message: matchesResult
-            })
+
+            if (matchesResult.length === 0) {
+                res.status(200).json({ message: 'No match found' })
+            }
+            else if (matchesResult.length > 0) {
+                if (matchesResult.sort((a, b) => b.score - a.score)) {
+                    res.status(200).json({
+                        message: matchesResult
+                    })
+                }
+
+            }
+
+
         }
 
 

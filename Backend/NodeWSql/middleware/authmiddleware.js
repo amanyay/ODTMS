@@ -6,6 +6,7 @@ module.exports = (req, res, next) => {
 
         const authHeader = req.headers.authorization;
 
+        // console.log(authHeader)
         // no token
         if (!authHeader) {
 
@@ -14,21 +15,9 @@ module.exports = (req, res, next) => {
             });
 
         }
-
-        // Bearer TOKEN
-        const token =
-            authHeader.split(" ")[1];
-
-        // verify token
-        const decoded =
-            jwt.verify(
-                token,
-                process.env.JWT_SECRET
-            );
-
-        req.user = decoded;
-
-        next();
+        if (authHeader) {
+            next()
+        }
 
     } catch (err) {
 

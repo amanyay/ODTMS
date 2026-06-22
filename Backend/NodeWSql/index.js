@@ -11,7 +11,46 @@ const OpenAiAPI = require('openai-api-node');
 const OpenAI = require('openai');
 const axios = require("axios");
 const cors = require('cors')
+const rateLimit = require('express-rate-limit')
+
+
+
 require('dotenv').config();
+const app = express();
+
+
+const endpoint = "https://router.huggingface.co/v1";
+
+const JWT_SECRET = process.env.JWT_SECRET;
+const port = process.env.PORT;
+
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: 'Too many requests, try again later.',
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+app.use(bodyParser.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+app.use(cors())
+app.use(limiter)
+
+
+app.listen(port, () => {
+    console.log("server running in port", port);
+})
+
+app.get('/', (req, res) => {
+    res.send("ODTMS APP is running")
+})
+
+
+
+
+
 
 //Super Admin Routes
 
@@ -39,7 +78,10 @@ const eyeBankAdminProfile = require('./routes/eyeBankAdminRoutes/eyeBankAdminPro
 
 const eyeBankDonorAdmin = require('./routes/eyeBankAdminRoutes/eyeBankDonorAdmin');
 const eyeBankAdminAddDonor = require('./routes/eyeBankAdminRoutes/eyeBankAdminAddDonor')
+const eyeBankDeleteDonors = require('./routes/eyeBankAdminRoutes/eyeBankDeleteDonors')
+
 const eyeBankRecipentAdmin = require('./routes/eyeBankAdminRoutes/eyeBankRecipentAdmin');
+const eyeBankDeleteRecipents = require('./routes/eyeBankAdminRoutes/eyeBankDeleteRecipents')
 
 const eyeBankOrganEdit = require('./routes/eyeBankAdminRoutes/eyeBankOrganEdit');
 
@@ -110,29 +152,6 @@ const faydaVerification = require('./routes/faydaVerification');
 
 
 
-
-
-
-const endpoint = "https://router.huggingface.co/v1";
-
-
-const JWT_SECRET = process.env.JWT_SECRET;
-const port = process.env.PORT;
-
-const app = express();
-app.use(bodyParser.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
-app.use(cors())
-
-
-app.listen(port, () => {
-    console.log("server running in port", port);
-})
-
-app.get('/', (req, res) => {
-    res.send("ODTMS APP is running")
-})
-
 //        Login Routes and SignUp
 
 app.use('/login', loginRoutes)
@@ -189,17 +208,18 @@ app.use('/adminAddOrgan', adminAddOrganRoutes)
 app.use('/superAdminDeleteAdmin', superAdminDeleteAdmins)
 
 
-
-
-
 //           EYE BANK ADMIN API 
 
 
 app.use('/eyeBankAdminProfile', eyeBankAdminProfile)
+
+
 app.use('/eyeBankDonorAdmin', eyeBankDonorAdmin)
 app.use('/eyeBankAdminAddDonor', eyeBankAdminAddDonor)
-app.use('/eyeBankRecipentAdmin', eyeBankRecipentAdmin)
+app.use('/eyeBankDeleteDonors', eyeBankDeleteDonors)
 
+app.use('/eyeBankRecipentAdmin', eyeBankRecipentAdmin)
+app.use('/eyeBankDeleteRecipents', eyeBankDeleteRecipents)
 
 app.use('/eyeBankTransplantComplete', eyeTransplantComplete)
 app.use('/eyeBankTransplantCompleteApprove', eyeTransplantCompleteApprove)

@@ -15,28 +15,19 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const port = process.env.PORT;
 const app = express();
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../uploads')); // make sure uploads/ exists
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage });
 
 
 
-router.post('/', upload.single('PPImage'), async (req, res) => {
 
-    const { firstname, lastName, age, location, gender, email, bloodType, token } = req.body
+router.post('/', async (req, res) => {
+
+    const { firstName, lastName, age, location, gender, email, bloodType, token } = req.body
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    const fileName = req.file.filename;
+    // const fileName = req.file.filename;
 
     try {
-        const updateUsersTable = await userModel.updateUserProfile(firstname, lastName, email, age, location, gender, bloodType, fileName, actualVerifiedPhoneNumber)
+        const updateUsersTable = await userModel.updateUserProfile(firstName, lastName, email, age, location, gender, bloodType, actualVerifiedPhoneNumber)
         if (updateUsersTable) {
             const selectionFromUsersTable = await userModel.selectionForProfile(actualVerifiedPhoneNumber)
 

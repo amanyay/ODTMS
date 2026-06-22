@@ -1,13 +1,12 @@
 
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function map() {
 
@@ -18,6 +17,8 @@ export default function map() {
     const [displayBloodType, setDisplayBloodType] = useState('');
     const [displayLocation, setDisplayLocation] = useState('');
     const [dispalyProfileImage, setDispalyProfileImage] = useState('');
+    const [refreshing, setRefreshing] = useState(false);
+    const [faydaNumber, setFaydaNumber] = useState('')
     const [error, setError] = useState('');
 
 
@@ -25,6 +26,7 @@ export default function map() {
 
     async function displayUsersData() {
 
+        setRefreshing(false)
         try {
 
 
@@ -39,7 +41,7 @@ export default function map() {
             setDisplayBloodType(request.data.message.blood_type);
             setDisplayLocation(request.data.message.location);
             setDispalyProfileImage(request.data.message.profile_image);
-
+            setFaydaNumber(request.data.message.fayda_no)
 
         } catch (error: any) {
 
@@ -111,18 +113,15 @@ export default function map() {
             <ImageBackground
                 source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
                 style={{ flex: 1 }} >
-                <View style={style.box1}>
-                    <TouchableOpacity style={style.headerIcons} onPressOut={displayUsersData}>
-                        <Text><AntDesign name="reload" size={30} color="black" /></Text>
-                    </TouchableOpacity>
-                </View>
-                <Text style={style.error}>{error}</Text>
+
                 <View style={style.profileImageBox}>
+
                     <View style={style.profileImage}>
                         {dispalyProfileImage ? (<Image style={{ height: 150, width: 150 }} source={{ uri: `${baseUrl}/uploads/${dispalyProfileImage}` }} />) : (<EvilIcons name="user" size={120} color="black" />)}
                     </View>
                 </View>
-                <ScrollView style={{ flex: 1, paddingBottom: 80 }}>
+                <Text style={style.error}>{error}</Text>
+                <ScrollView style={{ flex: 1, paddingBottom: 80 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={displayUsersData} />}>
                     <View style={style.box3}>
                         <Text style={style.box3Text}>Name</Text>
                         <TouchableOpacity style={style.input}>
@@ -133,7 +132,10 @@ export default function map() {
                         <TouchableOpacity style={style.input}>
                             <Text style={style.eachDataTexts}>{displayPhoneNumber}</Text>
                         </TouchableOpacity>
-
+                        <Text style={style.box3Text}>Fayda Number</Text>
+                        <TouchableOpacity style={style.input}>
+                            <Text style={style.eachDataTexts}>{faydaNumber}</Text>
+                        </TouchableOpacity>
                         <Text style={style.box3Text}>Email Address</Text>
                         <TouchableOpacity style={style.input}>
                             <Text style={style.eachDataTexts}>{displayEmail}</Text>
@@ -191,25 +193,26 @@ const style = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         // backgroundColor:'blue',
-        width:'60%'
+        width: '60%'
     },
     error: {
-        marginTop: 10,
+        marginTop: 1,
         textAlign: 'center',
         // backgroundColor:'red',
     },
     headerIcons: {
         marginRight: '10%',
-        marginTop:'2%'
+        marginTop: '2%'
         // backgroundColor: 'yellow',
     },
     profileImageBox: {
-        // backgroundColor:'blue',
-        width: '100%',
-        height: '22%',
+        // backgroundColor: 'blue',
+        width: '80%',
+        height: '25%',
+        alignSelf: 'center',
         marginTop: '1%',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         marginBottom: '5%'
     },
     profileImage: {
@@ -217,31 +220,11 @@ const style = StyleSheet.create({
         height: 150,
         // backgroundColor: 'yellow',
         borderRadius: 90,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    changeProfile: {
-        // backgroundColor:'blue',
-        marginTop: '3%',
-    },
-    changeProfileText: {
-        fontSize: 20,
-        color: 'white',
-        fontWeight: 'bold',
-        // backgroundColor: 'blue',
-    },
-    toAdminPanel: {
-        // backgroundColor: 'red',
-        alignItems: 'center',
-        padding: '3%'
-    },
-    toAdminPanelText: {
-        backgroundColor: 'red',
-        color: 'black',
-        padding: 7,
-        fontFamily: 'arial',
-        fontWeight: 'bold',
-        fontSize: 15
-    },
+
     box3: {
         // backgroundColor:'blue'
     },

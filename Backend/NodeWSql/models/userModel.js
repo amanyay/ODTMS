@@ -26,10 +26,10 @@ async function selectionFromUsersTableForForgetPassword(phoneNumber) {
 }
 
 
-async function userLoginSelection(phoneNumber, password) {
+async function userLoginSelection(phoneNumber) {
     const connection = await createDBConnection();
-    const [userLoginSelection] = await connection.query(`SELECT * FROM users 
-                WHERE phone_number = ? AND password = ? AND role != ?  `, [phoneNumber, password, 'admin']);
+    const [userLoginSelection] = await connection.query(`SELECT phone_number , password , role FROM users 
+                WHERE phone_number = ? AND role != ?  `, [phoneNumber, 'admin']);
     return userLoginSelection
 }
 
@@ -74,7 +74,7 @@ async function signupInsertionQuery(phoneNumber, firstName, lastName, email, pas
 }
 
 
-async function updateUserProfile(firstname, lastName, email, age, location, gender, bloodType, fileName, actualVerifiedPhoneNumber) {
+async function updateUserProfile(firstname, lastName, email, age, location, gender, bloodType, actualVerifiedPhoneNumber) {
     const connection = await createDBConnection();
     const [updateUsersTable] = await connection.query(`UPDATE users SET 
         first_name = ? , 
@@ -83,18 +83,17 @@ async function updateUserProfile(firstname, lastName, email, age, location, gend
         age = ? , 
         location = ? , 
         gender = ? , 
-        blood_type = ? ,
-        profile_image = ?
-        WHERE phone_number = ? `, [firstname, lastName, email, age, location, gender, bloodType, fileName, actualVerifiedPhoneNumber])
+        blood_type = ? 
+        WHERE phone_number = ? `, [firstname, lastName, email, age, location, gender, bloodType, actualVerifiedPhoneNumber])
 
     return updateUsersTable
 }
 
 
-async function updateUserForm(lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber) {
+async function updateUserForm(firstName, lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber) {
     const connection = await createDBConnection();
-    const [updateUserForm] = await connection.query(`UPDATE users SET  last_name = ? , age = ? , location = ? 
-                , gender = ? , blood_type = ? WHERE phone_number = ? ` , [lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
+    const [updateUserForm] = await connection.query(`UPDATE users SET  first_name = ? ,last_name = ? , age = ? , location = ? 
+                , gender = ? , blood_type = ? WHERE phone_number = ? ` , [firstName, lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber]);
     return updateUserForm;
 }
 

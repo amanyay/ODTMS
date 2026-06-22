@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
             const completeAmount = totalRequestComplete[0].total_complete;
             const totalRequestAmount = total[0].total;
             const percentages = (completeAmount / totalRequestAmount) * 100;
-            const percentage = percentages.toFixed(1)
+            const percentage = percentages.toFixed(1)   
 
             if (totalRequestPending || total || totalRecipents || totalRequestComplete) {
                 res.status(200).json(

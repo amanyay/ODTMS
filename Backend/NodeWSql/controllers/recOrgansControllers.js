@@ -26,13 +26,15 @@ const urgencyOrder = {
 
 router.post('/', async (req, res) => {
 
-    const { token, recAge, recBloodType, userOrgan } = req.body;
-    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
-    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-
-
-
     try {
+
+        const { token, recAge, recBloodType, userOrgan, page } = req.body;
+        const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+        const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+        const limit = 10;
+
+        const startIndex = (page - 1) * limit;
+        const lastIndex = startIndex + limit;
 
 
         const recipentInfo = await recipentModel.selectionFromRecTableJoin(actualVerifiedPhoneNumber)
@@ -43,7 +45,7 @@ router.post('/', async (req, res) => {
         function getMatchScore(eachDonors) {
 
             let score = 0;
-        
+
             if (recipentInfo[0].organ_id === eachDonors.organ_id) {
                 score = score + 35
             }
@@ -75,7 +77,7 @@ router.post('/', async (req, res) => {
 
             const score = getMatchScore(donor)
 
-            if (score > 0) {
+            if (score >= 75) {
                 matchesResult.push(
                     {
                         donation_id: donor.donation_id,
@@ -94,16 +96,25 @@ router.post('/', async (req, res) => {
         }
 
 
-        if (matchesResult.sort((a, b) => b.score - a.score)) {
 
-            console.log(matchesResult)
 
-            res.status(200).json({
-                message: matchesResult
+        if (matchesResult.length > 0) {
+            if (matchesResult.sort((a, b) => b.score - a.score)) {
+
+                // console.log(matchesResult)
+
+                res.status(200).json({
+                    message: matchesResult
+                })
+
+
+            }
+        } else if (matchesResult.length === 0) {
+            res.status(201).json({
+                message: 'Not Found'
             })
-
-
         }
+
 
 
 
@@ -112,7 +123,7 @@ router.post('/', async (req, res) => {
     } catch (error) {
         console.log(error)
         if (error.message) {
-            res.status(409).json({ err: "Database error " })
+            res.status(409).json({ err: "Unknown error " })
         }
         else {
             res.status(500).json({ err: "Server error" })

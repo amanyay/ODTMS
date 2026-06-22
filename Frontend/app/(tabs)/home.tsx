@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function home() {
     const [userNameDisplay, setUserNameDisplay] = useState('');
@@ -18,19 +18,22 @@ export default function home() {
     const [faydaNo, setFaydaNo] = useState();
     const [organs, setOrgans] = useState<any>([]);
     const [hidden, setHidden] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState("")
     const [faydaVerifaction, setFaydaVerifaction] = useState("")
 
     async function getData() {
 
         setError('');
-        
+        setRefreshing(false)
         try {
             const token = await AsyncStorage.getItem("token");
+
             if (!token) {
                 router.push('/login')
             } else {
-                const request = await axios.post(`${baseUrl}/home`, { token });
+                const request = await axios.post(`${baseUrl}/home`, { token }, { headers: { Authorization: token } });
+
 
                 setFaydaNo(request.data.message.fayda_no);
                 setFaydaVerifaction(request.data.faydaVerfication)
@@ -46,7 +49,11 @@ export default function home() {
 
             }
         } catch (error: any) {
-
+            if (error.status === 401) {
+                AsyncStorage.removeItem('token', () => {
+                    router.push('/login')
+                })
+            }
             setError(error.response.data.err)
 
         }
@@ -70,7 +77,7 @@ export default function home() {
 
         try {
             const token = await AsyncStorage.getItem('token');
-            const request = await axios.post(`${baseUrl}/home`, { token });
+            const request = await axios.post(`${baseUrl}/home`, { token }, { headers: { Authorization: token } });
             const userRole = request.data.message.role;
             const length = request.data.joinMessage;
             const userBloodType = request.data.message.blood_type;
@@ -126,11 +133,11 @@ export default function home() {
 
         try {
             const token = await AsyncStorage.getItem('token');
-            const request = await axios.post(`${baseUrl}/home`, { token });
+            const request = await axios.post(`${baseUrl}/home`, { token }, { headers: { Authorization: token } });
             const userBloodType = request.data.message.blood_type;
             const userRole = request.data.message.role;
             const length = request.data.joinMessage;
-
+            // console.log(token)
             if (userRole === 'donor') {
 
                 Alert.alert("You are donor not allowed")
@@ -228,7 +235,7 @@ export default function home() {
                 <View style={styless.error}>
                     <Text style={styless.errorText}>{error}</Text>
                 </View>
-                <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 50 }}>
+                <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 50 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getData} />}>
                     <View style={styless.box3}>
                         <Text style={styless.box3Title}>Top services</Text>
                         <View style={styless.items}>
@@ -240,17 +247,13 @@ export default function home() {
                                 <Text><MaterialIcons name="healing" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Organs</Text>
                             </TouchableOpacity>
-                            {/* <TouchableOpacity style={styless.servicesBtn} onPress={() => { router.push('/homePageContents/search') }}>
-                                <Text><Feather name="search" size={24} color="black" /></Text>
-                                <Text style={styless.logoTitiles}>Search</Text>
-                            </TouchableOpacity> */}
                             <TouchableOpacity style={styless.servicesBtn1} onPress={() => { router.push('/homePageContents/help') }}>
                                 <Text><Feather name="help-circle" size={24} color="black" /></Text>
                                 <Text style={styless.logoTitiles}>Help</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styless.servicesBtn1} onPress={() => { router.push('/homePageContents/calculator') }}>
                                 <Text><AntDesign name="calculator" size={24} color="black" /></Text>
-                                <Text style={styless.logoTitiles}>Calculator</Text>
+                                <Text style={styless.logoTitiles}>BMI Calculator</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styless.servicesBtn1} onPress={() => { router.push('/homePageContents/chatBot') }}>
                                 <Text><Ionicons name="chatbubble-ellipses-outline" size={24} color="black" /></Text>
@@ -265,12 +268,20 @@ export default function home() {
                     <View style={styless.box4}>
                         <Text style={styless.box3Title}>Blood Compatibility Guide</Text>
                         <TouchableOpacity style={styless.box4Btn}>
-                            <Text style={styless.text1}><Text style={{ fontWeight: 'bold' }}>🩸 O− Universal Donor </Text>
+                            <Text style={styless.text1}>
+                                🩸 O− Universal Donor
                                 Can donate to everyone because it has no A, B, or Rh antigens.{'\n'}
-                                <Text style={{ fontWeight: 'bold' }}>🩸 AB+ Universal Recipient  </Text>
+                            </Text>
+                            <Text style={styless.text1}>
+                                🩸 AB+ Universal Recipient
                                 Can receive blood from all blood types because it has all antigens. {'\n'}
-                                <Text style={{ fontWeight: 'bold' }}>🩸 Rh Factor (+ / −) </Text>
-                                Rh positive can receive from both Rh+ and Rh−. Rh negative can receive only from Rh negative.</Text>
+                            </Text>
+                            <Text style={styless.text1}>
+                                🩸 Rh Factor (+ / −)
+                                Rh positive can receive from both Rh+ and Rh−. Rh negative can receive only from Rh negative.
+
+                            </Text>
+
                         </TouchableOpacity>
                         <TouchableOpacity style={styless.box4Btn2}>
                             <Text style={styless.text2}>O+ →Donates to O+,A+,B+,AB+| Receives from O+,O−</Text>
@@ -315,15 +326,18 @@ const styless = StyleSheet.create({
     headerText: {
         color: 'black',
         fontSize: 17,
+        fontWeight: '300',
         fontFamily: 'arial',
     },
     box2: {
-        width: '97%',
-        height: '32%',
+        width: '91%',
+        height: '27%',
+        alignSelf: 'center',
         backgroundColor: 'red',
         marginTop: '5%',
-        marginLeft: '2%',
-        borderRadius: 10
+        marginLeft: '0%',
+        borderRadius: 10,
+        boxShadow: '0px 10px 10px 1px rgba(4, 4, 10, 0.45)',
     },
     boxImage: {
         width: '100%',
@@ -333,7 +347,7 @@ const styless = StyleSheet.create({
     orderNumber: {
         color: '#F3742B',
         letterSpacing: 4,
-        margin: '8%',
+        margin: '4%',
         marginBottom: '3%',
         marginLeft: '7%',
         fontSize: 25,
@@ -386,41 +400,44 @@ const styless = StyleSheet.create({
         width: '98%'
     },
     box3Title: {
-        fontSize: 20,
+        fontSize: 22,
         fontFamily: 'arial',
         fontWeight: 'bold',
+        textAlign: 'center',
         margin: '3%',
         marginLeft: '5%',
-        letterSpacing: 0.3
+        letterSpacing: 0.3,
     },
     items: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         textAlign: 'center',
         alignItems: 'center',
-        marginLeft: '8%',
+        alignContent: 'center',
         // backgroundColor: 'red'
     },
     servicesBtn: {
-        height: 90,
+        height: 150,
         width: '21%',
         backgroundColor: "rgba(42, 146, 201, 0.1)",
         opacity: 1,
-        margin: 7,
+        marginLeft: 7,
         alignItems: 'center',
         justifyContent: 'center',
+        alignSelf: 'center',
         borderRadius: 7
     },
     servicesBtn1: {
-        height: 80,
-        width: '24%',
-        backgroundColor: "rgba(42, 146, 201, 0.1)",
-        opacity: 1,
+        height: 100,
+        width: '35%',
+        backgroundColor: "#F5f5f5",
+        opacity: 0.8,
         margin: 14,
-        marginRight: 10,
+        marginLeft: '10%',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 7
+        borderRadius: 10,
+        boxShadow: '0px 0px 10px 0.2px '
     },
     logoTitiles: {
         marginTop: 8,
@@ -436,14 +453,15 @@ const styless = StyleSheet.create({
         width: '97%'
     },
     box4Btn: {
-        height: 200,
+        height: 210,
         // width: '19%',
         backgroundColor: "rgba(42, 146, 201, 0.7)",
         opacity: 1,
         margin: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 7
+        borderRadius: 7,
+        overflow: 'hidden'
     },
     box4Btn2: {
         height: 150,
@@ -457,9 +475,12 @@ const styless = StyleSheet.create({
     },
     text1: {
         fontSize: 14,
-        padding: 10,
+        padding: 1,
+        height: '27%',
         fontFamily: 'arial',
-        fontWeight: '500'
+        fontWeight: '600',
+        // backgroundColor: 'red',
+        marginTop: 1
     },
     text2: {
         fontSize: 12,

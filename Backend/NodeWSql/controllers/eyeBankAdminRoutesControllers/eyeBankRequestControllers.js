@@ -14,6 +14,7 @@ const adminModel = require('../../models/adminModel')
 app.use(bodyParser.json());
 
 router.post('/', async (req, res) => {
+    
 
     try {
         const selectionFromRequest = await adminModel.waitingListDataDisplay();

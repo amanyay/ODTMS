@@ -303,7 +303,7 @@ async function getEyeDonorInfoForMatching() {
 
     const connection = await createDBConnection();
 
-    const [getEyeDonorInfo] = await connection.query(`SELECT donations.donation_id , donations.phone_numbers , donations.donation_date , 
+    const [getEyeDonorInfo] = await connection.query(`SELECT donations.donation_id , donations.phone_numbers , donations.donation_date , donations.donor_doc,
             donations.status , users.first_name , users.last_name , users.age ,users.blood_type , organ.organ_name , donations.organ_id ,users.location , users.gender
             FROM donations 
             JOIN users ON donations.phone_numbers = users.phone_number 
@@ -338,11 +338,40 @@ async function adminAddEyeDonor(firstName, lastName, age, phoneNumber, gender, b
 
     return insertToUserTable
 
+}
 
 
+async function deleteEyeDonor(phoneNumber) {
 
+    const connection = await createDBConnection();
+
+    const deleteEyeDonor = await connection.query(`DELETE FROM donations WHERE phone_numbers = ?`, [phoneNumber])
+    return deleteEyeDonor
 
 }
+
+
+async function deleteEyeRecipents(phoneNumber) {
+
+    const connection = await createDBConnection();
+
+    const deleteEyeRecipents = await connection.query(`DELETE FROM recipents WHERE phone_number = ?`, [phoneNumber])
+    return deleteEyeRecipents
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Kidney Model
@@ -669,6 +698,8 @@ module.exports =
     makeTransplantReject,
     RejectDonationsAndRecipentTable,
     adminAddEyeDonor,
+    deleteEyeDonor,
+    deleteEyeRecipents,
 
     //Kidney
 

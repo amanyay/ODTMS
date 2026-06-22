@@ -14,10 +14,11 @@ async function eyeBankReportDashboardController(req, res) {
             const successfullTransplant = adminDashboardData.successfull_transplant;
             const successFullRate = (parseFloat(successfullTransplant) / parseFloat(totalWaitingListUser)) * 100
 
+        
             res.status(200).json({
                 report: adminDashboardData,
                 userBloodTypeAmount: groupBySelctionQuery,
-                successFullRate: successFullRate.toFixed(1)
+                successFullRate: parseFloat(successFullRate).toFixed(1)
             })
 
         }

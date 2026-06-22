@@ -11,11 +11,11 @@ export default function HomePageContentLayout() {
     >
       <Stack.Screen
         name="donarForm"
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Donor Form', headerTitleAlign: 'center' }}
       />
       <Stack.Screen
         name="recipentsForm"
-        options={{ headerShown: true }}
+        options={{ headerShown: true, title: 'Recipents Form', headerTitleAlign: 'center' }}
 
       />
       <Stack.Screen
@@ -34,7 +34,7 @@ export default function HomePageContentLayout() {
       />
       <Stack.Screen
         name="notification"
-        options={{ headerShown: true, title: 'Notification' }}
+        options={{ headerShown: true, title: 'Notification', headerTitleAlign: 'center' }}
       />
       <Stack.Screen
         name="search"

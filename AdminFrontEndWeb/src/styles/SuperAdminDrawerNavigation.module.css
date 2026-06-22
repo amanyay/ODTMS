@@ -6,31 +6,31 @@
     align-items: center;
     border-right: 5px solid;
 
-    .links span {
+    .superAdminlinks span {
         display: none;
 
     }
 
-    .logo h1 {
+    .superAdminlogo h1 {
         display: none;
     }
 
-    .links li {
+    .superAdminlinks li {
         margin: 8% auto 0% auto;
         text-decoration: none;
         list-style: none;
     }
 
-    .linksFooter span {
+    .superAdminlinksFooter span {
         display: none;
     }
 
-    .linksFooter li {
+    .superAdminlinksFooter li {
         margin: 8% auto 0% auto;
         list-style: none;
     }
 
-    .linksFooter button {
+    .superAdminlinksFooter button {
         display: none;
     }
 }
@@ -43,7 +43,7 @@
     width: 20%;
     transition: 100ms;
 
-    .logo h1 {
+    .superAdminlogo h1 {
         /* background-color: red; */
         text-align: center;
         color: wheat;
@@ -53,7 +53,7 @@
         width: 100%;
     }
 
-    .links li {
+    .superAdminlinks li {
         margin: 8% 0% 0% 0%;
         /* background-color: blue; */
         color: white;
@@ -62,7 +62,7 @@
         text-align: end;
     }
 
-    .links span {
+    .superAdminlinks span {
         margin: 8% 0% 0% 7%;
         /* background-color: red; */
         color: white;
@@ -73,7 +73,7 @@
         text-decoration: none;
     }
 
-    .links .a {
+    .superAdminlinks .superAdmina {
         text-decoration: none;
         color: white;
         font-weight: bold;
@@ -89,7 +89,7 @@
         margin: 5% 0% 0% 0%;
     }
 
-    .linksFooter li {
+    .superAdminlinksFooter li {
         margin: 8% 0% 0% 0%;
         /* background-color: red; */
         color: white;
@@ -98,7 +98,7 @@
         text-align: end;
     }
 
-    .linksFooter span {
+    .superAdminlinksFooter span {
         margin: 8% 0% 0% 7%;
         /* background-color: red; */
         color: white;
@@ -109,7 +109,7 @@
         text-decoration: none;
     }
 
-    .linksFooter button {
+    .superAdminlinksFooter button {
         margin: 8% 0% 0% 7%;
         background-color: red;
         color: white;
@@ -123,7 +123,7 @@
 
 }
 
-.logo {
+.superAdminlogo {
     /* background-color: aliceblue; */
     height: 25%;
     align-content: center;
@@ -135,24 +135,24 @@
     height: max-content;
 }
 
-.links {
+.superAdminlinks {
     width: 100%;
     display: flex;
 }
 
-.links:hover {
+.superAdminlinks:hover {
     background-color: gray;
     width: 100%;
     transition: 1s;
-    opacity: 0.8;
+    opacity: 0.superAdmin8;
 }
 
-.links .a.active {
+.superAdminlinks .superAdmina.superAdminactive {
     background-color: gray;
     padding: 10px;
 }
 
-.links .aLogo {
+.superAdminlinks .superAdminaLogo {
     font-size: 25px;
 }
 
@@ -164,21 +164,21 @@
     margin: 105% 0% 0% 0%;
 }
 
-.linksFooter {
+.superAdminlinksFooter {
     width: 100%;
     display: flex;
     margin-left: 10%;
 }
 
-.linksFooter:hover {
+.superAdminlinksFooter:hover {
     background-color: gray;
     width: 100%;
     transition: 1s;
-    opacity: 0.8;
+    opacity: 0.superAdmin8;
 }
 
 
-.linksFooter .a {
+.superAdminlinksFooter .superAdmina {
     text-decoration: none;
     color: white;
     font-weight: bold;
@@ -186,11 +186,11 @@
     font-size: 18px;
 }
 
-.linksFooter .aLogo {
+.superAdminlinksFooter .superAdminaLogo {
     font-size: 30px;
 }
 
-.linksFooter .a.active {
+.superAdminlinksFooter .superAdmina.superAdminactive {
     background-color: gray;
     padding: 10px;
 }

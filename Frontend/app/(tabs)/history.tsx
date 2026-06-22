@@ -1,20 +1,22 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import AntDesign from '@expo/vector-icons/AntDesign';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, StyleSheet, Text, RefreshControl, View } from 'react-native';
 
 export default function history() {
 
   const [requests, setRequests] = useState<any>([])
   const [textType, setTextType] = useState('');
   const [error, setError] = useState('')
+  const [refreshing, setRefreshing] = useState(false);
 
   async function allhistory() {
 
     setError('')
+    setRefreshing(false)
     try {
       const token = await AsyncStorage.getItem('token');
       const request = await axios.post(`${baseUrl}/history`, { token });
@@ -37,7 +39,7 @@ export default function history() {
 
   }
 
-  
+
 
   useEffect(() => {
     allhistory()
@@ -55,10 +57,7 @@ export default function history() {
       <View style={style.box1}>
 
       </View>
-      <TouchableOpacity style={style.header} onPress={history}>
-        <Text style={{ fontSize: 20, marginRight: '25%' }}>History</Text>
-        <Text style={{ marginRight: '8%' }}><AntDesign name="reload" size={30} color="black" onPress={allhistory} /></Text>
-      </TouchableOpacity>
+
 
       <Text style={style.box1}>{error}</Text>
       <FlatList
@@ -82,6 +81,7 @@ export default function history() {
 
           </View>
         )}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={allhistory} />}
       />
 
 

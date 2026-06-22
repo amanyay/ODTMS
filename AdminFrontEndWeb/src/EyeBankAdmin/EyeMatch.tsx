@@ -28,6 +28,7 @@ export default function eyeMatch() {
     donor_name: string;
     donor_blood_type: string;
     donor_age: number;
+    donor_doc: string;
     organ_id: number;
     organ_name: string;
     recipient_name: string;
@@ -37,6 +38,7 @@ export default function eyeMatch() {
     rec_organ_id: number;
     rec_phone_number: string;
     rec_status: string;
+    recipents_doc: string;
     urgency_level: string;
     score: number
   };
@@ -44,6 +46,9 @@ export default function eyeMatch() {
   const [EyeMatch, setEyeMatch] = useState<EyeMatch[]>([])
   const [notFound, setNotFound] = useState('')
   const [approvedMessage, setApprovedMessage] = useState('')
+  const [donorDoc, setDonorDoc] = useState<string | null>(null);
+  const [recipentDoc, setRecipentDoc] = useState<string | null>(null);
+
 
   async function EyeMatchInfo() {
 
@@ -97,24 +102,38 @@ export default function eyeMatch() {
         <div className={style.section1} >
           <h3>Matched Organ</h3>
           <h2>{approvedMessage}</h2>
+          <h5 className={donorDoc === null ? (style.notPreview) : (style.preview)}> {donorDoc && (
+            <div>
+              <button onClick={() => setDonorDoc(null)}>Close</button>
+              <img src={donorDoc} alt="Donor Document" />
+            </div>
+          )}</h5>
+          <h5 className={recipentDoc === null ? (style.notPreview) : (style.preview)}> {recipentDoc && (
+            <div>
+              <button onClick={() => setRecipentDoc(null)}>Close</button>
+              <img src={recipentDoc} alt="Rec Document" />
+            </div>
+          )}</h5>
           <div>
             <button><NavLink to='/Search'>Search</NavLink></button>
           </div>
         </div >
         <div className={style.section2} >
           <div className={style.title} >
-            <span>Donor Phone</span>
-            <span>Donor Name</span>
+            <span>D Phone</span>
+            <span>D Name</span>
             <span>D Blood type</span>
-            <span>Donor Age</span>
-            <span>Recipent Phone</span>
-            <span>Recipent Name</span>
+            <span>D Age</span>
+            <span></span>
+            <span>R Phone</span>
+            <span>R Name</span>
             <span>R Blood type</span>
-            <span>Recipent Age</span>
-            <span>Recipent status</span>
+            <span>R Age</span>
+            <span></span>
+            <span>R status</span>
             <span>Match Score</span>
             <span></span>
-
+            <span></span>
           </div >
           {
             EyeMatch.length > 0 ?
@@ -140,6 +159,19 @@ export default function eyeMatch() {
                   })}
                 </span>
                 <span>
+                  {EyeMatch.map((item, index) => (
+                    <li key={index}>
+                      <button
+                        onClick={() =>
+                          setDonorDoc(`${baseUrl}/uploads/documentImages/donorsDocument/${item.donor_doc}`)
+                        }
+                      >
+                        View
+                      </button>
+                    </li>
+                  ))}
+                </span>
+                <span>
                   {EyeMatch.map((item) => {
                     return <li key={item.donation_id}>{item.rec_phone_number}</li>
                   })}
@@ -160,18 +192,32 @@ export default function eyeMatch() {
                   })}
                 </span>
                 <span>
+                  {EyeMatch.map((item, index) => {
+                    return <li key={index}><button onClick={() => { setRecipentDoc(`${baseUrl}/uploads/documentImages/recipentsDocument/${item.recipents_doc}`) }}>
+                      View</button>
+                    </li>
+                  })}
+                </span>
+                <span>
                   {EyeMatch.map((item) => {
                     return <li key={item.donation_id}>{item.rec_status}</li>
                   })}
                 </span>
+
                 <span>
                   {EyeMatch.map((item) => {
                     return <li key={item.donation_id}>{item.score}%</li>
                   })}
                 </span>
+
+                <span>
+                  {/* {EyeMatch.map((item) => {
+                    return <li><button onClick={() => { approveMatchedOrgan(item) }}>Reject Match</button></li>
+                  })} */}
+                </span>
                 <span>
                   {EyeMatch.map((item) => {
-                    return <li><button onClick={() => { approveMatchedOrgan(item) }}>Notify User</button></li>
+                    return <li><button onClick={() => { approveMatchedOrgan(item) }}>Approve Match</button></li>
                   })}
                 </span>
 

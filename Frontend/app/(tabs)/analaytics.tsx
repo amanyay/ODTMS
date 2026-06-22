@@ -11,7 +11,7 @@ export default function statstics() {
     // const [totalRequest, setTotalRequest] = useState("")
     // const [totalDonors, setTotalDonor] = useState('');
     const [activeRecipents, setactiveRecipents] = useState('');
-    const [completedTransplant, setCompletedTransplant] = useState('');
+    const [completedTransplant, setCompletedTransplant] = useState(Number);
     const [error, setError] = useState("")
 
     async function statstics() {
@@ -60,7 +60,7 @@ export default function statstics() {
                     </View>
                     <View style={style.dataBox1}>
                         <Text style={style.dataBoxText1}>Successfull Transplant Win Rate</Text>
-                        <Text style={style.dataBoxText3}>{completedTransplant} % </Text>
+                        <Text style={style.dataBoxText3}>{isNaN(completedTransplant) ? (0) : (completedTransplant)} % </Text>
                     </View>
                 </View>
                 <Text style={style.error}>{error}</Text>

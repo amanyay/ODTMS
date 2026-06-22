@@ -15,7 +15,7 @@ const app = express();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../uploads/documentImages')); // make sure uploads/ exists
+        cb(null, path.join(__dirname, '../uploads/documentImages/donorsDocument')); // make sure uploads/ exists
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -28,6 +28,8 @@ app.use(bodyParser.json());
 router.post('/', upload.single('DocumentImage'), async (req, res) => {
 
     const { firstName, lastName, email, age, location, bloodType, gender, token, organs } = req.body;
+    const donorsDocument = req.file.filename;
+
 
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET)
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
@@ -35,13 +37,12 @@ router.post('/', upload.single('DocumentImage'), async (req, res) => {
 
     try {
 
-        const updateQueryResult = await donorModel.donorFormUpdate(firstName, lastName, email, age, location, bloodType, gender, token, organs, actualVerifiedPhoneNumber)
-
-
         const selectionFromDonation = await donorModel.selectionFromDonationByPhoneNumber(actualVerifiedPhoneNumber)
-        console.log(selectionFromDonation)
+
         if (selectionFromDonation.length > 0) {
-            const updateDonation = await donorModel.updateDonation(organs, actualVerifiedPhoneNumber)
+            const updateQueryResult = await donorModel.donorFormUpdate(firstName, lastName, email, age, location, bloodType, gender, token, organs, actualVerifiedPhoneNumber)
+            const updateDonation = await donorModel.updateDonation(organs, actualVerifiedPhoneNumber, donorsDocument)
+
 
             if (updateQueryResult || updateDonation) {
                 res.status(200).json({
@@ -52,8 +53,8 @@ router.post('/', upload.single('DocumentImage'), async (req, res) => {
             }
         }
         else if (selectionFromDonation.length === 0) {
-
-            const insertToDonationTable = await donorModel.insertToDonationTable(actualVerifiedPhoneNumber, organs)
+            const updateQueryResult = await donorModel.donorFormUpdate(firstName, lastName, email, age, location, bloodType, gender, token, organs, actualVerifiedPhoneNumber)
+            const insertToDonationTable = await donorModel.insertToDonationTable(actualVerifiedPhoneNumber, organs, donorsDocument)
 
             if (updateQueryResult || insertToDonationTable) {
                 res.status(200).json({
@@ -65,9 +66,6 @@ router.post('/', upload.single('DocumentImage'), async (req, res) => {
         }
 
 
-        if (!updateQueryResult) {
-            res.status(201).json({ message: 'Error in updating' })
-        }
     } catch (error) {
         console.log(error)
         if (error.message) {

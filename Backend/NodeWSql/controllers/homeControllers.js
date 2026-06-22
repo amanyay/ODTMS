@@ -14,24 +14,27 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(bodyParser.json());
-
 router.post('/', async (req, res) => {
 
-    const { token } = req.body;
-
-    const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
-    const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
-    let verificationMessage = 'default';
 
     try {
 
+        const { token } = req.body;
+
+        const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
+        const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+        let verificationMessage = 'default';
+
+
+
         const selectionFromUser = await userModel.selectionForProfile(actualVerifiedPhoneNumber)
+
 
 
         if (selectionFromUser[0].role === 'recipents') {
             const getRecInfoQuery = await recipentsModel.getRecInfoQuery(actualVerifiedPhoneNumber)
 
-            // console.log(getRecInfoQuery);
+
             if (selectionFromUser[0].fayda_no === 0 || selectionFromUser[0].fayda_no === null) {
                 verificationMessage = "Not Verified"
             }
@@ -69,9 +72,13 @@ router.post('/', async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        if (error.message) {
-            res.status(409).json({ err: "Database error " })
-        } else {
+        if (error.expiredAt) {
+            res.status(401).json({ err: 'Unauthorized User' })
+        }
+        else if (error.message) {
+            res.status(409).json({ err: "Unkown error " })
+        }
+        else {
             res.status(500).json({ err: "Server error" })
         }
     }

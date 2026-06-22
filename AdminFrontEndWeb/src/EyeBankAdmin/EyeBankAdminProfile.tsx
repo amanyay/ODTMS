@@ -52,8 +52,7 @@ export default function AdminProfile() {
         </div>
         <div className={style.informationsBox}>
           <div className={style.editBtnsBox}>
-            <button>Update</button>
-            <button>Delete</button>
+
             <button>Logout</button>
           </div>
           <div className={style.userInformations}>
@@ -88,7 +87,6 @@ export default function AdminProfile() {
             <div className={style.dataTitleBox}>
               <span>{myData.map((item) => { return item.blood_type })}</span>
               <span>{myData.map((item) => { return item.role })}</span>
-
               <span>{myData.map((item) => { return item.location })}</span>
             </div>
           </div>

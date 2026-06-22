@@ -16,7 +16,7 @@ export const options = {
 
 export default function donarForm() {
 
-    // const [firstName, setFirstName] = useState("");
+    const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     // const [email, setEmail] = useState("");
     const [age, setAge] = useState('');
@@ -26,6 +26,7 @@ export default function donarForm() {
     const [organs, setOrgans] = useState("");
     const [error, setError] = useState('');
     const [file, setFile] = useState<any>(null);
+    const [fileName, setFileName] = useState<any>(null);
     const optionsLocation = ['Addis Ababa', 'Tigray', 'Oromia'];
     const optionsGender = ['male', 'female'];
     const optionsBlood = ['A+', 'A-', 'AB+', 'AB-', 'B', 'B+', 'O+', 'O-',]
@@ -38,7 +39,8 @@ export default function donarForm() {
         })
         if (!documentImage.canceled) {
             setFile(documentImage.assets[0])
-        } else {
+            setFileName(documentImage.assets[0].fileName)
+        } else if (documentImage.canceled) {
             setFile(null)
         }
 
@@ -52,12 +54,12 @@ export default function donarForm() {
 
 
         try {
-            if (age === "" || location === "" || gender === "" || lastName === "" || setFile === null) {
+            if (age === "" || location === "" || gender === "" || lastName === "" || file === null || firstName === "") {
                 setError('Please fill all field');
             }
 
             else {
-                if (age !== "" || location !== "" || gender !== "" || lastName !== "") {
+                if (age !== "" || location !== "" || gender !== "" || lastName !== "" || file !== null || firstName !== "") {
 
 
                     const formData = new FormData();
@@ -65,6 +67,7 @@ export default function donarForm() {
                     if (tokenToBackEnd) {
                         formData.append('token', tokenToBackEnd)
                     }
+                    formData.append('firstName', firstName)
                     formData.append('lastName', lastName)
                     formData.append('age', age)
                     formData.append('location', location)
@@ -122,14 +125,14 @@ export default function donarForm() {
                 </View>
 
                 <View style={style.secondInput}>
-                    <Text style={style.inputIcon}><Fontisto name="email" size={24} color="black" /></Text>
-                    <Text style={[style.commonInput, { width: '32%' }]} >Filled</Text>
+                    <Text style={style.inputIcon}><AntDesign style={style.icon} name="user" size={30} color="black" /></Text>
+                    <TextInput style={[style.commonInput, { width: '32%' }]} placeholderTextColor={'white'} placeholder='First name' onChangeText={setFirstName} />
                     <Text style={style.inputIcon}><AntDesign style={style.icon} name="user" size={30} color="black" /></Text>
                     <TextInput style={[style.commonInput, { width: '32%' }]} placeholderTextColor={'white'} placeholder='Last name' onChangeText={setLastName} />
                 </View>
                 <View style={style.secondInput}>
                     <Text style={style.inputIcon}><Fontisto name="email" size={24} color="black" /></Text>
-                    <Text style={[style.commonInput, { width: '32%' }]} >Filled</Text>
+                    <Text style={[style.commonInput, { width: '32%', fontWeight: 'bold', color: "black" }]} >Email Filled</Text>
                     <Text style={style.inputIcon}><AntDesign style={style.icon} name="number" size={30} color="black" /></Text>
                     <TextInput style={[style.commonInput, { width: '32%' }]} placeholderTextColor={'white'} placeholder='Age' onChangeText={setAge} />
                 </View>
@@ -189,7 +192,7 @@ export default function donarForm() {
                     <TouchableOpacity style={style.fileUploadBtn}
                         onPress={docUpload}
                     >
-                        <Text style={{ color: 'white' }}>UPLOAD</Text>
+                        <Text style={{ color: 'white' }}>{fileName ? (fileName) : ('Upload')}</Text>
                     </TouchableOpacity>
                 </TouchableOpacity>
                 <Text style={style.error}>{error}</Text>

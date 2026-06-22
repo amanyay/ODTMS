@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import baseUrl from '@/src/api';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View, RefreshControl } from 'react-native';
 
 export default function notification() {
 
+    const [refreshing, setRefreshing] = useState(false);
     const [approvedData, setApprovedData] = useState<any>([])
     const [notFound, setNotFound] = useState('');
     const [arrow, setArrow] = useState('')
@@ -38,6 +38,11 @@ export default function notification() {
                     setArrow(request.data.arrow)
                     setNotificationContent(`The transplant has been finalized successfully. The process is complete. Please proceed with post‑care monitoring. `)
                 }
+                else if (request.data.message[0].status === 'Rejected') {
+                    setApprovedData(request.data.message)
+                    setArrow(request.data.arrow)
+                    setNotificationContent(`The transplant has been Rejected. The system will notify for other transplant. `)
+                }
 
             }
             else if (request.status === 201) {
@@ -57,6 +62,11 @@ export default function notification() {
         getNotificationdata()
     }, [])
 
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await getNotificationdata();
+        setRefreshing(false);
+    };
 
 
 
@@ -67,38 +77,34 @@ export default function notification() {
             <ImageBackground
                 source={require('../../Desgin Templete and Docmentation/background 3.jpg')}
                 style={{ flex: 1 }} >
-
-                <View style={styless.box1}>
-                    <TouchableOpacity style={styless.box2BtnRefresh} onPress={getNotificationdata}>
-                        <Text style={styless.box2BtnText}><AntDesign name="reload" size={35} color="black" /></Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={{ height: 35 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue', fontWeight: 'bold', marginTop: "2%" }}>{notFound}</Text>
-                </View>
-
-                <FlatList
-                    data={approvedData}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <View style={styless.eachNotificationBox}>
-                            <Text style={{ fontWeight: 'bold', fontFamily: 'fantasy' }}>   Date : {new Date(item.date).toLocaleDateString()}</Text>
-                            <Text style={styless.texts}>Dear, <Text style={styless.userName}>{item.rec_name} </Text>
-                                <Text>
-                                    {notificationContent}{item.status === 'Pending' && 'Please wait until admin approved. '}
-                                    <Text style={styless.texts1}>{item.status} </Text>
-                                </Text>
-                            </Text>
-                            <Text style={styless.texts1}>{item.rec_name} {arrow}  {item.don_name}  </Text>
-                            <Text style={styless.texts}>Call 900 for more information</Text>
-                            <TouchableOpacity style={styless.freeCallCenterBox}>
-                                <Text>900</Text>
-                            </TouchableOpacity>
-                        </View>
+                {approvedData.length === 0 ?
+                    (<View style={{ height: 35 }}>
+                        <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue', fontWeight: 'bold', marginTop: "2%" }}>{notFound}</Text>
+                    </View>) : (
+                        <FlatList
+                            data={approvedData}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => (
+                                <View style={styless.eachNotificationBox}>
+                                    <Text style={{ fontWeight: 'bold', fontFamily: 'fantasy' }}>   Date : {new Date(item.date).toLocaleDateString()}</Text>
+                                    <Text style={styless.texts}>Dear, <Text style={styless.userName}>{item.rec_name} </Text>
+                                        <Text>
+                                            {notificationContent}{item.status === 'Pending' && 'Please wait until admin approved. '}
+                                            <Text style={styless.texts1}>{item.status} </Text>
+                                        </Text>
+                                    </Text>
+                                    <Text style={styless.texts1}>{item.rec_name} {arrow}  {item.don_name}  </Text>
+                                    <Text style={styless.texts}>Call 900 for more information</Text>
+                                    <TouchableOpacity style={styless.freeCallCenterBox}>
+                                        <Text>900</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                        />
                     )}
 
-                />
+
 
 
 

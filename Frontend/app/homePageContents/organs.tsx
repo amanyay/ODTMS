@@ -6,16 +6,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function organs() {
 
   const [organs, setOrgans] = useState<any>([]);
   const [notFound, setNotFound] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  // const [page, setPage] = useState(1)
 
   async function getOrganForRecs() {
 
     setNotFound('')
+    setRefreshing(false)
     try {
 
       const token = await AsyncStorage.getItem('token');
@@ -23,6 +26,7 @@ export default function organs() {
       const userOrgan = await AsyncStorage.getItem('userOrgan');
       const recBloodType = await AsyncStorage.getItem('recBloodType');
       const request = await axios.post(`${baseUrl}/recOrgans`, { token, recAge, recBloodType, userOrgan });
+
 
       if (request.status === 201) {
         setNotFound('No match found');
@@ -39,6 +43,7 @@ export default function organs() {
 
     }
   }
+
   useEffect(() => {
     getOrganForRecs()
   }, [])
@@ -68,48 +73,50 @@ export default function organs() {
         </TouchableOpacity>
       </View>
 
-      <View style={{ height: 50, marginBottom: 10 }}>
-        <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}>{notFound}</Text>
-        {/* <Text style={style.eachReqError}>{eachReqError}</Text> */}
-      </View>
+      {notFound === "" ? (
+        <FlatList
+          data={organs}
+          keyExtractor={(item) => item.donation_id.toString()}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getOrganForRecs} />}
+          renderItem={({ item }) => (
+            <View style={style.organBox}>
 
+              <View style={style.organBox1}>
 
-      <FlatList
-        data={organs}
-        keyExtractor={(item) => item.donation_id.toString()}
-        renderItem={({ item }) => (
-          <View style={style.organBox}>
+                <View style={style.boxHeaderIcon}>
+                  <FontAwesome5 name="briefcase-medical" size={24} color="black" />
+                </View>
+                <View style={style.boxHeaderText}>
+                  <Text style={style.boxHeaderText1}>Information about matched organ</Text>
 
-            <View style={style.organBox1}>
+                </View>
 
-              <View style={style.boxHeaderIcon}>
-                <FontAwesome5 name="briefcase-medical" size={24} color="black" />
               </View>
-              <View style={style.boxHeaderText}>
-                <Text style={style.boxHeaderText1}>Information about matched organ</Text>
-                {/* {checkRequest ? (<Text style={style.boxHeaderText2}>Request not Sent</Text>) : (<Text style={style.boxHeaderText2}>Request sent</Text>)} */}
+              <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}>
+                <View style={style.organBoxText}>
+                  <Text style={style.organBoxText1}>Donor Name  </Text><Text style={style.datas}>{item.donor_name}</Text>
+                  <Text style={style.organBoxText1}>Donor age   </Text><Text style={style.datas}>{item.donor_age}</Text>
+                  <Text style={style.organBoxText1}>Donate Organ </Text><Text style={style.datas}>{item.organ_name}</Text>
+                  <Text style={style.organBoxText1}>Gender  </Text><Text style={style.datas}>{item.gender}</Text>
+                  <Text style={style.organBoxText1}>Blood Type  </Text><Text style={style.datas}>{item.donor_blood_type}</Text>
+                  <Text style={style.organBoxText1}>Status </Text><Text style={style.datas}>{item.rec_status}</Text>
+                  <Text style={style.organBoxText1}>Match Score </Text><Text style={style.datas}>{item.score} %</Text>
+                </View>
+              </ScrollView>
+              <View style={style.updateAndRemoveBtn}>
+
               </View>
 
             </View>
-            <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}>
-              <View style={style.organBoxText}>
-                <Text style={style.organBoxText1}>Donor Name  </Text><Text style={style.datas}>{item.donor_name}</Text>
-                <Text style={style.organBoxText1}>Donor age   </Text><Text style={style.datas}>{item.donor_age}</Text>
-                <Text style={style.organBoxText1}>Donate Organ </Text><Text style={style.datas}>{item.organ_name}</Text>
-                <Text style={style.organBoxText1}>Gender  </Text><Text style={style.datas}>{item.gender}</Text>
-                <Text style={style.organBoxText1}>Blood Type  </Text><Text style={style.datas}>{item.donor_blood_type}</Text>
-                <Text style={style.organBoxText1}>Status </Text><Text style={style.datas}>{item.rec_status}</Text>
-                <Text style={style.organBoxText1}>Match Score </Text><Text style={style.datas}>{item.score} %</Text>
-              </View>
-            </ScrollView>
-            <View style={style.updateAndRemoveBtn}>
+          )}
 
-            </View>
+        />) : (
+        <View style={{ height: 50, marginBottom: 10 }} >
+          <Text style={{ textAlign: 'center', fontSize: 21, color: 'blue' }}>{notFound}</Text>
+          {/* <Text style={style.eachReqError}>{eachReqError}</Text> */}
+        </View>)}
 
-          </View>
-        )}
 
-      />
     </ImageBackground >
   )
 }
@@ -170,6 +177,23 @@ const style = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     color: 'red'
+  },
+  paginationBox: {
+    height: 50,
+    marginBottom: 10,
+    // backgroundColor: 'red',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
+  },
+  paginationBtn: {
+    backgroundColor: "rgba(42, 146, 201, 1)",
+    width: '20%',
+    marginLeft: '3%',
+    height: '95%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 7,
   },
   box3: {
     // backgroundColor:'red',

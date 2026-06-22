@@ -18,7 +18,7 @@ const app = express();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../uploads/documentImages')); // make sure uploads/ exists
+        cb(null, path.join(__dirname, '../uploads/documentImages/recipentsDocument')); // make sure uploads/ exists
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -33,21 +33,25 @@ app.use(bodyParser.json());
 
 router.post('/', upload.single('DocumentImage'), async (req, res) => {
 
-    const { lastName, age, location, gender, bloodType, token, organs } = req.body;
+    const { firstName, lastName, age, location, gender, bloodType, token, organs } = req.body;
+    const recipentsDoc = req.file.filename;
+    console.log(firstName)
+
 
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
+
 
     try {
 
         const selectionFromRecTable = await recipentsModel.selectionFromRecTable(actualVerifiedPhoneNumber)
 
 
-        if (selectionFromRecTable.length >= 1) {
+        if (selectionFromRecTable.length > 0) {
 
 
-            const updateUserForm = await userModel.updateUserForm(lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber)
-            const updateRecTable = await recipentsModel.updateRecTable(actualVerifiedPhoneNumber, organs)
+            const updateUserForm = await userModel.updateUserForm(firstName, lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber)
+            const updateRecTable = await recipentsModel.updateRecTable(actualVerifiedPhoneNumber, organs, recipentsDoc)
 
 
             if (updateRecTable || updateUserForm) {
@@ -60,8 +64,8 @@ router.post('/', upload.single('DocumentImage'), async (req, res) => {
         }
         else if (selectionFromRecTable.length === 0) {
 
-            const updateUserForm = await userModel.updateUserForm(lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber)
-            const insertionToRecTable = await recipentsModel.insertionToRecTable(actualVerifiedPhoneNumber, organs)
+            const updateUserForm = await userModel.updateUserForm(firstName, lastName, age, location, gender, bloodType, actualVerifiedPhoneNumber)
+            const insertionToRecTable = await recipentsModel.insertionToRecTable(actualVerifiedPhoneNumber, organs, recipentsDoc)
 
             if (updateUserForm || insertionToRecTable) {
                 res.status(200).json({

@@ -23,6 +23,7 @@ router.post('/', async (req, res) => {
     const verifiedPhoneNumber = JWT.verify(token, JWT_SECRET);
     const actualVerifiedPhoneNumber = verifiedPhoneNumber.tokenPhoneNumber;
 
+
     try {
 
 

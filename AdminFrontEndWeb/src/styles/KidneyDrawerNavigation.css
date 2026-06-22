@@ -1,4 +1,4 @@
-.KidneydrawerNavBox {
+.kidneyKidneydrawerNavBox {
     background-color: #1c2e4a;
     width: 5%;
     height: 100vh;
@@ -6,36 +6,36 @@
     align-items: center;
     border-right: 5px solid;
 
-    .links span {
+    .kidneylinks span {
         display: none;
 
     }
 
-    .logo h1 {
+    .kidneylogo h1 {
         display: none;
     }
 
-    .links li {
+    .kidneylinks li {
         margin: 8% auto 0% auto;
         text-decoration: none;
         list-style: none;
     }
 
-    .linksFooter span {
+    .kidneylinksFooter span {
         display: none;
     }
 
-    .linksFooter li {
+    .kidneylinksFooter li {
         margin: 8% auto 0% auto;
         list-style: none;
     }
 }
 
-.KidneydrawerNavBox:hover {
+.kidneyKidneydrawerNavBox:hover {
     width: 20%;
     transition: 100ms;
 
-    .logo h1 {
+    .kidneylogo h1 {
         /* background-color: red; */
         text-align: center;
         color: wheat;
@@ -45,7 +45,7 @@
         width: 100%;
     }
 
-    .links li {
+    .kidneylinks li {
         margin: 8% 0% 0% 0%;
         /* background-color: blue; */
         color: white;
@@ -54,7 +54,7 @@
         text-align: end;
     }
 
-    .links span {
+    .kidneylinks span {
         margin: 8% 0% 0% 7%;
         /* background-color: red; */
         color: white;
@@ -65,7 +65,7 @@
         text-decoration: none;
     }
 
-    .links .a {
+    .kidneylinks .kidneya {
         text-decoration: none;
         color: white;
         font-weight: bold;
@@ -74,14 +74,14 @@
 
     }
 
-    .KidneydrawerNavBoxFooter {
+    .kidneyKidneydrawerNavBoxFooter {
         /* background-color: blue; */
         height: 100vh;
         width: 100%;
         margin: 5% 0% 0% 0%;
     }
 
-    .linksFooter li {
+    .kidneylinksFooter li {
         margin: 8% 0% 0% 0%;
         /* background-color: red; */
         color: white;
@@ -90,7 +90,7 @@
         text-align: end;
     }
 
-    .linksFooter span {
+    .kidneylinksFooter span {
         margin: 8% 0% 0% 7%;
         /* background-color: red; */
         color: white;
@@ -103,62 +103,62 @@
 
 }
 
-.logo {
+.kidneylogo {
     /* background-color: aliceblue; */
     height: 10%;
     align-content: center;
 }
 
 
-.KidneydrawerNavBoxLinks {
+.kidneyKidneydrawerNavBoxLinks {
     /* background-color: wheat; */
     height: max-content;
 }
 
-.links {
+.kidneylinks {
     width: 100%;
     display: flex;
 }
 
-.links:hover {
+.kidneylinks:hover {
     background-color: gray;
     width: 100%;
     transition: 1s;
-    opacity: 0.8;
+    opacity: 0.kidney8;
 }
 
-.links .a.active {
+.kidneylinks .kidneya.kidneyactive {
     background-color: gray;
     padding: 10px;
 }
 
-.links .aLogo {
+.kidneylinks .kidneyaLogo {
     font-size: 25px;
 }
 
 
-.KidneydrawerNavBoxFooter {
+.kidneyKidneydrawerNavBoxFooter {
     /* background-color: blue; */
     height: 100vh;
     width: 100%;
     margin: 105% 0% 0% 0%;
 }
 
-.linksFooter {
+.kidneylinksFooter {
     width: 100%;
     display: flex;
     margin-left: 10%;
 }
 
-.linksFooter:hover {
+.kidneylinksFooter:hover {
     background-color: gray;
     width: 100%;
     transition: 1s;
-    opacity: 0.8;
+    opacity: 0.kidney8;
 }
 
 
-.linksFooter .a {
+.kidneylinksFooter .kidneya {
     text-decoration: none;
     color: white;
     font-weight: bold;
@@ -166,11 +166,11 @@
     font-size: 18px;
 }
 
-.linksFooter .aLogo {
+.kidneylinksFooter .kidneyaLogo {
     font-size: 30px;
 }
 
-.linksFooter .a.active {
+.kidneylinksFooter .kidneya.kidneyactive {
     background-color: gray;
     padding: 10px;
 }

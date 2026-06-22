@@ -57,7 +57,7 @@ export default function dahsboard() {
 
             const request = await axios.get(`${baseUrl}/eyeBankReport`, {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `${token}`
                 }
             });
             if (request.status === 200) {
@@ -126,7 +126,7 @@ export default function dahsboard() {
                     <div className={style.section1Box}>
                         <div className={style.section1Boxs}>
                             <h1><FaUsers /></h1>
-                            <p>{successRate} %</p>
+                            <p>{isNaN(successRate) ? (0) : (`${successRate}`)} %</p>
                         </div>
 
                         <h2>Successfull Transplant</h2>

@@ -12,18 +12,19 @@ async function getRecInfoQuery(actualVerifiedPhoneNumber) {
     return getRecInfoQuery
 }
 
-async function updateRecTable(organs, actualVerifiedPhoneNumber) {
+async function updateRecTable(actualVerifiedPhoneNumber, organs, recipentsDoc) {
     const connection = await createDBConnection();
-    const [updateRecTable] = await connection.query(`UPDATE recipents SET organ_id = ?
-            WHERE phone_number = ? ` , [organs, actualVerifiedPhoneNumber])
+    const [updateRecTable] = await connection.query(`UPDATE recipents SET organ_id = ?, recipents_doc = ?
+                 WHERE phone_number = ? ` , [organs, recipentsDoc, actualVerifiedPhoneNumber])
+
     return updateRecTable
 }
 
 
-async function insertionToRecTable(actualVerifiedPhoneNumber, organs) {
+async function insertionToRecTable(actualVerifiedPhoneNumber, organs, recipentsDoc) {
     const connection = await createDBConnection();
     const [insertionToRecTable] = await connection.query(`INSERT INTO recipents 
-                (phone_number , organ_id ) VALUES (? , ? ) `, [actualVerifiedPhoneNumber, organs]);
+                (phone_number , organ_id,recipents_doc ) VALUES (? , ? ,?) `, [actualVerifiedPhoneNumber, organs, recipentsDoc]);
     return insertionToRecTable
 }
 

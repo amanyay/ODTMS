@@ -5,7 +5,7 @@ import axios from 'axios';
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, ImageBackground, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-
+import Feather from '@expo/vector-icons/Feather';
 
 
 const login = () => {
@@ -13,6 +13,7 @@ const login = () => {
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState('');
     const [loading, setIsLoading] = useState(false);
+    const [secureText, setSecureText] = useState(true);
     function toSignupPage() {
         router.replace("/signup");
     }
@@ -38,11 +39,13 @@ const login = () => {
                 else if (request.status === 201) {
                     setError(request.data.message)
                 }
-
+                else if (request.status === 202) {
+                    setError(request.data.message)
+                }
             }
 
 
-        }   
+        }
 
         catch (error: any) {
             console.log(error)
@@ -63,23 +66,20 @@ const login = () => {
 
     return (
         <ImageBackground
-            source={require('../Desgin Templete and Docmentation/background 3.jpg')}
+            source={require('../Desgin Templete and Docmentation/background 2.jpg')}
             style={styles.box}
             resizeMode="cover"
         >
-            <KeyboardAvoidingView
-                style={{ flex: 1, width: '100%', alignItems: 'center', }}
-                behavior="padding"
-            >
 
-                <ScrollView style={{ flex: 1, width: '90%' }}>
+            <View style={styles.box2}>
+                <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
 
-                    <View style={styles.box1}>
-                        <Text style={styles.title}>Login</Text>
-                    </View>
-                    <View style={styles.box2}>
-                        <TextInput inputMode="numeric" placeholder='   Enter your phone number' placeholderTextColor={'white'} style={styles.input} onChangeText={setPhoneNumber} />
-                        <TextInput placeholder='   Enter your password' placeholderTextColor={'white'} style={styles.input} onChangeText={setPassword} />
+                    <ScrollView >
+                        <View style={styles.box1}>
+                            <Text style={styles.title}>Welcome back</Text>
+                        </View>
+                        <View style={styles.inputBox}><View style={styles.inputIcons}><Feather name="phone" size={24} color="black" /></View><TextInput placeholder='Enter your phone number' keyboardType={"number-pad"} placeholderTextColor={'black'} style={styles.input} onChangeText={setPhoneNumber} /></View>
+                        <View style={styles.inputBox}><View style={styles.inputIcons}><Feather name="key" size={24} color="black" /></View><TextInput placeholder='Enter your password' secureTextEntry={secureText} placeholderTextColor={'black'} style={styles.input} onChangeText={setPassword} /><TouchableOpacity style={styles.hiddenPassBox} onPress={() => { setSecureText(!secureText) }}>{secureText ? (<Text><Feather name="eye" size={24} color="black" /></Text>) : (<Text><Feather name="eye-off" size={24} color="black" /></Text>)}</TouchableOpacity></View>
                         <TouchableOpacity style={styles.forgetAccountBox} onPress={() => { router.push('/ForgetPassword/forget') }}>
                             <Text style={styles.forgetAccountText}>Forget Password ?</Text>
                         </TouchableOpacity>
@@ -87,15 +87,12 @@ const login = () => {
                         <Text style={styles.errorMessage}>{error}</Text>
                         <Text style={styles.signUpBox}>Don{"'"}t have an account ? <TouchableOpacity onPress={toSignupPage}><Text style={styles.commonText}> sign up</Text></TouchableOpacity></Text>
                         {loading ? (<ActivityIndicator size="large" color="#0000ff" />) : (<Text></Text>)}
-                    </View>
-                    <View style={styles.asAdminBox}>
-                        {/* <TouchableOpacity style={styles.asAdmin} onPress={() => { router.replace("/AdminstratorLogin") }}>
-                            <Text>Login as Administrator</Text>
-                        </TouchableOpacity> */}
-                    </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </ImageBackground>
+
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </View>
+
+        </ImageBackground >
 
     )
 
@@ -108,24 +105,28 @@ const styles = StyleSheet.create({
     box: {
         height: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
 
     },
     box1: {
         // backgroundColor: 'red',
         width: '100%',
-        height: '38%',
+        height: '18%',
         marginBottom: "2%",
         justifyContent: 'flex-end'
     },
     box2: {
-        // backgroundColor: 'red',
+        backgroundColor: '#cdd5de',
         width: '100%',
-        marginBottom: '18%'
+        margin: '0%',
+        height: '70%',
+        borderTopRightRadius: '8%',
+        borderTopLeftRadius: '8%'
+
     },
     title: {
         fontSize: 35,
-        fontWeight: '500',
+        fontWeight: '600',
         marginBottom: '3%',
         color: 'black',
         letterSpacing: 1,
@@ -136,18 +137,43 @@ const styles = StyleSheet.create({
         color: 'blue',
         fontSize: 18
     },
+    inputBox: {
+        // backgroundColor: 'red',
+        textAlign: 'center',
+        margin: 9,
+        borderBottomWidth: 1,
+        borderTopColor: 'black',
+        width: '90%',
+        alignSelf: 'center',
+        height: 50,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        overflow: 'hidden'
+    },
+    inputIcons: {
+        // backgroundColor: 'yellow',
+        height: '100%',
+        width: 30,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     input: {
-        borderWidth: 1,
-        borderColor: 'white',
         borderRadius: 3,
-        marginTop: '10%',
-        marginLeft: '5%',
-        width: "90%",
+        marginTop: '0%',
+        marginLeft: '3%',
+        width: "70%",
         textAlign: 'left',
-        height: 55,
-        color: 'white',
+        height: '100%',
+        color: 'black',
         fontSize: 13,
-        letterSpacing: 0.5
+        letterSpacing: 0.5,
+        // backgroundColor: 'blue'
+    },
+    hiddenPassBox: {
+        flex: 1,
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     errorMessage: {
         color: 'red',
@@ -186,6 +212,7 @@ const styles = StyleSheet.create({
         color: 'black'
     },
     signUpBox: {
+        // backgroundColor: 'red',
         marginLeft: '6%',
         color: 'black',
         alignSelf: 'center',
