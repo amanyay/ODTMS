@@ -75,6 +75,7 @@ const superAdminDeleteAdmins = require('./routes/superAdminRoutes/superAdminDele
 //Eye bank Admin Routes
 
 const eyeBankAdminProfile = require('./routes/eyeBankAdminRoutes/eyeBankAdminProfile');
+const eyeBankAdminUpdateProfile = require('./routes/eyeBankAdminRoutes/eyeBankAdminUpdateProfiles')
 
 const eyeBankDonorAdmin = require('./routes/eyeBankAdminRoutes/eyeBankDonorAdmin');
 const eyeBankAdminAddDonor = require('./routes/eyeBankAdminRoutes/eyeBankAdminAddDonor')
@@ -212,6 +213,7 @@ app.use('/superAdminDeleteAdmin', superAdminDeleteAdmins)
 
 
 app.use('/eyeBankAdminProfile', eyeBankAdminProfile)
+app.use('/eyeBankAdminUpdateProfile', eyeBankAdminUpdateProfile)
 
 
 app.use('/eyeBankDonorAdmin', eyeBankDonorAdmin)

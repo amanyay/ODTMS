@@ -360,6 +360,15 @@ async function deleteEyeRecipents(phoneNumber) {
 
 }
 
+async function eyeBankAdminUpdateProfile(actualVerifiedPhoneNumber, firstName, lastName, age, phoneNumber, email, password, gender, location, bloodType) {
+
+    const connection = await createDBConnection();
+    const eyeBankAdminUpdateProfile = await connection.query(`UPDATE admin SET first_name = ? , last_name = ? , age = ? , 
+        email = ? , password = ? , gender = ? , location = ? , blood_type = ? WHERE phone_number = ? ` ,
+        [firstName, lastName, age, email, password, gender, location, bloodType, actualVerifiedPhoneNumber])
+    return eyeBankAdminUpdateProfile;
+}
+
 
 
 
@@ -700,6 +709,7 @@ module.exports =
     adminAddEyeDonor,
     deleteEyeDonor,
     deleteEyeRecipents,
+    eyeBankAdminUpdateProfile,
 
     //Kidney
 

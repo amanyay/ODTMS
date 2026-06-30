@@ -17,7 +17,6 @@ router.post('/', async (req, res) => {
 
         const selectEyeBankAdminFromAdminTable = await adminModel.selectEyeBankAdminFromAdminTable(actualVerifiedPhoneNumber)
 
-        console.log(selectEyeBankAdminFromAdminTable)
 
         if (selectEyeBankAdminFromAdminTable.length > 0) {
             res.status(200).json({

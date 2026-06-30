@@ -96,7 +96,7 @@
     /* background-color: blue; */
     height: max-content;
     width: 100%;
-    margin: 0% 0% 0% 10%;
+    margin: 0% 0% 0% 5%;
 }
 
 .linksFooter {
@@ -142,7 +142,7 @@
     background-color: gray;
     align-items: center;
     border-radius: 3px;
-    width: 70%;
+    width: 80%;
     margin: 3% auto 0% auto;
 }
 
@@ -166,7 +166,14 @@
     display: block;
     width: 70%;
     text-align: center;
-    font-size: 15px;
+    font-size: 13px;
     text-decoration: none;
     padding: 10px;
+}
+
+.drawerNavBoxFooter .a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
 }

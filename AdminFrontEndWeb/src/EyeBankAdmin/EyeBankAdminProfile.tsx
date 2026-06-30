@@ -4,6 +4,7 @@ import DrawerNavigation from "../Components/DrawerNavigation"
 import baseUrl from "../../network/api"
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { CgClose } from 'react-icons/cg'
 
 
 
@@ -22,6 +23,18 @@ export default function AdminProfile() {
   }
 
   const [myData, setMyData] = useState<MyDataArray[]>([])
+  const [updateForm, setUpdateForm] = useState(false)
+  const [error, setError] = useState('')
+
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [age, setAge] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [gender, setGender] = useState('')
+  const [bloodType, setBloodType] = useState('')
+  const [location, setlocation] = useState('')
 
 
   async function displayProfile() {
@@ -39,6 +52,31 @@ export default function AdminProfile() {
 
 
 
+  async function eyeBankAdminUpdateProfile() {
+
+    setError('')
+
+    const token = localStorage.getItem('token');
+
+    if (firstName === '' || lastName === '' || age === '' || phoneNumber === '' || email === '' || password === '' || gender === '' || bloodType === '' || location === '') {
+      setError('Please Fill all field')
+    }
+    else if (firstName !== '' || lastName !== '' || age !== '' || phoneNumber !== '' || email !== '' || password !== '' || gender !== '' || bloodType !== '' || location !== '') {
+
+
+      const request = await axios.post(`${baseUrl}/eyeBankAdminUpdateProfile`, { token, firstName, lastName, age, phoneNumber, email, password, gender, bloodType, location })
+
+      if (request.status === 200) {
+        setUpdateForm(false)
+      }
+    }
+
+
+
+  }
+
+
+
 
 
 
@@ -47,13 +85,81 @@ export default function AdminProfile() {
       <DrawerNavigation />
 
       <div className={style.profilePageMainBox1}>
+
+        <div className={updateForm ? (style.updateForm) : (style.updateFormDisable)}>
+
+          <h1><button onClick={() => { setUpdateForm(false) }}><CgClose /></button></h1>
+          <div className={style.updateInformationsBox}>
+            <div className={style.updateUserInformations}>
+              <div className={style.updateDataTitleBox}>
+                <h2>Personal Info</h2>
+              </div>
+              <div className={style.updateDataTitleBox}>
+                <p>First name</p>
+                <p>Last name</p>
+                <p>Age</p>
+              </div>
+              <div className={style.updateDataTitleBox}>
+                <input placeholder='Enter your first name' onChange={(e) => { setFirstName(e.target.value) }} />
+                <input placeholder='Enter your last name' onChange={(e) => { setLastName(e.target.value) }} />
+                <input placeholder='Enter your age' onChange={(e) => { setAge(e.target.value) }} />
+              </div>
+
+              <div className={style.updateDataTitleBox}>
+                <p>Phone Number</p>
+                <p>Email</p>
+                <p>Password</p>
+              </div>
+              <div className={style.updateDataTitleBox}>
+                <input placeholder='Enter your phone number' onChange={(e) => { setPhoneNumber(e.target.value) }} />
+                <input placeholder='Enter your email address' onChange={(e) => { setEmail(e.target.value) }} />
+                <input placeholder='Enter your password' type='password' onChange={(e) => { setPassword(e.target.value) }} />
+              </div>
+              <div className={style.updateDataTitleBox}>
+                <p>Gender</p>
+                <p>Blood Type</p>
+                <p>Location</p>
+              </div>
+              <div className={style.updateDataTitleBox}>
+                <select value={gender}
+                  onChange={(e) => { setGender(e.target.value) }}>
+                  <option value="">Gender</option>
+                  <option value="male">male</option>
+                  <option value="female">female</option>
+                </select>
+                <select value={bloodType}
+                  onChange={(e) => { setBloodType(e.target.value) }}>
+                  <option value="">Blood Type</option>
+                  <option value="A+">A+</option>
+                  <option value="A">A</option>
+                  <option value="AB+">AB+</option>
+                  <option value="B+">B+</option>
+                  <option value="B">B</option>
+                  <option value="O">O</option>
+                  <option value="O+">O+</option>
+                </select>
+                <select value={location}
+                  onChange={(e) => { setlocation(e.target.value) }}>
+                  <option value="">Location</option>
+                  <option value="Addis Ababa">Addis Ababa</option>
+                  <option value="Tigray">Tigray</option>
+                  <option value="Oromia">Oromia</option>
+                  <option value="Amhara">Amhara</option>
+                </select>
+              </div>
+            </div>
+            <h4>{error}</h4>
+            <h3><button onClick={() => { eyeBankAdminUpdateProfile() }}>Save</button></h3>
+          </div>
+        </div>
+
+
         <div className={style.header}>
           <h3>General Information</h3>
         </div>
         <div className={style.informationsBox}>
           <div className={style.editBtnsBox}>
-
-            <button>Logout</button>
+            <button onClick={() => { setUpdateForm(true) }}>Update</button>
           </div>
           <div className={style.userInformations}>
             <div className={style.dataTitleBox}>
