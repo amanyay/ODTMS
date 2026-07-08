@@ -61,7 +61,7 @@ export default function KidneyDonor() {
       <SuperAdminDrawerNavigation />
       <div className={style.KidneyDonorInfoBox}>
         <div className={style.section1}>
-          <h3>Kidney Donor</h3>
+          <h3> Donor</h3>
           <div>
             <button><NavLink to='/Search'>Search</NavLink></button>
           </div>

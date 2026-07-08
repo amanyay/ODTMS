@@ -178,12 +178,9 @@ export default function eyeDonor() {
               onChange={(e) => { setlocation(e.target.value) }} >
               <option value="">Location</option>
               <option value="Addis Ababa">Addis Ababa</option>
-              <option value="Addis Ababa">Addis Ababa</option>
-              <option value="Addis Ababa">Addis Ababa</option>
-              <option value="Addis Ababa">Addis Ababa</option>
-              <option value="Addis Ababa">Addis Ababa</option>
-              <option value="Addis Ababa">Addis Ababa</option>
-              <option value="Addis Ababa">Addis Ababa</option>
+              <option value="Tigray">Tigray</option>
+              <option value="Oromia">Oromia</option>
+              <option value="Amhara">Amhara</option>
             </select>
             <span></span>
             <span>

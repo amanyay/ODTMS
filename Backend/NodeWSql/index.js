@@ -66,6 +66,7 @@ const adminRecipentsData = require('./routes/superAdminRoutes/adminRecipentsData
 const adminRequestData = require('./routes/superAdminRoutes/superAdminSearch');
 const superAdminReport = require('./routes/superAdminRoutes/superAdminDashboard')
 const superAdminProfile = require('./routes/superAdminRoutes/superAdminProfile');
+const superAdminUpdateProfile = require('./routes/superAdminRoutes/superAdminUpdateProfile')
 const adminRequestApp = require('./routes/superAdminRoutes/adminRequestApp')
 const superAdminFetchAdmins = require('./routes/superAdminRoutes/superAdminFetchAdmins')
 const superAdminDeleteAdmins = require('./routes/superAdminRoutes/superAdminDeleteAdmins')
@@ -187,7 +188,7 @@ app.use('/qr', qr)
 //          SUPER-ADMIN API
 
 app.use('/superAdminProfile', superAdminProfile)
-
+app.use('/superAdminUpdateProfile', superAdminUpdateProfile)
 app.use('/adminOrgansData', adminOrgansData)
 
 app.use('/adminDonorsData', adminDonorsData)
